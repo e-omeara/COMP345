@@ -1,8 +1,49 @@
 
 #include <iostream>
 #include <cmath>
+#include <stdlib.h>
+#include <stdio.h>
 
 using namespace std;
+
+struct coord{
+            int x;
+            int y;
+};
+
+class Map{
+
+
+    Map(int x, int y);
+
+    void printMap();
+
+
+
+    //getter methods
+    vector<coord> getPath();
+
+     vector<char> getMap();
+
+
+
+    //methods to make the map
+    void initiateMaking();
+
+    void setEntrance(int x, int y);
+
+    void laypath(char dir);
+
+    void setExit();
+
+
+
+};
+
+
+
+
+
 
 
 

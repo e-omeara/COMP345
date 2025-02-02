@@ -1,9 +1,264 @@
 
 #include <iostream>
 #include <cmath>
+#include <vector>
+#include <stdlib.h>
 #include "Map.h" 
-#include "MapMaker.h" 
+//#include "MapMaker.h" 
 using namespace std;
+
+
+struct coord{
+            int x;
+            int y;
+};
+
+class Map {
+
+    
+    
+    
+    private:
+
+        
+        bool isMaking;
+        int height;
+        int width;
+        vector<char> map;
+        vector<coord> path;
+        int makeX;
+        int makeY;
+        char prevDir;
+        
+
+    //critter objects
+
+
+    public:
+        Map(int x, int y){ //constructor
+            cout << "You've constructed MAP \n";
+            width = x;
+            height = y;
+            isMaking = false;
+            prevDir = 'x';
+
+            map.resize(x*y, '-');
+
+            
+
+
+        }
+
+
+
+
+        void printMap(){
+
+            
+
+            for(int i = 0; i < height; i++){
+                for(int j = 0; j < width; j++){
+                    cout << map[i*width + j];
+                
+                }
+                cout << "\n";
+            }
+            
+            cout << "\n";
+
+
+            return;
+        }
+
+
+
+        vector<coord> getPath(){
+
+            return path;
+        }
+
+        vector<char> getMap(){
+
+            return map;
+        }
+
+
+
+        void initiateMaking(){
+            isMaking = true;
+
+
+        }
+
+
+        void setEntrance(int x, int y){
+
+            if (isMaking == false){
+                cout << "you're not making a map!\n";
+                return ;
+            }
+
+            makeX = x;
+            makeY = y;
+            map[getPos(x, y)] = 'N';
+            printMap();
+            return;
+
+        }
+
+        void laypath(char dir){
+
+            if (isMaking == false){
+                cout << "you're not making a map!\n";
+                return ;
+            }
+
+            if(dir == 'u' || dir == 'U'){
+                //go up
+                if(prevDir == 'd' || prevDir == 'D'){
+                    cout << "You just came from there!\n\n";
+                    return;
+                }
+                if(makeY == 0){
+                    cout << "You can't go there!\n\n";
+                    return;
+                }
+                makeY--;
+                map[getPos(makeX, makeY)] = 'P';
+                
+            }
+            else if(dir == 'd' || dir == 'D'){
+                //go up
+                if(prevDir == 'u' || prevDir == 'U'){
+                    cout << "You just came from there!\n\n";
+                    return;
+                }
+                if(makeY == height - 1){
+                    cout << "You can't go there!\n\n";
+                    return;
+                }
+                makeY++;
+                map[getPos(makeX, makeY)] = 'P';
+            }
+            else if(dir == 'l' || dir == 'L'){
+                //go up
+                if(prevDir == 'r' || prevDir == 'R'){
+                    cout << "You just came from there!\n\n";
+                    return;
+                }
+                if(makeX == 0){
+                    cout << "You can't go there!\n\n";
+                    return;
+                }
+                makeX--;
+                map[getPos(makeX, makeY)] = 'P';
+            }
+            else if(dir == 'r' || dir == 'R'){
+                //go up
+                if(prevDir == 'l' || prevDir == 'L'){
+                    cout << "You just came from there!\n\n";
+                    return;
+                }
+                if(makeX == width - 1){
+                    cout << "You can't go there!\n\n";
+                    return;
+                }
+                makeX++;
+                map[getPos(makeX, makeY)] = 'P';
+            }
+
+            prevDir = dir;
+            printMapMaker();
+            return;
+        }
+
+        void setExit(){
+            map[getPos(makeX, makeY)] = 'X';
+            cout << "You've finalized the exit!\n";
+            printMap();
+        }
+
+    private:
+
+            void printMapMaker(){
+
+            vector<char> mapMaker = map;
+            mapMaker[getPos(makeX,makeY)] = 'X';
+
+            for(int i = 0; i < height; i++){
+                for(int j = 0; j < width; j++){
+                    cout << mapMaker[i*width + j];
+                
+                }
+                cout << "\n";
+            }
+            
+            cout << "\n";
+
+
+            return;
+            }  
+
+            int getPos(int x, int y){
+                return (y)*width + x;
+            } 
+
+
+
+
+};
+
+
+
+int main(){
+
+    Map map(15, 10);
+    map.printMap();
+    map.setEntrance(3,4);
+    map.initiateMaking();
+    map.setEntrance(3,4);
+    map.laypath('U');
+    map.laypath('U');
+    map.laypath('d');
+    map.laypath('r');
+    map.laypath('R');
+    map.laypath('d');
+    map.laypath('U');
+    map.laypath('U');
+    map.laypath('d');
+    map.laypath('r');
+    map.laypath('R');
+    map.laypath('U');
+    map.laypath('L');
+    map.laypath('U');
+    map.laypath('d');
+    map.laypath('r');
+    map.laypath('R');
+    map.laypath('r');
+    map.laypath('R');
+    map.laypath('r');
+    map.laypath('R');
+    map.laypath('r');
+    map.laypath('R');
+    map.laypath('R');
+    map.laypath('r');
+    map.laypath('R');
+    map.laypath('d');
+    map.laypath('d');
+    map.laypath('d');
+    map.laypath('d');
+    map.laypath('L');
+    map.laypath('L');
+    map.laypath('L');
+    map.laypath('L');
+    map.setExit();
+
+
+    return 0;
+
+};
+
+
 
 //attributes
 //length
