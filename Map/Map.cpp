@@ -23,7 +23,7 @@ struct coord{
             cout << "You've constructed MAP \n";
             width = x;
             height = y;
-            isMaking = false;
+            isMaking = true;
             prevDir = 'x';
 
             map.resize(x*y, '-');
@@ -66,6 +66,15 @@ struct coord{
             return map;
         }
 
+        int Map::getWidth(){
+            return width;
+        }
+
+
+        int Map::getHeight(){
+            return height;
+        }
+
 
 
         void Map::initiateMaking(){
@@ -85,12 +94,14 @@ struct coord{
             makeX = x;
             makeY = y;
             map[getPos(x, y)] = 'N';
-            printMap();
+            //printMap();
             return;
 
         }
 
+        //Take a char as parameter, adds a 'P' to the map vector as necessary, checks for doubleback
         void Map::laypath(char dir){
+
 
             if (isMaking == false){
                 cout << "you're not making a map!\n";
@@ -152,15 +163,23 @@ struct coord{
             }
 
             prevDir = dir;
-            printMapMaker();
+            //printMapMaker();
             return;
         }
 
+        //signals the 
         void Map::setExit(){
             map[getPos(makeX, makeY)] = 'X';
             cout << "You've finalized the exit!\n";
-            printMap();
+            //printMap();
+
+            isMaking = false;
+
             return;
+
+            
+
+            //toggle initate back to off
         }
 
   
