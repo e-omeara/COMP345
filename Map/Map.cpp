@@ -7,35 +7,19 @@
 //#include "MapMaker.h" 
 using namespace std;
 
-
+/*
 struct coord{
             int x;
             int y;
 };
+*/
 
-class Map {
+
 
     
     
-    
-    private:
 
-        
-        bool isMaking;
-        int height;
-        int width;
-        vector<char> map;
-        vector<coord> path;
-        int makeX;
-        int makeY;
-        char prevDir;
-        
-
-    //critter objects
-
-
-    public:
-        Map(int x, int y){ //constructor
+        Map::Map(int x, int y){ //constructor
             cout << "You've constructed MAP \n";
             width = x;
             height = y;
@@ -52,7 +36,7 @@ class Map {
 
 
 
-        void printMap(){
+        void Map::printMap(){
 
             
 
@@ -72,26 +56,26 @@ class Map {
 
 
 
-        vector<coord> getPath(){
+        vector<coord> Map::getPath(){
 
             return path;
         }
 
-        vector<char> getMap(){
+        vector<char> Map::getMap(){
 
             return map;
         }
 
 
 
-        void initiateMaking(){
+        void Map::initiateMaking(){
             isMaking = true;
 
 
         }
 
 
-        void setEntrance(int x, int y){
+        void Map::setEntrance(int x, int y){
 
             if (isMaking == false){
                 cout << "you're not making a map!\n";
@@ -106,7 +90,7 @@ class Map {
 
         }
 
-        void laypath(char dir){
+        void Map::laypath(char dir){
 
             if (isMaking == false){
                 cout << "you're not making a map!\n";
@@ -172,15 +156,16 @@ class Map {
             return;
         }
 
-        void setExit(){
+        void Map::setExit(){
             map[getPos(makeX, makeY)] = 'X';
             cout << "You've finalized the exit!\n";
             printMap();
+            return;
         }
 
-    private:
+  
 
-            void printMapMaker(){
+            void Map::printMapMaker(){
 
             vector<char> mapMaker = map;
             mapMaker[getPos(makeX,makeY)] = 'X';
@@ -199,14 +184,14 @@ class Map {
             return;
             }  
 
-            int getPos(int x, int y){
+            int Map::getPos(int x, int y){
                 return (y)*width + x;
             } 
 
 
 
 
-};
+
 
 
 

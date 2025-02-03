@@ -3,6 +3,7 @@
 #include <cmath>
 #include <stdlib.h>
 #include <stdio.h>
+#include <vector>
 
 using namespace std;
 
@@ -14,27 +15,48 @@ struct coord{
 class Map{
 
 
-    Map(int x, int y);
+    private:
 
-    void printMap();
+        
+        bool isMaking;
+        int height;
+        int width;
+        vector<char> map;
+        vector<coord> path;
+        int makeX;
+        int makeY;
+        char prevDir;
+
+    public:
+
+        Map(int x, int y);
+
+        void printMap();
 
 
 
-    //getter methods
-    vector<coord> getPath();
+        //getter methods
+        vector<coord> getPath();
 
-     vector<char> getMap();
+        vector<char> getMap();
 
 
 
-    //methods to make the map
-    void initiateMaking();
+        //methods to make the map
+        void initiateMaking();
 
-    void setEntrance(int x, int y);
+        void setEntrance(int x, int y);
 
-    void laypath(char dir);
+        void laypath(char dir);
 
-    void setExit();
+        void setExit();
+
+
+    private:
+
+        void printMapMaker();
+
+        int getPos(int x, int y);
 
 
 
@@ -126,13 +148,3 @@ MAINMENU class
 
 
 
-int main( )
-{
-
-}
-
-//Uses cmath:
-int roundDub(double number)
-{
-
-}
