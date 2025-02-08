@@ -7,25 +7,23 @@
 //#include "MapMaker.h" 
 using namespace std;
 
-/*
-struct coord{
-            int x;
-            int y;
-};
-*/
+
 
 
 
     
     
-
-        Map::Map(int x, int y){ //constructor
+        //Constructor takes map width and height as input
+        Map::Map(int x, int y){ 
             cout << "You've constructed MAP \n";
             width = x;
             height = y;
+
+            //Set up the class for map making
             isMaking = true;
             prevDir = 'x';
 
+            //create the linear array of the specified size
             map.resize(x*y, '-');
 
             
@@ -35,7 +33,7 @@ struct coord{
 
 
 
-
+        //Print out the map in a 2d output
         void Map::printMap(){
 
             
@@ -55,35 +53,37 @@ struct coord{
         }
 
 
-
+        // getter method for the critter path
         vector<coord> Map::getPath(){
 
             return path;
         }
 
+        //getting method for the 1d map array
         vector<char> Map::getMap(){
 
             return map;
         }
 
+        //get the width of the map
         int Map::getWidth(){
             return width;
         }
 
-
+        //get the hheight of the map
         int Map::getHeight(){
             return height;
         }
 
 
-
+        //To use in the larger game
         void Map::initiateMaking(){
             isMaking = true;
-
+            return;
 
         }
 
-
+        //Specifies the entrance, which is the first coord of the path
         void Map::setEntrance(int x, int y){
 
             if (isMaking == false){
@@ -91,8 +91,10 @@ struct coord{
                 return ;
             }
 
+            //Specify where the user is
             makeX = x;
             makeY = y;
+            //Set entrance coordinate to N for entrance
             map[getPos(x, y)] = 'N';
             //printMap();
             return;
@@ -102,28 +104,34 @@ struct coord{
         //Take a char as parameter, adds a 'P' to the map vector as necessary, checks for doubleback
         void Map::laypath(char dir){
 
-
+            //make sure we're in the mapmaking mode
             if (isMaking == false){
                 cout << "you're not making a map!\n";
                 return ;
             }
 
+            //take a character as unput
             if(dir == 'u' || dir == 'U'){
                 //go up
+                //make sure the path doesn't double back
                 if(prevDir == 'd' || prevDir == 'D'){
+                    
                     cout << "You just came from there!\n\n";
                     return;
                 }
+                // make sure we don't go off the map
                 if(makeY == 0){
                     cout << "You can't go there!\n\n";
                     return;
                 }
+                //adjsut the player's current position in the map
                 makeY--;
+                //set the current coord in the map to P for path
                 map[getPos(makeX, makeY)] = 'P';
                 
             }
             else if(dir == 'd' || dir == 'D'){
-                //go up
+                //go down
                 if(prevDir == 'u' || prevDir == 'U'){
                     cout << "You just came from there!\n\n";
                     return;
@@ -136,7 +144,7 @@ struct coord{
                 map[getPos(makeX, makeY)] = 'P';
             }
             else if(dir == 'l' || dir == 'L'){
-                //go up
+                //go left
                 if(prevDir == 'r' || prevDir == 'R'){
                     cout << "You just came from there!\n\n";
                     return;
@@ -149,7 +157,7 @@ struct coord{
                 map[getPos(makeX, makeY)] = 'P';
             }
             else if(dir == 'r' || dir == 'R'){
-                //go up
+                //go right
                 if(prevDir == 'l' || prevDir == 'L'){
                     cout << "You just came from there!\n\n";
                     return;
@@ -162,33 +170,39 @@ struct coord{
                 map[getPos(makeX, makeY)] = 'P';
             }
 
+            //update the previous direction variable, used to prevent doubling back
             prevDir = dir;
-            //printMapMaker();
+            //printMapMaker(); <-- for testing purposes
             return;
         }
 
-        //signals the 
+        //signals the player is done creating the path
         void Map::setExit(){
+            //in the map array, set the exist coord to X for exit
             map[getPos(makeX, makeY)] = 'X';
             cout << "You've finalized the exit!\n";
             //printMap();
 
+            //the map cannot be modified any more
             isMaking = false;
 
             return;
 
             
 
-            //toggle initate back to off
+            
         }
 
   
-
+            //print the map while indicating the current player location with an X
             void Map::printMapMaker(){
 
+            //make a copy of the map vector
             vector<char> mapMaker = map;
+            //set the current player position to X
             mapMaker[getPos(makeX,makeY)] = 'X';
 
+            //print it out according to the width and height as a 2d array
             for(int i = 0; i < height; i++){
                 for(int j = 0; j < width; j++){
                     cout << mapMaker[i*width + j];
@@ -203,6 +217,7 @@ struct coord{
             return;
             }  
 
+            // take the width x and height y positions and turn them into the 1d position along the map vector
             int Map::getPos(int x, int y){
                 return (y)*width + x;
             } 
@@ -213,7 +228,7 @@ struct coord{
 
 
 
-
+//for testing purposes
 int main(){
 
     Map map(15, 10);
@@ -261,31 +276,6 @@ int main(){
     return 0;
 
 };
-
-
-
-//attributes
-//length
-//width
-//map 2d array of chars
-//array of struct path with atributes int x int y
-//critter 1d array of Critter objects
-
-
-//map constructor with size
-//
-
-
-//MAIN FUNCS
-
-//display()
-//
-//return string object
-
-
-
-//HELPER FUNCS
-
 
 
 
