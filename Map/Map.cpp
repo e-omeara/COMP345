@@ -94,6 +94,10 @@ using namespace std;
             //Specify where the user is
             makeX = x;
             makeY = y;
+            coord start;
+            start.x = x;
+            start.y = y;
+            path.push_back(start);
             //Set entrance coordinate to N for entrance
             map[getPos(x, y)] = 'N';
             //printMap();
@@ -170,6 +174,10 @@ using namespace std;
                 map[getPos(makeX, makeY)] = 'P';
             }
 
+            coord pathstep;
+            pathstep.x = makeX;
+            pathstep.y = makeY;
+
             //update the previous direction variable, used to prevent doubling back
             prevDir = dir;
             //printMapMaker(); <-- for testing purposes
@@ -178,6 +186,14 @@ using namespace std;
 
         //signals the player is done creating the path
         void Map::setExit(){
+            
+            //refuses exit if there is no path (i.e. there is only an entrance)
+            int cnt = count(map.begin(), map.end(), 'P');
+            if(cnt == 0){
+                cout << "You haven't made a path!\n";
+                return;
+            }
+
             //in the map array, set the exist coord to X for exit
             map[getPos(makeX, makeY)] = 'X';
             cout << "You've finalized the exit!\n";
