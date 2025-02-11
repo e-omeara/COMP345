@@ -94,6 +94,8 @@ using namespace std;
             //Specify where the user is
             makeX = x;
             makeY = y;
+
+            //set first entry in the path vector
             coord start;
             start.x = x;
             start.y = y;
@@ -174,6 +176,7 @@ using namespace std;
                 map[getPos(makeX, makeY)] = 'P';
             }
 
+            //update the path vector
             coord pathstep;
             pathstep.x = makeX;
             pathstep.y = makeY;
