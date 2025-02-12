@@ -1,81 +1,70 @@
 
 #include <iostream>
 #include <cmath>
+#include <stdlib.h>
+#include <stdio.h>
+#include <vector>
 
 using namespace std;
 
+struct coord{
+            int x;
+            int y;
+};
+
+class Map{
 
 
-/*
+    private:
 
-MAP CLASS
-attrivute: editting
-attributes: length & width
+        
+        bool isMaking;
+        int height;
+        int width;
+        vector<char> map;
+        vector<coord> path;
+        int makeX;
+        int makeY;
+        char prevDir;
 
-2d array all cells - can i put a tower here? pointer to tower cell if there is one or some kinda indication its a path
-ep--k----
--p-x-----
--p--h----
--pe------
+    public:
 
-1d array this is the path
-1,1 - 1,2 - 2,2 - etc.
+        Map(int x, int y);
 
-function backspace if we have time
+        void printMap();
 
-function displaymap
+        friend class MapMaker;
 
-constructor function
+        //getter methods
+        vector<coord> getPath();
 
-function userInput:
+        vector<char> getMap();
 
+        int getWidth();
 
-function add path tile(direction)
-    this must include a validation step to check they don't double back directly where they came from
-    would they have to click enter after each tile ?
-    
-
-    
-function add entrance(x,y)
-
-function add exit(x,y)
-
-
-function validatePath
-    check that path touches exit
-    if so, exit the thing
-    also check that there is scenery remaining: does 2d array contain -
+        int getHeight();
 
 
 
-1d array of critter objects
-TO BE DISCUSSED ON MONDAY
-should have location attribute - this can be a 
-will consume path array to move
+        //methods to make the map
+        void initiateMaking();
 
-function that takes (location x, y of tower, range (square or circle ??))
-    return critters in range;
+        void setEntrance(int x, int y);
 
+        void laypath(char dir);
 
-
-
-PathCell CLASS:
-Awareness of before and next
+        void setExit();
 
 
-MAINMENU class
+    private:
 
--build a thing
-    -choose sizes x width, y height
-    -construct map with input sizes
--exit
+        void printMapMaker();
+
+        int getPos(int x, int y);
 
 
 
-
-
-
- */
+};
 
 
 
@@ -85,13 +74,11 @@ MAINMENU class
 
 
 
-int main( )
-{
 
-}
 
-//Uses cmath:
-int roundDub(double number)
-{
 
-}
+
+
+
+
+
