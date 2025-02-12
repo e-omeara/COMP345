@@ -247,6 +247,7 @@ using namespace std;
 
 
 //for testing purposes
+/*
 int main(){
 
     Map map(15, 10);
@@ -294,7 +295,7 @@ int main(){
     return 0;
 
 };
-
+*/
 
 
 
