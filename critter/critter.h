@@ -12,7 +12,8 @@ struct Position {
 //Critter class
 class Critter {
 
-private:
+//for all Critter types to access
+protected:
     //Critter attributes
     int hp;
     int speed;
@@ -30,21 +31,45 @@ public:
     //Constructor
     Critter(int hp, int spd, int str, int lvl, int reward, std::vector<Position> path);
 
-    //Movement on the path
-    void move();
+    //Movement on the path for all critters
+    virtual void move();
     
     //Taking damage (loss of hp)
     void takeDamage(int damage);
     
     //Getters
     bool isAlive() const;
+    int getHP() const;
     int getStrength() const;
     int getSpeed() const;
     int getReward() const;  //Coins given when critter is killed
     int stealCoins() const; //Coins stolen from player if critter reaches end of the path
     bool hasReachedEnd() const;  //Check if critter reached the end of the path
     Position getPosition() const;
+    virtual std::string getType() const;
 
+};
+
+//Fast Critter (Moves Faster)
+class FastCritter : public Critter {
+public:
+    FastCritter(std::vector<Position> path);
+    void move() override;
+    std::string getType() const override;
+};
+
+//Tank Critter (More HP but Slower)
+class TankCritter : public Critter {
+public:
+    TankCritter(std::vector<Position> path);
+    std::string getType() const override;
+};
+
+//Boss Critter (High HP and High Strength)
+class BossCritter : public Critter {
+public:
+    BossCritter(std::vector<Position> path);
+    std::string getType() const override;
 };
 
 //CritterGroup class
