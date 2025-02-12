@@ -1,6 +1,5 @@
 
 #include <iostream>
-#include <cmath>
 #include <stdlib.h>
 #include <stdio.h>
 #include <vector>
@@ -55,10 +54,10 @@ class Map{
 
         void setExit();
 
+        void printMapMaker();
 
     private:
 
-        void printMapMaker();
 
         int getPos(int x, int y);
 

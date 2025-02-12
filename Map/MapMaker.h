@@ -1,32 +1,27 @@
 
 #include <iostream>
-#include <cmath>
+#include "Map.cpp"
 using namespace std;
 
-int roundDub(double number);
-//Assumes number >= 0.  
-//Returns number rounded to the nearest integer.
+//runs the program
+void startMapMaker();
 
-int main( )
-{
-    double doubleValue;
-    char ans;
+//asks user for map dimensions & makes new map
+Map createMap();
 
-    do
-    {
-        cout << "Enter a double value: ";
-        cin >> doubleValue;
-        cout << "Rounded that number is " << round(doubleValue) << endl;
-        cout << "Again? (y/n): ";
-        cin >> ans;
-    }while (ans == 'y' || ans == 'Y');
-    cout << "End of testing.\n";
 
-    return 0;
-}
+//asks user for entrance coords and then calls Map::setEntrance
+void setEntrance(int x, int y);
 
-//Uses cmath:
-int roundDub(double number)
-{
-    return static_cast<int>(floor(number + 0.5));
-}
+void editMap(Map map);
+//takes user input, calls Map::layMap
+//user input also asks if user wants to place exit at current location > calls Map::setExit
+//calls Map::printMapMaker() after every edit
+
+
+//clear and show "you're playing the game now"
+void startGame();
+
+//clear and show "youre in the main menu" place holder for mm
+void backToMain();
+

@@ -1,6 +1,5 @@
 
 #include <iostream>
-#include <cmath>
 #include <vector>
 #include <stdlib.h>
 #include "Map.h" 
