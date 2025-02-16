@@ -13,14 +13,19 @@ private:
     double rateOfFire;
     std::string type;
     Position position;
+    Position origin;
+    
 
 public:
     // Constructor declaration
-    Towers(double level = 0.0, double cost = 0.0, double refund = 0.0, double towerRange = 0.0, 
-         double towerPower = 0.0, double fireRate = 0.0, std::string type = "N/A", Position pos = {0,0});
+    Towers(double level, double cost, double refund, double towerRange, 
+        double towerPower, double fireRate, std::string type, Position pos);
+    
 
     // Constructor for type
-    Towers(std::string type = "archer", Position pos = {0,0});
+    Towers(std::string type, Position pos);
+    // Default position method
+    static Position getOrigin(int x, int y);
 
     // base shoot method
     void shoot(Critter& critter);

@@ -8,8 +8,12 @@
 
 
 //Default Constructor
-Towers::Towers(double level, double cost, double refund, double towerRange, 
-            double towerPower, double fireRate, std::string type, Position pos)
+
+
+
+
+Towers::Towers(double level = 0.0, double cost = 0.0, double refund = 0.0, double towerRange = 0.0, 
+    double towerPower = 0.0, double fireRate = 0.0, std::string type = "N/A", Position pos = getOrigin())
 
     : level(level)
     , buyingCost(cost)
@@ -23,7 +27,7 @@ Towers::Towers(double level, double cost, double refund, double towerRange,
 
 //Constructor to make defined tower types
 //Use this one for driver
-Towers::Towers(std::string type, Position pos)
+Towers::Towers(std::string type = "archer", Position pos = getOrigin())
     : type(type)
     , position(pos)
 {
@@ -65,6 +69,15 @@ Towers::Towers(std::string type, Position pos)
         rateOfFire = 500; //milliseconds
     }
 }
+//Method to get the origin position
+Position Towers::getOrigin(int x = 0, int y = 0){
+    Position origin;
+    origin.x = x;
+    origin.y = y;
+    return origin;
+
+}
+
 
 //recursive shoot method that allows for variable sized parameter
 //parameter size >1 mostly for catapult allowing to hit more enemies

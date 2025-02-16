@@ -1,22 +1,36 @@
 #include <iostream>
-#include "MapObjects/Towers.cpp"
-#include "MapObjects/Critter.cpp"
-#include "Map/MapMaker.cpp"
+#include "MapObjects/Towers.h"
+#include "MapObjects/Critter.h"
+#include "Map/MapMaker.h"
 
 int main() {
     std::cout << "Hello, World!" << std::endl;
 
     double balance = 1000;
 
-    Towers archer = Towers("archer", {0,0});
-    Towers ballista = Towers("ballista", {0,0});
-    Towers catapult = Towers("catapult", {50,50});
+    Position origin;
+    origin.x = 0;
+    origin.y = 0;
+
+    Towers archer = Towers("archer", origin);
+    Towers ballista = Towers("ballista", origin);
+    Towers catapult = Towers("catapult", origin);
 
     /* std::cout << "Archer Level: " << archer.getLevel() << std::endl;
     std::cout << "Archer Cost: " << archer.getBuyingCost() << std::endl;
     std::cout << "Archer Refund: " << archer.getRefundValue() << std::endl;
  */
-    std::vector<Position> path = { {0,0}, {1,0}, {2,0}, {3,0}, {4,0}, {5,0}, {6,0}, {7,0} };
+    std::vector<Position> path;
+
+    Position patharray[8];
+    for(int i = 0; i < 8; i++){
+        patharray[i].x = i;
+        patharray[i].y = 0;
+        path.push_back(patharray[i]);
+
+    }
+
+    
     Critter enemy = Critter(20, 1, 3, 1, 7, path);
     
 
