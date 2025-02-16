@@ -1,12 +1,15 @@
-#include "Towers.h"
 #include <string>
 #include <thread>
 #include <chrono>
 #include <atomic>
+#include <array> 
+#include "Towers.h"
+#include "critter.cpp"
 
-// Constructor
+
+//Default Constructor
 Towers::Towers(double level, double cost, double refund, double towerRange, 
-            double towerPower, double fireRate)
+            double towerPower, double fireRate, std::string type, Position pos)
 
     : level(level)
     , buyingCost(cost)
@@ -14,29 +17,38 @@ Towers::Towers(double level, double cost, double refund, double towerRange,
     , range(towerRange)
     , power(towerPower)
     , rateOfFire(fireRate)
+    , type(type)
+    , position(pos)
 {}
 
-Towers::Towers(std::string type)
+//Constructor to make defined tower types
+//Use this one for driver
+Towers::Towers(std::string type, Position pos)
     : type(type)
+    , position(pos)
 {
-    if(type.compare("archer"))
+    level = 1;
+    if(type == "archer")
     {
+        //std::cout << "Archer " << std::endl;
         buyingCost = 10;
         refundValue = 3;
         range = 3;
         power = 1;
         rateOfFire = 500; //milliseconds
     }
-    else if(type.compare("ballista"))
+    else if(type == "ballista")
     {
+        //std::cout << "ballista " << std::endl;
         buyingCost = 20;
         refundValue = 6;
         range = 7;
         power = 5;
         rateOfFire = 1000; //milliseconds
     }
-    else if(type.compare("catapult"))
+    else if(type == "catapult")
     {
+        //std::cout << "catapult " << std::endl;
         buyingCost = 30;
         refundValue = 10;
         range = 5;
@@ -54,25 +66,55 @@ Towers::Towers(std::string type)
     }
 }
 
-//recursive method to shoot multiple enemy (mostly for catapult)
-template <typename... Args>
-void shoot(Enemy first, Args... rest) 
+//recursive shoot method that allows for variable sized parameter
+//parameter size >1 mostly for catapult allowing to hit more enemies
+//Critter will not get hit if it is out of range
+void Towers::shoot(Critter& critter) 
 {
-    first.hp -= power;
-    if(type.compare("ballista"))
+    std::cout << std::abs(critter.getPosition().x - position.x) << std::endl;
+    std::cout << std::abs(critter.getPosition().y - position.y) << std::endl;
+    std::cout << range << std::endl;
+    std::cout << (std::abs(critter.getPosition().x - position.x) < range) << std::endl;
+    if(std::abs(critter.getPosition().x - position.x) < range || std::abs(critter.getPosition().y - position.y) < range)
     {
-        first.speed -= 2;
-
-        std::thread([this]() {
-            std::this_thread::sleep_for(std::chrono::seconds(3));
-            speed++;
-            std::cout << name << " has recovered! Speed: " << speed << std::endl;
-        }).detach();  // Detach so it runs independently
+        critter.setHP(critter.getHP()-power);
+        std::cout << "Hit!" << std::endl;
     }
-    shoot(rest...);
+    else
+    {
+        std::cout << "Out of Range!" << std::endl;
+    }
 }
 
-void levelUp() {  }
+
+//level up method where balance is the player's gold balance
+void Towers::levelUp(double& balance)
+{
+    level += 1;
+    balance -= buyingCost;
+    //shoots faster
+    if(type.compare("archer"))
+    {
+        refundValue += 4;
+        power += 1;
+        if(level == 2 || level == 3)
+        {
+            rateOfFire -= 100;
+        }
+    }
+    //more power
+    else if(type.compare("ballista"))
+    {
+        refundValue += 8;
+        power += 5;
+    }
+    //more power + hits more critters
+    else if(type.compare("catapult"))
+    {
+        refundValue += 10;
+        power += 5;
+    }
+}
 
 // Getters
 double Towers::getBuyingCost() const { return buyingCost; }
@@ -80,6 +122,7 @@ double Towers::getRefundValue() const { return refundValue; }
 double Towers::getRange() const { return range; }
 double Towers::getPower() const { return power; }
 double Towers::getRateOfFire() const { return rateOfFire; }
+double Towers::getLevel() const { return level; }
 
 // Setters
 void Towers::setBuyingCost(double cost) { buyingCost = cost; }
@@ -87,4 +130,4 @@ void Towers::setRefundValue(double refund) { refundValue = refund; }
 void Towers::setRange(double towerRange) { range = towerRange; }
 void Towers::setPower(double towerPower) { power = towerPower; }
 void Towers::setRateOfFire(double fireRate) { rateOfFire = fireRate; }
-
+void Towers::setLevel(double newLevel) { level = newLevel; }

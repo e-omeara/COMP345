@@ -2,7 +2,7 @@
 #define TOWER_H
 
 #include <string>
-#include "Enemy.h"
+#include "critter.h"
 
 class Towers {
 private:
@@ -13,20 +13,21 @@ private:
     double power;
     double rateOfFire;
     std::string type;
+    Position position;
 
 public:
     // Constructor declaration
     Towers(double level = 0.0, double cost = 0.0, double refund = 0.0, double towerRange = 0.0, 
-         double towerPower = 0.0, double fireRate = 0.0);
+         double towerPower = 0.0, double fireRate = 0.0, std::string type = "N/A", Position pos = {0,0});
 
-    Towers(std::string type = "archer");
+    // Constructor for type
+    Towers(std::string type = "archer", Position pos = {0,0});
 
-    template <typename... Args>
-    void shoot(Enemy first, Args... rest) {}
+    // base shoot method
+    void shoot(Critter& critter);
 
-    void shoot() {}
-
-    void levelUp(double level = 1.0) {}
+    // level up method
+    void levelUp(double& balance);
 
     // Getters
     double getBuyingCost() const;
@@ -34,6 +35,7 @@ public:
     double getRange() const;
     double getPower() const;
     double getRateOfFire() const;
+    double getLevel() const;
 
     // Setters
     void setBuyingCost(double cost);
@@ -41,6 +43,7 @@ public:
     void setRange(double towerRange);
     void setPower(double towerPower);
     void setRateOfFire(double fireRate);
+    void setLevel(double newLevel) ;
 };
 
 #endif
