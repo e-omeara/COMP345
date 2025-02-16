@@ -55,6 +55,18 @@ std::string Critter::getType() const {
     return "Basic Critter"; 
 }
 
+//Setters
+void Critter::setHP(int health){
+    hp = health;
+}
+
+void Critter::setStrength(int str){
+    strength = str;
+}
+
+void Critter::setSpeed(int spd){
+    speed = spd;
+}
 //Move the critter along the path
 void Critter::move() {
     if (positionIndex + 1 < path.size()) {
@@ -160,3 +172,5 @@ int main() {
 
     return 0;
 }*/
+
+

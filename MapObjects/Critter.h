@@ -48,6 +48,12 @@ public:
     Position getPosition() const;
     virtual std::string getType() const;
 
+    //Setters
+    void setHP(int health);
+    void setStrength(int str);
+    void setSpeed(int spd);
+
+
 };
 
 //Fast Critter (Moves Faster)
