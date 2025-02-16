@@ -4,10 +4,7 @@
 #include "MapMaker.h"
 using namespace std;
 
-int main(){
-     startMapMaker();
-     return 1;
-}
+
 
 void startMapMaker(){
      cout << "Welcome to the Map Maker\n";
