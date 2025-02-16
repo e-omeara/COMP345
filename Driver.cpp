@@ -1,6 +1,7 @@
 #include <iostream>
-#include "Towers.cpp"
-#include "critter.h"
+#include "MapObjects/Towers.cpp"
+#include "MapObjects/Critter.cpp"
+#include "Map/MapMaker.cpp"
 
 int main() {
     std::cout << "Hello, World!" << std::endl;
