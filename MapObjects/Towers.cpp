@@ -84,10 +84,10 @@ Position Towers::getOrigin(int x = 0, int y = 0){
 //Critter will not get hit if it is out of range
 void Towers::shoot(Critter& critter) 
 {
-    std::cout << std::abs(critter.getPosition().x - position.x) << std::endl;
-    std::cout << std::abs(critter.getPosition().y - position.y) << std::endl;
-    std::cout << range << std::endl;
-    std::cout << (std::abs(critter.getPosition().x - position.x) < range) << std::endl;
+    //std::cout << std::abs(critter.getPosition().x - position.x) << std::endl;
+    //std::cout << std::abs(critter.getPosition().y - position.y) << std::endl;
+    //std::cout << range << std::endl;
+    //std::cout << (std::abs(critter.getPosition().x - position.x) < range) << std::endl;
     if(std::abs(critter.getPosition().x - position.x) < range || std::abs(critter.getPosition().y - position.y) < range)
     {
         critter.setHP(critter.getHP()-power);
