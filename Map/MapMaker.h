@@ -1,6 +1,10 @@
+#ifndef MAPMAKER_H
+#define MAPMAKER_H
+
 
 #include <iostream>
-#include "Map.cpp"
+#include "Map.h"
+
 using namespace std;
 
 //runs the program
@@ -25,3 +29,4 @@ void startGame();
 //clear and show "youre in the main menu" place holder for mm
 void backToMain();
 
+#endif

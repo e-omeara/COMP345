@@ -2,7 +2,7 @@
 
 //Critter constructor, member initializer list since constant values 
 Critter::Critter(int hp, int spd, int str, int lvl, int reward, std::vector<Position> path)
-    : hp(hp), speed(spd), strength(str), level(lvl), reward(reward), path(path), positionIndex(0) {}
+    : hp(hp), speed(spd), strength(str), level(lvl), reward(reward), path(path), positionIndex(0), alive(true) {}
 
 //Critter takes damage, loss of hp
 void Critter::takeDamage(int damage) {

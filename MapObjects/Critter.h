@@ -20,7 +20,7 @@ protected:
     int strength;
     int level;
     int reward;
-    bool alive = true;
+    bool alive;
 
     //Tracks current position on the given path
     size_t positionIndex;  
@@ -32,7 +32,8 @@ public:
     Critter(int hp, int spd, int str, int lvl, int reward, std::vector<Position> path);
 
     //Movement on the path for all critters
-    virtual void move();
+    //virtual void move();
+    void move();
     
     //Taking damage (loss of hp)
     void takeDamage(int damage);
@@ -46,7 +47,8 @@ public:
     int stealCoins() const; //Coins stolen from player if critter reaches end of the path
     bool hasReachedEnd() const;  //Check if critter reached the end of the path
     Position getPosition() const;
-    virtual std::string getType() const;
+    //virtual std::string getType() const;
+    std::string getType() const;
 
     //Setters
     void setHP(int health);
@@ -60,22 +62,22 @@ public:
 class FastCritter : public Critter {
 public:
     FastCritter(std::vector<Position> path);
-    void move() override;
-    std::string getType() const override;
+    void move();
+    std::string getType() const;
 };
 
 //Tank Critter (More HP but Slower)
 class TankCritter : public Critter {
 public:
     TankCritter(std::vector<Position> path);
-    std::string getType() const override;
+    std::string getType() const;
 };
 
 //Boss Critter (High HP and High Strength)
 class BossCritter : public Critter {
 public:
     BossCritter(std::vector<Position> path);
-    std::string getType() const override;
+    std::string getType() const;
 };
 
 //CritterGroup class

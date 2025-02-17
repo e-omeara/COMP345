@@ -4,7 +4,7 @@
 #include <atomic>
 #include <array> 
 #include "Towers.h"
-#include "Critter.cpp"
+#include "Critter.h"
 
 
 //Default Constructor
@@ -12,8 +12,8 @@
 
 
 
-Towers::Towers(double level = 0.0, double cost = 0.0, double refund = 0.0, double towerRange = 0.0, 
-    double towerPower = 0.0, double fireRate = 0.0, std::string type = "N/A", Position pos = getOrigin())
+Towers::Towers(double level, double cost, double refund, double towerRange, 
+    double towerPower, double fireRate, std::string type, Position pos)
 
     : level(level)
     , buyingCost(cost)
@@ -27,7 +27,7 @@ Towers::Towers(double level = 0.0, double cost = 0.0, double refund = 0.0, doubl
 
 //Constructor to make defined tower types
 //Use this one for driver
-Towers::Towers(std::string type = "archer", Position pos = getOrigin())
+Towers::Towers(std::string type, Position pos)
     : type(type)
     , position(pos)
 {

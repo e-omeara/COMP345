@@ -3,6 +3,7 @@
 #include "MapObjects/Critter.h"
 #include "Map/MapMaker.h"
 
+
 int main() {
     std::cout << "Hello, World!" << std::endl;
 
@@ -12,16 +13,7 @@ int main() {
     origin.x = 0;
     origin.y = 0;
 
-    Towers archer = Towers("archer", origin);
-    Towers ballista = Towers("ballista", origin);
-    Towers catapult = Towers("catapult", origin);
-
-    /* std::cout << "Archer Level: " << archer.getLevel() << std::endl;
-    std::cout << "Archer Cost: " << archer.getBuyingCost() << std::endl;
-    std::cout << "Archer Refund: " << archer.getRefundValue() << std::endl;
- */
     std::vector<Position> path;
-
     Position patharray[8];
     for(int i = 0; i < 8; i++){
         patharray[i].x = i;
@@ -31,15 +23,29 @@ int main() {
     }
 
     
+    std::string archerString = "archer";
+    std::string ballistaString = "ballista";
+    std::string catapultString = "catapult";
+    Towers archer(archerString, origin);
     Critter enemy = Critter(20, 1, 3, 1, 7, path);
+    Towers ballista = Towers(ballistaString, origin);
+    Towers catapult = Towers(catapultString, origin);
+
+    std::cout << "Archer Level: " << archer.getLevel() << std::endl;
+    std::cout << "Archer Cost: " << archer.getBuyingCost() << std::endl;
+    std::cout << "Archer Refund: " << archer.getRefundValue() << std::endl;
+ 
     
-
+    
+ 
     std::cout << "Critter health is at " << enemy.getHP() << std::endl;
-    /* archer.shoot(enemy);
+     archer.shoot(enemy);
 
-    ballista.shoot(enemy); */
+    ballista.shoot(enemy); 
  
     catapult.shoot(enemy);  
+
+    
 
     std::cout << "Critter health is at " << enemy.getHP() << std::endl;
 
@@ -49,4 +55,6 @@ int main() {
     std::cout << "Balance: " << balance << std::endl;
 
     return 0;
+
+    
 }

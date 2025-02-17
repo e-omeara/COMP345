@@ -1,3 +1,5 @@
+#ifndef MAP_H
+#define MAP_H
 
 #include <iostream>
 #include <stdlib.h>
@@ -67,7 +69,7 @@ class Map{
 
 
 
-
+#endif
 
 
 

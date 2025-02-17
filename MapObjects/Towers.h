@@ -18,12 +18,12 @@ private:
 
 public:
     // Constructor declaration
-    Towers(double level, double cost, double refund, double towerRange, 
-        double towerPower, double fireRate, std::string type, Position pos);
+    Towers(double level = 0.0, double cost = 0.0, double refund = 0.0, double towerRange = 0.0, 
+        double towerPower = 0.0, double fireRate = 0.0, std::string type = "N/A", Position pos = getOrigin(0,0));
     
 
     // Constructor for type
-    Towers(std::string type, Position pos);
+    Towers(std::string type, Position position);
     // Default position method
     static Position getOrigin(int x, int y);
 
