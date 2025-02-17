@@ -1,9 +1,14 @@
+//This is the basic map class
+//This holds two main attributes: the map array and the path array
+//This also holds the methods for making the map
+//And validating the map
+
 
 #include <iostream>
 #include <vector>
 #include <stdlib.h>
 #include "Map.h" 
-//#include "MapMaker.h" 
+
 using namespace std;
 
 
