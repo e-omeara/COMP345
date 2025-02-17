@@ -7,6 +7,7 @@
 #include <iostream>
 #include <vector>
 #include <stdlib.h>
+#include <algorithm>
 #include "Map.h" 
 
 using namespace std;

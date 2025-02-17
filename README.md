@@ -12,4 +12,4 @@ Critters move along the path according to their speed, moving from the entrance 
 
 For more specifics on the implementation of the towers and critters, check their corresponding ReadMes in the MapObjects folder.
 
-Please remember to read HOWtoRUN.md
+Please remember to read HOWtoRUN.md for specific compiler instructions depending on your machine
