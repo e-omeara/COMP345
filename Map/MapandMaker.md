@@ -17,3 +17,5 @@ The entrance and exit can be anywhere in the map
 We've chosen to allow "bridges", i.e. the path can overlap itself
 We don't allow the path to turn back on itself though
 
+The MapMaker file runs a user input cycle that allows the user to choose and entrance,
+add path tiles (by choosing the direction to go), and place an exit
