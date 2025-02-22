@@ -54,7 +54,7 @@ class Map{
 
         void laypath(char dir);
 
-        void setExit();
+        int setExit();
 
         void printMapMaker();
 

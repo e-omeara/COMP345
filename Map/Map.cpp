@@ -193,13 +193,13 @@ using namespace std;
         }
 
         //signals the player is done creating the path
-        void Map::setExit(){
+        int Map::setExit(){
             
             //refuses exit if there is no path (i.e. there is only an entrance)
             int cnt = count(map.begin(), map.end(), 'P');
             if(cnt == 0){
                 cout << "You haven't made a path!\n";
-                return;
+                return 1;
             }
 
             //in the map array, set the exist coord to X for exit
@@ -210,7 +210,7 @@ using namespace std;
             //the map cannot be modified any more
             isMaking = false;
 
-            return;
+            return 0;
 
             
 

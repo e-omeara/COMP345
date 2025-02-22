@@ -77,9 +77,10 @@ void editMap(Map map){
           input = tolower(input);
           if(input == 'e'){
                cout << "Placing exit at current location\n";
-               map.setExit();
+               int valid = map.setExit();
                map.printMap();
-               break;
+               if(valid == 0){
+               break;}
           }
           //switch case ensures that the proper input was given. if not u,d,l, or r, is invalid and loops again
           switch (input){
@@ -87,7 +88,7 @@ void editMap(Map map){
                     map.laypath('u');
                     break;
                case 'd':
-               map.laypath('d');
+                    map.laypath('d');
                     break;
                case 'l':
                     map.laypath('l');
@@ -96,6 +97,8 @@ void editMap(Map map){
                     map.laypath('r');
                     break;
                case 'q':
+                    break;
+               case 'e':
                     break;
                default:
                     cout << "invalid input\n";
