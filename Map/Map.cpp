@@ -246,6 +246,7 @@ using namespace std;
             coord pathstep;
             pathstep.x = makeX;
             pathstep.y = makeY;
+            path.push_back(pathstep); // Add the new coordinates to the path
 
             //update the previous direction variable, used to prevent doubling back
             prevDir = dir;
