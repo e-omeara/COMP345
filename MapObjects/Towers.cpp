@@ -3,9 +3,26 @@
 #include <chrono>
 #include <atomic>
 #include <array> 
+#include <vector>
+#include <algorithm>
 #include "Towers.h"
-#include "Critter.h"
+#include "critter.h"
 
+TowerObserver::TowerObserver(Towers& tower) : tower(tower)
+{
+    tower.addObserver(this);
+}
+
+void TowerObserver::update(double level, double buyingCost, double refundValue, double range, double power, double rateOfFire, Position position)
+{
+    std::cout << "Updated Tower View: " << std::endl <<
+    "Level: " << level <<  std::endl <<
+    "BuyingCost " << buyingCost <<  std::endl <<
+    "Refund Value " << refundValue <<  std::endl <<
+    "Range: " << range <<  std::endl <<
+    "Power: " << power <<  std::endl <<
+    "Rate Of Fire: " << rateOfFire <<  std::endl;
+}
 
 //Default Constructor
 
@@ -127,6 +144,23 @@ void Towers::levelUp(double& balance)
         refundValue += 10;
         power += 5;
     }
+
+    notifyObservers();
+}
+
+void Towers::addObserver(TowerObserver* observer)
+{
+    observers.push_back(observer);
+}
+
+void Towers::removeObserver(TowerObserver* observer) {
+    observers.erase(remove(observers.begin(), observers.end(), observer), observers.end());
+}
+
+void Towers::notifyObservers() {
+    for (TowerObserver* observer : observers) {
+        observer->update(level, buyingCost, refundValue, range, power, rateOfFire, position);
+    }
 }
 
 // Getters
@@ -138,9 +172,9 @@ double Towers::getRateOfFire() const { return rateOfFire; }
 double Towers::getLevel() const { return level; }
 
 // Setters
-void Towers::setBuyingCost(double cost) { buyingCost = cost; }
-void Towers::setRefundValue(double refund) { refundValue = refund; }
-void Towers::setRange(double towerRange) { range = towerRange; }
-void Towers::setPower(double towerPower) { power = towerPower; }
-void Towers::setRateOfFire(double fireRate) { rateOfFire = fireRate; }
-void Towers::setLevel(double newLevel) { level = newLevel; }
+void Towers::setBuyingCost(double cost) { buyingCost = cost; notifyObservers(); }
+void Towers::setRefundValue(double refund) { refundValue = refund; notifyObservers(); }
+void Towers::setRange(double towerRange) { range = towerRange; notifyObservers(); }
+void Towers::setPower(double towerPower) { power = towerPower; notifyObservers(); }
+void Towers::setRateOfFire(double fireRate) { rateOfFire = fireRate; notifyObservers(); }
+void Towers::setLevel(double newLevel) { level = newLevel; notifyObservers(); }
