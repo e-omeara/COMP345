@@ -65,6 +65,8 @@ class Map{
 
         int setExit();
 
+        int setTower(int x, int y);
+
         void printMapMaker();
 
     private:

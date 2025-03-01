@@ -19,6 +19,15 @@ class MapGraphics {
 
         MapObserver* observer;
         Map* map;
+        sf::RenderWindow window;
+        vector<sf::RectangleShape> mapTiles;
+        float tilelength;
+
+        sf::RectangleShape scenery;
+        sf::RectangleShape pathTile;
+        sf::RectangleShape tower;
+        sf::RectangleShape entry;
+        sf::RectangleShape exit;
 
 
     //functions
@@ -30,14 +39,16 @@ class MapGraphics {
 
         int updatevisuals();
 
-        string displayText();
+        string displayText(string title);
 
-        int render();
+        int renderMap();
 
     private:
 
         int loadingmenu();
-        int MapMaking();
+        int mapMaking();
+        int placeTowers();
+        coord getMapPos(int x, int y);
 
 
 };

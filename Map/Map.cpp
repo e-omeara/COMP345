@@ -266,6 +266,7 @@ using namespace std;
 
             //in the map array, set the exist coord to X for exit
             map[getPos(makeX, makeY)] = 'X';
+            updateObserver("Place a tower");
             cout << "You've finalized the exit!\n";
             //printMap();
 
@@ -279,9 +280,31 @@ using namespace std;
             
         }
 
+        int Map::setTower(int x, int y){
+
+            if(x > width || y > width){
+                return 0;
+            }
+
+            int pos = getPos(x, y);
+            if(map[pos] == '-'){
+                map[pos] = 'T';
+                updateObserver("placed tower");
+
+                return 0;
+            } else {
+                return 1;
+            }
+
+
+                
+        }
+
+            
+
   
-            //print the map while indicating the current player location with an X
-            void Map::printMapMaker(){
+        //print the map while indicating the current player location with an X
+        void Map::printMapMaker(){
 
             //make a copy of the map vector
             vector<char> mapMaker = map;

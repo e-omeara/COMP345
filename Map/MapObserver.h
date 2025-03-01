@@ -37,6 +37,9 @@ class MapObserver{
         void ping();
 
         string getMessage();
+        vector<char> getMap();
+        int getHeight();
+        int getWidth();
 
 };
 

@@ -49,7 +49,7 @@ int MapGraphics::loadingmenu()
 
 
 
-    sf::RenderWindow window(sf::VideoMode({600, 400}), "SFML works!");
+    window = sf::RenderWindow(sf::VideoMode({600, 400}), "SFML works!");
     sf::CircleShape shape(100.f);
     shape.setFillColor(sf::Color::Blue);
 
@@ -59,8 +59,8 @@ int MapGraphics::loadingmenu()
         {
             if (event->is<sf::Event::Closed>())
                 window.close();
-            if(event->is<sf::Event::MouseButtonPressed>()){
-                sf::Vector2i position = sf::Mouse::getPosition();
+            else if(event->is<sf::Event::MouseButtonPressed>()){
+                sf::Vector2i position = sf::Mouse::getPosition(window);
                 mouseX = position.x;
                 mouseY = position.y;
                 textstr.append(" \n x: ");
@@ -68,6 +68,13 @@ int MapGraphics::loadingmenu()
                 textstr.append(" y: ");
                 textstr.append(std::to_string(mouseY));
                 text.setString(textstr);
+            } else if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>()){
+                if (keyPressed->scancode == sf::Keyboard::Scancode::Escape)
+                    {window.close();
+                }
+                
+                    
+                
             }
         }
 
@@ -80,7 +87,7 @@ int MapGraphics::loadingmenu()
 }
 
 
-int MapGraphics::MapMaking(){
+int MapGraphics::mapMaking(){
 
    
     
@@ -108,7 +115,7 @@ int MapGraphics::MapMaking(){
 
 
 
-    sf::RenderWindow window(sf::VideoMode({600, 400}), "SFML works!");
+    window = sf::RenderWindow(sf::VideoMode({600, 400}), "SFML works!");
     sf::CircleShape shape(100.f);
     shape.setFillColor(sf::Color::Blue);
 
@@ -164,8 +171,83 @@ int MapGraphics::MapMaking(){
         window.clear();
         string textstr = map->stringMap();
         //cout << map->stringMap();
-        text.setString(displayText());
+        text.setString(displayText("Make Map"));
         window.draw(text);
+        renderMap();
+        window.display();
+    }
+    return 0;
+
+}
+
+int MapGraphics::placeTowers(){
+
+   
+    
+
+
+    int mouseX;
+    int mouseY;
+
+    sf::Font font("Courier New.ttf");
+    sf::Text text(font); // a font is required to make a text object
+
+    // set the string to display
+    string textstr = map->stringMap();
+    cout << map->stringMap();
+    text.setString(textstr);
+
+    // set the character size
+    text.setCharacterSize(24); // in pixels, not points!
+
+    // set the color
+    text.setFillColor(sf::Color::Red);
+
+    // set the text style
+    text.setStyle(sf::Text::Bold | sf::Text::Underlined);
+
+
+
+    window = sf::RenderWindow(sf::VideoMode({600, 400}), "SFML works!");
+    sf::CircleShape shape(100.f);
+    shape.setFillColor(sf::Color::Blue);
+
+    
+
+    while (window.isOpen())
+    {
+        while (const std::optional event = window.pollEvent())
+        {
+            if (event->is<sf::Event::Closed>())
+                window.close();
+            else if(event->is<sf::Event::MouseButtonPressed>()){
+                sf::Vector2i position = sf::Mouse::getPosition(window);
+                mouseX = position.x;
+                mouseY = position.y;
+                cout << mouseX;
+                cout << mouseY;
+                coord towerPos = getMapPos(mouseX, mouseY);
+                int ret = map->setTower(towerPos.x, towerPos.y);
+                cout << ret;
+                
+            }
+            else if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>()){
+                if (keyPressed->scancode == sf::Keyboard::Scancode::Escape)
+                    {window.close();
+                }
+                
+                    
+                
+            }
+        }
+
+        window.clear();
+        string textstr = map->stringMap();
+        //cout << map->stringMap();
+        text.setString(displayText("Play game"));
+        
+        window.draw(text);
+        renderMap();
         window.display();
     }
     return 0;
@@ -173,16 +255,88 @@ int MapGraphics::MapMaking(){
 }
 
 
-string MapGraphics::displayText(){
+string MapGraphics::displayText(string title){
 
     string displaystr;
-    displaystr.append("Title here!\n");
+    displaystr.append(title);
+    displaystr.append("\n");
     displaystr.append(observer->getMessage());
     displaystr.append("\n\n");
-    displaystr.append(map->stringMap());
+    //displaystr.append(map->stringMap());
 
     return displaystr;
 
+}
+
+int MapGraphics::renderMap(){
+
+    vector<char> map = observer->getMap();
+    int height = observer->getHeight();
+    int width = observer->getWidth();
+
+    tilelength = 20.f;
+    sf::Vector2f tileSize(tilelength, tilelength);
+
+    scenery.setFillColor(sf::Color::Green);
+    scenery.setSize(tileSize);
+    scenery.setPosition(sf::Vector2f(100.f, 100.f));
+
+    pathTile.setFillColor(sf::Color{ 88, 57, 39});
+    pathTile.setSize(tileSize);
+
+    tower.setFillColor(sf::Color::Blue);
+    tower.setSize(tileSize);
+
+    entry.setFillColor(sf::Color::Black);
+    entry.setSize(tileSize);
+
+    exit.setFillColor(sf::Color::White);
+    exit.setSize(tileSize);
+
+    
+
+    for(int i = 0; i < width; i++){
+        for(int j = 0; j < height; j++){
+            char tilechar = map[j*width + i];
+            if(tilechar == '-'){
+                scenery.setPosition(sf::Vector2f(100.f + tilelength*i, 100.f + tilelength*j));
+                window.draw(scenery);
+            }else if(tilechar == 'P'){
+                pathTile.setPosition(sf::Vector2f(100.f + tilelength*i, 100.f + tilelength*j));
+                window.draw(pathTile);
+            }
+            else if(tilechar == 'N'){
+                entry.setPosition(sf::Vector2f(100.f + tilelength*i, 100.f + tilelength*j));
+                window.draw(entry);
+            }
+            else if(tilechar == 'X'){
+                exit.setPosition(sf::Vector2f(100.f + tilelength*i, 100.f + tilelength*j));
+                window.draw(exit);
+            }
+            else if(tilechar == 'T'){
+                tower.setPosition(sf::Vector2f(100.f + tilelength*i, 100.f + tilelength*j));
+                window.draw(tower);
+            }
+    
+        }
+
+    }
+
+
+
+    return 0;
+}
+
+
+coord MapGraphics::getMapPos(int x, int y){
+    coord mapPos;
+    mapPos.x = (x - 100) / tilelength;
+    mapPos.y = (y - 100) / tilelength;
+
+    cout << mapPos.x;
+    cout << mapPos.y;
+
+    return mapPos;
 }
 
 
@@ -190,7 +344,8 @@ string MapGraphics::displayText(){
 
 int MapGraphics::runGame(){
     loadingmenu();
-    MapMaking();
+    mapMaking();
+    placeTowers();
     return 0;
 }
 

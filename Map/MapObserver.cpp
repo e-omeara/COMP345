@@ -44,6 +44,20 @@ string MapObserver::getMessage(){
 
 }
 
+vector<char> MapObserver::getMap(){
+    return map;
+}
+
+
+int MapObserver::getHeight(){
+    return height;
+}
+
+
+int MapObserver::getWidth(){
+    return width;
+}
+
 void MapObserver::ping(){
     cout << "ping";
 }
