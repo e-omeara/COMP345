@@ -1,7 +1,7 @@
 #include <vector>
 #include <iostream>
 #include "Towers.cpp"
-#include "critter.cpp"
+#include "Critter.cpp"
 
 int main() {
     std::cout << "Creating example towers and critters!" << std::endl;

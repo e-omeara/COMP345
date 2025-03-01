@@ -4,7 +4,7 @@
 #include <string>
 #include <vector>
 #include <algorithm>
-#include "critter.h"
+#include "Critter.h"
 
 class TowerObserver;
 
