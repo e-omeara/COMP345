@@ -1,3 +1,6 @@
+#ifndef TOWER_OBS
+#define TOWER_OBS
+
 #include <string>
 #include <vector>
 #include <algorithm>
@@ -17,3 +20,6 @@ class TowerObserver
 
         void update(double level = 0, double buyingCost = 0, double refundValue = 0, double range = 0, double power = 0, double rateOfFire = 0, Position position = {0,0});
 };
+
+
+#endif

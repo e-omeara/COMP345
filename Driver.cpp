@@ -1,6 +1,7 @@
 #include <vector>
 #include <iostream>
 #include "Towers.h"
+#include "TowerObserver.h"
 #include "Critter.h"
 #include "Map.h"
 #include "MapObserver.h"

@@ -6,7 +6,7 @@
 #include <vector>
 #include <algorithm>
 #include "Towers.h"
-//#include "TowerObserver.h"
+#include "TowerObserver.h"
 #include "Critter.h"
 
 TowerObserver::TowerObserver(Towers& tower) : tower(tower)
