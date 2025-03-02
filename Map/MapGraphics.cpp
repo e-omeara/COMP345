@@ -7,9 +7,9 @@
 #include "MapObserver.h"
 #include "Map.h"
 
-
+//constructor with observer and map
 MapGraphics::MapGraphics(MapObserver* plugin, Map* theMap){
-    //Map *map;
+    
     observer = plugin;
     map = theMap;
     cout << map->getHeight() << endl;
@@ -21,10 +21,10 @@ MapGraphics::MapGraphics(MapObserver* plugin, Map* theMap){
 
 }
 
-
+//the initial loading menu
 int MapGraphics::loadingmenu()
 {
-    //std::cout << "hello world";
+   
     sf::Font font("Arial Unicode.ttf");
     sf::Text text(font); // a font is required to make a text object
 
@@ -33,7 +33,7 @@ int MapGraphics::loadingmenu()
     text.setString(textstr);
 
     // set the character size
-    text.setCharacterSize(24); // in pixels, not points!
+    text.setCharacterSize(24); 
 
     // set the color
     text.setFillColor(sf::Color::Red);
@@ -48,15 +48,15 @@ int MapGraphics::loadingmenu()
 
 
 
-
+    //create the render window
     window = sf::RenderWindow(sf::VideoMode({600, 400}), "SFML works!");
-    sf::CircleShape shape(100.f);
-    shape.setFillColor(sf::Color::Blue);
+    
 
     while (window.isOpen())
     {
         while (const std::optional event = window.pollEvent())
         {
+            //check for key inputs
             if (event->is<sf::Event::Closed>())
                 window.close();
             else if(event->is<sf::Event::MouseButtonPressed>()){
@@ -78,6 +78,7 @@ int MapGraphics::loadingmenu()
             }
         }
 
+        //clear and redraw the frame with updated text
         window.clear();
         window.draw(text);
         window.display();
@@ -99,25 +100,17 @@ int MapGraphics::mapMaking(){
     sf::Font font("Courier New.ttf");
     sf::Text text(font); // a font is required to make a text object
 
-    // set the string to display
+    // set the string to display and properties
     string textstr = map->stringMap();
     cout << map->stringMap();
     text.setString(textstr);
-
-    // set the character size
-    text.setCharacterSize(24); // in pixels, not points!
-
-    // set the color
+    text.setCharacterSize(24);
     text.setFillColor(sf::Color::Red);
-
-    // set the text style
     text.setStyle(sf::Text::Bold | sf::Text::Underlined);
 
 
-
-    window = sf::RenderWindow(sf::VideoMode({600, 400}), "SFML works!");
-    sf::CircleShape shape(100.f);
-    shape.setFillColor(sf::Color::Blue);
+    //create the render window
+    window = sf::RenderWindow(sf::VideoMode({600, 400}), "Make Map!");
 
     
 
@@ -125,22 +118,19 @@ int MapGraphics::mapMaking(){
     {
         while (const std::optional event = window.pollEvent())
         {
+
             if (event->is<sf::Event::Closed>())
-                window.close();
+               { window.close();}
             else if(event->is<sf::Event::MouseButtonPressed>()){
                 sf::Vector2i position = sf::Mouse::getPosition();
                 mouseX = position.x;
                 mouseY = position.y;
-                string textstr = text.getString();
-                textstr.append(" \n x: ");
-                textstr.append(std::to_string(mouseX));
-                textstr.append(" y: ");
-                textstr.append(std::to_string(mouseY));
-                text.setString(textstr);
             }
+            //user selects the direction in which to lay the path or chooses to exit
             else if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>()){
-                if (keyPressed->scancode == sf::Keyboard::Scancode::Escape)
-                    {window.close();
+                if (keyPressed->scancode == sf::Keyboard::Scancode::Escape){
+                    window.close();
+                    return 1;
                 }
                 else if (keyPressed->scancode == sf::Keyboard::Scancode::Down){
                     map->laypath('d');
@@ -148,29 +138,31 @@ int MapGraphics::mapMaking(){
                 }
                 else if (keyPressed->scancode == sf::Keyboard::Scancode::Up){
                     map->laypath('u');
-                    //cout << "down";
+                    //cout << "up";
                 }
                 else if (keyPressed->scancode == sf::Keyboard::Scancode::Left){
                     map->laypath('l');
-                    //cout << "down";
+                    //cout << "left";
                 }
                 else if (keyPressed->scancode == sf::Keyboard::Scancode::Right){
                     map->laypath('r');
-                    //cout << "down";
+                    //cout << "right";
                 }
                 else if (keyPressed->scancode == sf::Keyboard::Scancode::E){
+                    //user is trying to place the exit... validate map
                     int valid = map->setExit();
                     if(valid == 0){
                         window.close();
-                        return 0;}
-                    //cout << "down";
+                        return 0;
+                    }
+                    
                 }
             }
         }
 
+        //clear the window, update the text, and render any graphics
         window.clear();
         string textstr = map->stringMap();
-        //cout << map->stringMap();
         text.setString(displayText("Make Map"));
         window.draw(text);
         renderMap();
@@ -181,6 +173,7 @@ int MapGraphics::mapMaking(){
 }
 
 int MapGraphics::placeTowers(){
+    //map view where the user can place towers
 
    
     
@@ -190,28 +183,20 @@ int MapGraphics::placeTowers(){
     int mouseY;
 
     sf::Font font("Courier New.ttf");
-    sf::Text text(font); // a font is required to make a text object
+    sf::Text text(font);
 
-    // set the string to display
+    // set the string to display and properties
     string textstr = map->stringMap();
     cout << map->stringMap();
     text.setString(textstr);
-
-    // set the character size
-    text.setCharacterSize(20); // in pixels, not points!
-
-    // set the color
+    text.setCharacterSize(20); 
     text.setFillColor(sf::Color::Red);
-
-    // set the text style
     text.setStyle(sf::Text::Bold | sf::Text::Underlined);
 
 
-
-    window = sf::RenderWindow(sf::VideoMode({600, 400}), "SFML works!");
-    sf::CircleShape shape(100.f);
-    shape.setFillColor(sf::Color::Blue);
-
+    //create the renderwindow
+    window = sf::RenderWindow(sf::VideoMode({600, 400}), "Place Towers!");
+    
     
 
     while (window.isOpen())
@@ -221,18 +206,21 @@ int MapGraphics::placeTowers(){
             if (event->is<sf::Event::Closed>())
                 window.close();
             else if(event->is<sf::Event::MouseButtonPressed>()){
+                //get the mouse click coordinates
                 sf::Vector2i position = sf::Mouse::getPosition(window);
                 mouseX = position.x;
                 mouseY = position.y;
                 cout << mouseX;
                 cout << mouseY;
                 coord towerPos = getMapPos(mouseX, mouseY);
+                //try to set a tower there
                 int ret = map->setTower(towerPos.x, towerPos.y);
                 cout << ret;
                 
             }
             else if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>()){
                 if (keyPressed->scancode == sf::Keyboard::Scancode::Escape)
+                    //user pressed the escape button
                     {window.close();
                 }
                 
@@ -241,9 +229,9 @@ int MapGraphics::placeTowers(){
             }
         }
 
+        //clear and render anew the window
         window.clear();
         string textstr = map->stringMap();
-        //cout << map->stringMap();
         text.setString(displayText("Play game"));
         
         window.draw(text);
@@ -256,24 +244,27 @@ int MapGraphics::placeTowers(){
 
 
 string MapGraphics::displayText(string title){
+    //sets the map message into the title text
 
     string displaystr;
     displaystr.append(title);
     displaystr.append("\n");
     displaystr.append(observer->getMessage());
     displaystr.append("\n\n");
-    //displaystr.append(map->stringMap());
+    
 
     return displaystr;
 
 }
 
+//renders the map tiles with path and tower info
 int MapGraphics::renderMap(){
 
     vector<char> map = observer->getMap();
     int height = observer->getHeight();
     int width = observer->getWidth();
 
+    //decide on size of each maptile
     tilelength = 20.f;
     sf::Vector2f tileSize(tilelength, tilelength);
 
@@ -286,6 +277,8 @@ int MapGraphics::renderMap(){
 
     tower.setFillColor(sf::Color::Blue);
     tower.setSize(tileSize);
+    tower.setOutlineThickness(2.f);
+    tower.setOutlineColor(sf::Color::Black);
 
     entry.setFillColor(sf::Color::Black);
     entry.setSize(tileSize);
@@ -294,7 +287,7 @@ int MapGraphics::renderMap(){
     exit.setSize(tileSize);
 
     
-
+    //looping through the map vector, place the appropriate color rectangle
     for(int i = 0; i < width; i++){
         for(int j = 0; j < height; j++){
             char tilechar = map[j*width + i];
@@ -327,7 +320,7 @@ int MapGraphics::renderMap(){
     return 0;
 }
 
-
+//converts x and y position to the numerical value along the map vector
 coord MapGraphics::getMapPos(int x, int y){
     coord mapPos;
     mapPos.x = (x - 100) / tilelength;
@@ -341,7 +334,7 @@ coord MapGraphics::getMapPos(int x, int y){
 
 
 
-
+//runs the three stages of the map GUI
 int MapGraphics::runGame(){
     loadingmenu();
     mapMaking();
@@ -349,6 +342,7 @@ int MapGraphics::runGame(){
     return 0;
 }
 
+//function to run tests
 int mainfunc() {
 
     MapObserver* observer = new MapObserver;

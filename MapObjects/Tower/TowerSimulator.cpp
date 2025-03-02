@@ -19,46 +19,24 @@ TowerSimulator::TowerSimulator(TowerObserver* towerObserver, Towers* towers){
 
 int TowerSimulator::createWindow(){
 
-    //std::cout << "hello world";
-    sf::Font font("Arial Unicode.ttf");
-    sf::Text text(font); // a font is required to make a text object
 
-    // set the string to display
-    string textstr = "Welcome to Our Tower Defense Game!\n View Towers \n Upgrade Towers";
-    text.setString(textstr);
-
-    // set the character size
-    text.setCharacterSize(24); // in pixels, not points!
-
-    // set the color
-    text.setFillColor(sf::Color::Red);
-
-    // set the text style
-    text.setStyle(sf::Text::Bold | sf::Text::Underlined);
-
-
-    int mouseX;
-    int mouseY;
-
-
-
-
-
+    //create render window
     window = sf::RenderWindow(sf::VideoMode({600, 400}), "SFML works!");
-    sf::CircleShape shape(100.f);
-    shape.setFillColor(sf::Color::Blue);
+   
 
 
     while (window.isOpen())
     {
         while (const std::optional event = window.pollEvent())
         {
+            //wait for any user input
             if (event->is<sf::Event::Closed>())
                { window.close();}
             else if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>()){
                 if (keyPressed->scancode == sf::Keyboard::Scancode::Escape){
                     window.close();
                 } else if (keyPressed->scancode == sf::Keyboard::Scancode::U){
+                    //level up the tower
                     double balance = 1000;
                     tower->levelUp(balance);
                 }
@@ -68,6 +46,7 @@ int TowerSimulator::createWindow(){
             }
         }
 
+        //update the window
         window.clear();
         renderTowers();
         window.display();
@@ -77,6 +56,7 @@ int TowerSimulator::createWindow(){
 
 }
 
+//Render a tower along with text
 int TowerSimulator::renderTowers(){
 
     sf::Font font("Arial Unicode.ttf");
@@ -95,25 +75,25 @@ int TowerSimulator::renderTowers(){
      text.setStyle(sf::Text::Bold | sf::Text::Underlined);
 
 
+     //define the size of the tower
     sf::Vector2f towerRect(10.f, 10.f);
+    //create the rectangle shape and colour
     sf::RectangleShape towerShape(towerRect);
     towerShape.setFillColor(sf::Color::Blue);
-
+    //set the rectangle position
     int posx = tObserver->getPosition().x;
     int posy = tObserver->getPosition().y;
-    
     float shapex = posx * 10.f + 140.f;
     float shapey = posy * 10.f + 140.f;
-    
-    
     towerShape.setPosition(sf::Vector2f(shapex, shapey));
 
-
+    //draw the tower
     window.draw(towerShape);
 
+    //get mouse position
     sf::Vector2i mousePos = sf::Mouse::getPosition(window);
     
-
+    //if mouse hovering over tower, show tooltip with stats
     if(towerShape.getGlobalBounds().contains({static_cast<float>(mousePos.x),
         static_cast<float>(mousePos.y)})) {
         string tip = "Type: " + tObserver->getType() 
@@ -129,6 +109,7 @@ int TowerSimulator::renderTowers(){
         tooltip.setPosition({shapex + 40.f, shapey - 20.f});
         window.draw(tooltip);}
 
+    //draw the instructional text
     window.draw(text);
 
     return 0;
