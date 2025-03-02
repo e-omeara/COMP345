@@ -349,7 +349,7 @@ int MapGraphics::runGame(){
     return 0;
 }
 
-int main() {
+int mainfunc() {
 
     MapObserver* observer = new MapObserver;
     Map* map = new Map(20,10);

@@ -5,6 +5,7 @@
 #include <vector>
 #include <algorithm>
 #include "Critter.h"
+//#include "TowerObserver.h"
 
 class TowerObserver;
 
@@ -60,6 +61,8 @@ public:
     void setLevel(double newLevel) ;
 };
 
+
+/**/
 class TowerObserver
 {
     private:
@@ -70,5 +73,6 @@ class TowerObserver
 
         void update(double level = 0, double buyingCost = 0, double refundValue = 0, double range = 0, double power = 0, double rateOfFire = 0, Position position = {0,0});
 };
+
 
 #endif // TOWERS_H

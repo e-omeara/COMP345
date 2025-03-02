@@ -17,3 +17,6 @@ clang++ -std=c++20 -c MapObjects/Critter.cpp;
 clang++ -std=c++20 -c Map/MapMaker.cpp;
 clang++ -std=c++20 -c Map/Map.cpp;
 clang++ -std=c++20 Driver.o Towers.o Critter.o MapMaker.o Map.o
+
+
+/usr/bin/clang++ -std=c++20 -g -c 'Driver.cpp' -I 'MapObjects/Tower/' -I 'MapObjects/Critter/' -I '/opt/homebrew/Cellar/sfml/3.0.0_1/include'

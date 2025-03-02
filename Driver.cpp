@@ -1,9 +1,50 @@
 #include <vector>
 #include <iostream>
-#include "Towers.cpp"
-#include "Critter.cpp"
+#include "Towers.h"
+#include "Critter.h"
+#include "Map.h"
+#include "MapObserver.h"
+#include "MapGraphics.h"
+#include "SFMLCritterSimulator.h"
+
+Position coordToPosition(const coord &c) {
+   Position p;
+   p.x = c.x;
+   p.y = c.y;
+   return p;
+}
+
 
 int main() {
+
+   //Map-Making Test Case
+   MapObserver* mapobserver = new MapObserver;
+   Map* map = new Map(20, 10);
+   map->getObserver(mapobserver);
+   MapGraphics graphics(mapobserver, map);
+   graphics.runGame();  // user creates the map/path here.
+   
+   //Getting the made path from the map.
+   std::vector<coord> cpath = map->getPath();
+   if(cpath.empty()){
+      std::cerr << "Error: Path is empty." << std::endl;
+      return 1;
+   }
+   std::vector<Position> path1;
+   for(auto &c : cpath)
+      path1.push_back(coordToPosition(c));
+   
+   //Critter Test Case
+   SFMLCritterSimulator simulator(map, path1);
+   simulator.runSimulation();
+
+   delete map;
+   delete mapobserver;
+   //return 0;
+
+
+
+   //Tower examples
     std::cout << "Creating example towers and critters!" << std::endl;
 
     double balance = 1000;

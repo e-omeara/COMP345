@@ -11,6 +11,8 @@
 using namespace std;
 
 
+int mainfunc();
+
 
 class MapGraphics {
 

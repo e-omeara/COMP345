@@ -274,6 +274,12 @@ using namespace std;
             //the map cannot be modified any more
             isMaking = false;
 
+            //Update the path
+            coord pathstep;
+            pathstep.x = makeX;
+            pathstep.y = makeY;
+            path.push_back(pathstep);
+
             return 0;
 
             
