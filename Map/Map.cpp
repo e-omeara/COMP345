@@ -250,7 +250,7 @@ using namespace std;
 
             //update the previous direction variable, used to prevent doubling back
             prevDir = dir;
-            updateObserver("use the arrows keys to create the map");
+            updateObserver("use the arrows keys to create the map, \n press e to create the exit");
             //printMapMaker(); <-- for testing purposes
             return;
         }

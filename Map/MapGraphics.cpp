@@ -198,7 +198,7 @@ int MapGraphics::placeTowers(){
     text.setString(textstr);
 
     // set the character size
-    text.setCharacterSize(24); // in pixels, not points!
+    text.setCharacterSize(20); // in pixels, not points!
 
     // set the color
     text.setFillColor(sf::Color::Red);

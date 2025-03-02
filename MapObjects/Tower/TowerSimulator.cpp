@@ -81,12 +81,12 @@ int TowerSimulator::renderTowers(){
 
     sf::Font font("Arial Unicode.ttf");
      // set the string to display
-     string textstr = "Welcome to Our Tower View!\n Press U to upgrade the tower";
+     string textstr = "Welcome to Our Tower View!\n Hover for stats or press U to upgrade the tower";
      sf::Text text(font); // a font is required to make a text object
      text.setString(textstr);
  
      // set the character size
-     text.setCharacterSize(24); // in pixels, not points!
+     text.setCharacterSize(20); // in pixels, not points!
  
      // set the color
      text.setFillColor(sf::Color::Red);
