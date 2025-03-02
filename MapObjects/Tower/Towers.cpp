@@ -9,21 +9,7 @@
 #include "TowerObserver.h"
 #include "Critter.h"
 
-TowerObserver::TowerObserver(Towers& tower) : tower(tower)
-{
-    tower.addObserver(this);
-}
 
-void TowerObserver::update(double level, double buyingCost, double refundValue, double range, double power, double rateOfFire, Position position)
-{
-    std::cout << "Updated Tower View: " << std::endl <<
-    "Level: " << level <<  std::endl <<
-    "BuyingCost " << buyingCost <<  std::endl <<
-    "Refund Value " << refundValue <<  std::endl <<
-    "Range: " << range <<  std::endl <<
-    "Power: " << power <<  std::endl <<
-    "Rate Of Fire: " << rateOfFire <<  std::endl;
-}
 
 //Default Constructor
 
@@ -152,6 +138,7 @@ void Towers::levelUp(double& balance)
 void Towers::addObserver(TowerObserver* observer)
 {
     observers.push_back(observer);
+    notifyObservers();
 }
 
 void Towers::removeObserver(TowerObserver* observer) {
@@ -160,9 +147,11 @@ void Towers::removeObserver(TowerObserver* observer) {
 
 void Towers::notifyObservers() {
     for (TowerObserver* observer : observers) {
-        observer->update(level, buyingCost, refundValue, range, power, rateOfFire, position);
+        observer->update(level, buyingCost, refundValue, range, power, rateOfFire, position, type);
     }
 }
+
+
 
 // Getters
 double Towers::getBuyingCost() const { return buyingCost; }

@@ -52,6 +52,7 @@ public:
     double getRateOfFire() const;
     double getLevel() const;
 
+
     // Setters
     void setBuyingCost(double cost);
     void setRefundValue(double refund);

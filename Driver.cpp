@@ -6,6 +6,7 @@
 #include "Map.h"
 #include "MapObserver.h"
 #include "MapGraphics.h"
+#include "TowerSimulator.h"
 #include "SFMLCritterSimulator.h"
 
 Position coordToPosition(const coord &c) {
@@ -50,11 +51,14 @@ int main() {
 
     double balance = 1000;
 
-    Towers archer("archer", {0,0});
+    Towers* archer = new Towers("archer", {2,2});
     Towers ballista("ballista", {0,0});
     Towers catapult("catapult", {50,50});
 
-    TowerObserver observer(archer);
+    TowerObserver* observer = new TowerObserver( *archer);
+
+    TowerSimulator tSim(observer , archer);
+    tSim.runGame();
 
     /* std::cout << "Archer Level: " << archer.getLevel() << std::endl;
     std::cout << "Archer Cost: " << archer.getBuyingCost() << std::endl;
@@ -73,8 +77,8 @@ int main() {
 
     std::cout << "Critter health is at " << enemy.getHP() << std::endl; */
 
-    archer.levelUp(balance);
-    archer.levelUp(balance);
+    archer->levelUp(balance);
+    archer->levelUp(balance);
 
     /* std::cout << "Archer Level: " << archer.getLevel() << std::endl;
     std::cout << "Balance: " << balance << std::endl;

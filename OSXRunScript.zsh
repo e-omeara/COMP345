@@ -17,6 +17,8 @@ clang++ -std=c++20 -c Map/Map.cpp -I 'Map/' -I 'MapObjects/Tower/' -I 'MapObject
 
 
 clang++ -std=c++20 -c MapObjects/Tower/Towers.cpp -I 'Map/' -I 'MapObjects/Tower/' -I 'MapObjects/Critter/' -I '/opt/homebrew/Cellar/sfml/3.0.0_1/include';
+clang++ -std=c++20 -c MapObjects/Tower/TowerObserver.cpp -I 'Map/' -I 'MapObjects/Tower/' -I 'MapObjects/Critter/' -I '/opt/homebrew/Cellar/sfml/3.0.0_1/include';
+clang++ -std=c++20 -c MapObjects/Tower/TowerSimulator.cpp -I 'Map/' -I 'MapObjects/Tower/' -I 'MapObjects/Critter/' -I '/opt/homebrew/Cellar/sfml/3.0.0_1/include';
 
 g++ *.o -L/opt/homebrew/Cellar/sfml/3.0.0_1/lib -lsfml-graphics -lsfml-window -lsfml-system -o myapp;
 
