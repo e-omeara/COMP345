@@ -8,6 +8,7 @@
 #include <vector>
 #include <stdlib.h>
 #include <algorithm>
+#include <string>
 #include "Map.h" 
 
 using namespace std;
@@ -20,20 +21,45 @@ using namespace std;
     
         //Constructor takes map width and height as input
         Map::Map(int x, int y){ 
-            cout << "You've constructed MAP \n";
+            
             width = x;
             height = y;
+            cout << "You've constructed MAP with height " << height << " \n";
+
 
             //Set up the class for map making
             isMaking = true;
             prevDir = 'x';
+            makeX = 0;
+            makeY = 0;
+            coord orig;
+            orig.x = 0;
+            orig.y = 0;
+            path.resize(1, orig);
 
             //create the linear array of the specified size
             map.resize(x*y, '-');
+            cout << "done making map\n";
 
             
 
 
+        }
+
+        Map::Map(){
+            this->width = 20;
+            this->height = 20;
+            isMaking = true;
+            prevDir = 'x';
+            map.resize(this->height * this->width, '-');
+            return;
+        }
+
+        void Map::getObserver(MapObserver* plugin){
+            observer = plugin;
+            cout << "ready for game?";
+            updateObserver("ready for game");
+            cout << "ready for game";
         }
 
 
@@ -55,6 +81,33 @@ using namespace std;
 
 
             return;
+        }
+
+
+        string Map::stringMap(){
+
+            string strmap;
+            int count = 0;
+
+            //cout << height << width;
+
+            
+
+            for(int i = 0; i < height; i++){
+                for(int j = 0; j < width; j++){
+                    //strmap.push_back('i');
+                    strmap.push_back( map[i*width + j]);
+                    count++;
+                
+                }
+                
+                strmap.append("\n");
+            }
+            
+            //cout << strmap << "\n";
+
+
+            return strmap;
         }
 
 
@@ -115,6 +168,7 @@ using namespace std;
         //Take a char as parameter, adds a 'P' to the map vector as necessary, checks for doubleback
         void Map::laypath(char dir){
 
+
             //make sure we're in the mapmaking mode
             if (isMaking == false){
                 cout << "you're not making a map!\n";
@@ -126,13 +180,14 @@ using namespace std;
                 //go up
                 //make sure the path doesn't double back
                 if(prevDir == 'd' || prevDir == 'D'){
-                    
+                    updateObserver("You just came from there!");
                     cout << "You just came from there!\n\n";
                     return;
                 }
                 // make sure we don't go off the map
                 if(makeY == 0){
                     cout << "You can't go there!\n\n";
+                    updateObserver("You can't go there!");
                     return;
                 }
                 //adjsut the player's current position in the map
@@ -145,10 +200,12 @@ using namespace std;
                 //go down
                 if(prevDir == 'u' || prevDir == 'U'){
                     cout << "You just came from there!\n\n";
+                    updateObserver("You just came from there!");
                     return;
                 }
                 if(makeY == height - 1){
                     cout << "You can't go there!\n\n";
+                    updateObserver("You can't go there!");
                     return;
                 }
                 makeY++;
@@ -158,10 +215,12 @@ using namespace std;
                 //go left
                 if(prevDir == 'r' || prevDir == 'R'){
                     cout << "You just came from there!\n\n";
+                    updateObserver("You just came from there!");
                     return;
                 }
                 if(makeX == 0){
                     cout << "You can't go there!\n\n";
+                    updateObserver("You can't go there!");
                     return;
                 }
                 makeX--;
@@ -171,10 +230,12 @@ using namespace std;
                 //go right
                 if(prevDir == 'l' || prevDir == 'L'){
                     cout << "You just came from there!\n\n";
+                    updateObserver("You just came from there!");
                     return;
                 }
                 if(makeX == width - 1){
                     cout << "You can't go there!\n\n";
+                    updateObserver("You can't go there!");
                     return;
                 }
                 makeX++;
@@ -185,9 +246,11 @@ using namespace std;
             coord pathstep;
             pathstep.x = makeX;
             pathstep.y = makeY;
+            path.push_back(pathstep); // Add the new coordinates to the path
 
             //update the previous direction variable, used to prevent doubling back
             prevDir = dir;
+            updateObserver("use the arrows keys to create the map, \n press e to create the exit");
             //printMapMaker(); <-- for testing purposes
             return;
         }
@@ -204,11 +267,18 @@ using namespace std;
 
             //in the map array, set the exist coord to X for exit
             map[getPos(makeX, makeY)] = 'X';
+            updateObserver("Place a tower");
             cout << "You've finalized the exit!\n";
             //printMap();
 
             //the map cannot be modified any more
             isMaking = false;
+
+            //Update the path
+            coord pathstep;
+            pathstep.x = makeX;
+            pathstep.y = makeY;
+            path.push_back(pathstep);
 
             return 0;
 
@@ -217,9 +287,31 @@ using namespace std;
             
         }
 
+        int Map::setTower(int x, int y){
+
+            if(x > width || y > width){
+                return 0;
+            }
+
+            int pos = getPos(x, y);
+            if(map[pos] == '-'){
+                map[pos] = 'T';
+                updateObserver("placed tower");
+
+                return 0;
+            } else {
+                return 1;
+            }
+
+
+                
+        }
+
+            
+
   
-            //print the map while indicating the current player location with an X
-            void Map::printMapMaker(){
+        //print the map while indicating the current player location with an X
+        void Map::printMapMaker(){
 
             //make a copy of the map vector
             vector<char> mapMaker = map;
@@ -240,6 +332,16 @@ using namespace std;
 
             return;
             }  
+
+
+            void Map::updateObserver(string msg){
+
+                observer->update(height, width, map, path, makeX, makeY, "status", msg);
+                //observer->update(msg);
+                cout << "\nmsg: " << msg << "\n";
+
+                return;
+            }
 
             // take the width x and height y positions and turn them into the 1d position along the map vector
             int Map::getPos(int x, int y){

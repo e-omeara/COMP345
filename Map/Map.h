@@ -4,14 +4,16 @@
 #include <iostream>
 #include <stdlib.h>
 #include <stdio.h>
+#include <string>
+#include "MapObserver.h"
 #include <vector>
 
 using namespace std;
-
+/*
 struct coord{
             int x;
             int y;
-};
+};*/
 
 class Map{
 
@@ -27,12 +29,19 @@ class Map{
         int makeX;
         int makeY;
         char prevDir;
+        MapObserver* observer;
 
     public:
 
         Map(int x, int y);
 
+        Map();
+
+        void getObserver(MapObserver* plugin);
+
         void printMap();
+
+        string stringMap();
 
         friend class MapMaker;
 
@@ -56,10 +65,13 @@ class Map{
 
         int setExit();
 
+        int setTower(int x, int y);
+
         void printMapMaker();
 
     private:
 
+        void updateObserver(string msg);
 
         int getPos(int x, int y);
 
