@@ -17,7 +17,7 @@
 
 
 Towers::Towers(double level, double cost, double refund, double towerRange, 
-    double towerPower, double fireRate, std::string type, Position pos)
+    double towerPower, double fireRate, std::string type, Position pos, string targType)
 
     : level(level)
     , buyingCost(cost)
@@ -27,6 +27,7 @@ Towers::Towers(double level, double cost, double refund, double towerRange,
     , rateOfFire(fireRate)
     , type(type)
     , position(pos)
+    , targetingType(targType)
 {}
 
 //Constructor to make defined tower types
@@ -34,6 +35,55 @@ Towers::Towers(double level, double cost, double refund, double towerRange,
 Towers::Towers(std::string type, Position pos)
     : type(type)
     , position(pos)
+{
+    level = 1;
+    if(type == "archer")
+    {
+        //std::cout << "Archer " << std::endl;
+        buyingCost = 10;
+        refundValue = 3;
+        range = 3;
+        power = 1;
+        rateOfFire = 500; //milliseconds
+        targetingType = "exit";
+    }
+    else if(type == "ballista")
+    {
+        //std::cout << "ballista " << std::endl;
+        buyingCost = 20;
+        refundValue = 6;
+        range = 7;
+        power = 5;
+        rateOfFire = 1000; //milliseconds
+        targetingType = "strong";
+    }
+    else if(type == "catapult")
+    {
+        //std::cout << "catapult " << std::endl;
+        buyingCost = 30;
+        refundValue = 10;
+        range = 5;
+        power = 10;
+        rateOfFire = 1200; //milliseconds
+        targetingType = "weak";
+    }
+    else
+    {
+        //defaults to archer, but shoots near
+        buyingCost = 10;
+        refundValue = 3;
+        range = 3;
+        power = 1;
+        rateOfFire = 500; //milliseconds
+        targetingType = "near";
+    }
+}
+
+//Constructor for type and custom targeting method
+Towers::Towers(std::string type, Position pos, string targType)
+    : type(type)
+    , position(pos)
+    , targetingType(targType)
 {
     level = 1;
     if(type == "archer")
@@ -65,7 +115,7 @@ Towers::Towers(std::string type, Position pos)
     }
     else
     {
-        //defaults to archer
+        //defaults to archer, but shoots near
         buyingCost = 10;
         refundValue = 3;
         range = 3;
@@ -160,6 +210,7 @@ double Towers::getRange() const { return range; }
 double Towers::getPower() const { return power; }
 double Towers::getRateOfFire() const { return rateOfFire; }
 double Towers::getLevel() const { return level; }
+string Towers::getTargetingType() const {return targetingType;}
 
 // Setters
 void Towers::setBuyingCost(double cost) { buyingCost = cost; notifyObservers(); }
@@ -168,3 +219,5 @@ void Towers::setRange(double towerRange) { range = towerRange; notifyObservers()
 void Towers::setPower(double towerPower) { power = towerPower; notifyObservers(); }
 void Towers::setRateOfFire(double fireRate) { rateOfFire = fireRate; notifyObservers(); }
 void Towers::setLevel(double newLevel) { level = newLevel; notifyObservers(); }
+void Towers::setTargetingType(string targType) {targetingType = targType; notifyObservers(); }
+
