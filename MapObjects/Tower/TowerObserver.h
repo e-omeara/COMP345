@@ -26,8 +26,8 @@ class TowerObserver
 
     public:
         TowerObserver(Towers& tower);
-
-        void update(double tlevel = 0, double buyingCost = 0, double refundValue = 0, double trange = 0, double tpower = 0, double rateOfFire = 0, Position tposition = {0,0}, string tType = "normal");
+        //TODO: add targeting type to update function
+        void update(double tlevel = 0, double buyingCost = 0, double refundValue = 0, double trange = 0, double tpower = 0, double rateOfFire = 0, Position tposition = {0,0}, string tType = "normal", string targetingType = "near");
 
         Position getPosition();
 

@@ -17,7 +17,7 @@ TowerObserver::TowerObserver(Towers& tower) : tower(tower)
     tower.addObserver(this);
 }
 
-void TowerObserver::update(double tlevel, double buyingCost, double refundValue, double trange, double tpower, double rateOfFire, Position tposition, string tType)
+void TowerObserver::update(double tlevel, double buyingCost, double refundValue, double trange, double tpower, double rateOfFire, Position tposition, string tType, string targetingType)
 {
     std::cout << "Updated Tower View: " << std::endl <<
     "Level: " << tlevel <<  std::endl <<

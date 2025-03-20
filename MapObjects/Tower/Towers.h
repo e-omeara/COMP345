@@ -17,7 +17,7 @@ private:
     double range;
     double power;
     double rateOfFire;
-    string targetingType;
+    std::string targetingType;
     std::string type;
     Position position;
     std::vector<TowerObserver*> observers;
@@ -26,14 +26,14 @@ public:
     // Constructor declaration
     Towers(double level = 0.0, double cost = 0.0, double refund = 0.0, double towerRange = 0.0, 
         double towerPower = 0.0, double fireRate = 0.0, std::string type = "N/A", 
-        Position pos = getOrigin(0,0), string targetingType = "N/A");
+        Position pos = getOrigin(0,0), std::string targetingType = "N/A");
     
 
     // Constructor for type
     Towers(std::string type, Position position);
 
     // Constructor for type & custom targeting method
-    Towers(std::string type, Position position, string targetingType);
+    Towers(std::string type, Position position, std::string targetingType);
 
     // Default position method
     static Position getOrigin(int x, int y);
@@ -51,8 +51,8 @@ public:
     void notifyObservers();
 
     //Return the section of the path that is in range, in descending order of priority
-    vector<int> standardRangeFinder(); //prioritizes being close to the exit. used by exit, weak, strong
-    vector<int> nearRangeFinder(); //prioritizes being near to the tower. used by near
+    std::vector<int> standardRangeFinder(); //prioritizes being close to the exit. used by exit, weak, strong
+    std::vector<int> nearRangeFinder(); //prioritizes being near to the tower. used by near
 
     //returns a critter for shooting
     Critter findTarget(); //returns first critter according to priority. used by both exit and near
@@ -67,7 +67,7 @@ public:
     double getPower() const;
     double getRateOfFire() const;
     double getLevel() const;
-    string getTargetingType() const;
+    std::string getTargetingType() const;
 
     // Setters
     void setBuyingCost(double cost);
@@ -76,7 +76,7 @@ public:
     void setPower(double towerPower);
     void setRateOfFire(double fireRate);
     void setLevel(double newLevel) ;
-    void setTargetingType(string targetType);
+    void setTargetingType(std::string targetType);
 };
 
 

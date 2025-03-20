@@ -17,7 +17,7 @@
 
 
 Towers::Towers(double level, double cost, double refund, double towerRange, 
-    double towerPower, double fireRate, std::string type, Position pos, string targType)
+    double towerPower, double fireRate, std::string type, Position pos, std::string targType)
 
     : level(level)
     , buyingCost(cost)
@@ -80,7 +80,7 @@ Towers::Towers(std::string type, Position pos)
 }
 
 //Constructor for type and custom targeting method
-Towers::Towers(std::string type, Position pos, string targType)
+Towers::Towers(std::string type, Position pos, std::string targType)
     : type(type)
     , position(pos)
     , targetingType(targType)
@@ -197,7 +197,7 @@ void Towers::removeObserver(TowerObserver* observer) {
 
 void Towers::notifyObservers() {
     for (TowerObserver* observer : observers) {
-        observer->update(level, buyingCost, refundValue, range, power, rateOfFire, position, type);
+        observer->update(level, buyingCost, refundValue, range, power, rateOfFire, position, type, targetingType);
     }
 }
 
@@ -210,7 +210,7 @@ double Towers::getRange() const { return range; }
 double Towers::getPower() const { return power; }
 double Towers::getRateOfFire() const { return rateOfFire; }
 double Towers::getLevel() const { return level; }
-string Towers::getTargetingType() const {return targetingType;}
+std::string Towers::getTargetingType() const {return targetingType;}
 
 // Setters
 void Towers::setBuyingCost(double cost) { buyingCost = cost; notifyObservers(); }
@@ -219,5 +219,5 @@ void Towers::setRange(double towerRange) { range = towerRange; notifyObservers()
 void Towers::setPower(double towerPower) { power = towerPower; notifyObservers(); }
 void Towers::setRateOfFire(double fireRate) { rateOfFire = fireRate; notifyObservers(); }
 void Towers::setLevel(double newLevel) { level = newLevel; notifyObservers(); }
-void Towers::setTargetingType(string targType) {targetingType = targType; notifyObservers(); }
+void Towers::setTargetingType(std::string targType) {targetingType = targType; notifyObservers(); }
 
