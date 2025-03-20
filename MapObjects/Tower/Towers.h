@@ -5,6 +5,7 @@
 #include <vector>
 #include <algorithm>
 #include "Critter.h"
+#include "Map.h"
 //#include "TowerObserver.h"
 
 class TowerObserver;
@@ -21,6 +22,10 @@ private:
     std::string type;
     Position position;
     std::vector<TowerObserver*> observers;
+    std::vector<int> fireZone;
+
+    // sets fireZone to the section of the path that is in range in descending order of priority. Only called on creation or movement
+    void findFireZone(const std::vector<Position>& path); //prioritizes being close to the exit, unless targ type is near
 
 public:
     // Constructor declaration
@@ -50,14 +55,10 @@ public:
 
     void notifyObservers();
 
-    //Return the section of the path that is in range, in descending order of priority
-    std::vector<int> standardRangeFinder(); //prioritizes being close to the exit. used by exit, weak, strong
-    std::vector<int> nearRangeFinder(); //prioritizes being near to the tower. used by near
-
-    //returns a critter for shooting
-    Critter findTarget(); //returns first critter according to priority. used by both exit and near
-    Critter findWeakTarget(); //returns weakest critter in range
-    Critter findStrongTarget(); //returns strongest critter
+    // returns a critter for shooting. uses fireZone attribute
+    Critter& findTarget() const; //returns first critter according to priority. used by both exit and near
+    Critter& findWeakTarget() const; //returns weakest critter in range
+    Critter& findStrongTarget() const; //returns strongest critter
 
 
     // Getters
@@ -68,6 +69,7 @@ public:
     double getRateOfFire() const;
     double getLevel() const;
     std::string getTargetingType() const;
+    std::vector<int> getFireZone() const;
 
     // Setters
     void setBuyingCost(double cost);
@@ -77,6 +79,7 @@ public:
     void setRateOfFire(double fireRate);
     void setLevel(double newLevel) ;
     void setTargetingType(std::string targetType);
+    void setFireZone(std::vector<int>); //used in rare cases when setting fire zone manually. should normally use rangeFinder
 };
 
 

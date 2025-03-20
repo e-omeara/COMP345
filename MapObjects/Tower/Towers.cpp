@@ -5,6 +5,7 @@
 #include <array> 
 #include <vector>
 #include <algorithm>
+#include <cmath>
 #include "Towers.h"
 #include "TowerObserver.h"
 #include "Critter.h"
@@ -132,6 +133,30 @@ Position Towers::getOrigin(int x = 0, int y = 0){
 
 }
 
+//finds which section of path is within range. sets fire zone to a vector of position indeces
+void Towers::findFireZone(const std::vector<Position>& path){
+    Position p;
+    if(targetingType == "near"){//prioritizing being close to tower
+        for(int i = 1; i <=2*range; i++){
+            for(int index = path.size()-1; index>=0; index--){
+                p = path[index];
+                //if x,y distance isn't > range, then push if x distance + y distance = i.
+                if(abs((p.x-position.x)<=range && abs(p.y-position.y)<=range) && (((p.x-position.x) + abs(p.y-position.y))==i)){
+                    fireZone.push_back(index);
+                }
+            }
+        }
+    }
+    else{//prioritizing being close to exit
+        for(int index = path.size()-1; index>=0; index--){
+            p = path[index];
+            if(abs(p.x-position.x)<=range && abs(p.y-position.y)<=range){
+                fireZone.push_back(index);
+            }
+        }
+    }
+}
+
 
 //recursive shoot method that allows for variable sized parameter
 //parameter size >1 mostly for catapult allowing to hit more enemies
@@ -211,6 +236,7 @@ double Towers::getPower() const { return power; }
 double Towers::getRateOfFire() const { return rateOfFire; }
 double Towers::getLevel() const { return level; }
 std::string Towers::getTargetingType() const {return targetingType;}
+std::vector<int> Towers::getFireZone() const {return fireZone;}
 
 // Setters
 void Towers::setBuyingCost(double cost) { buyingCost = cost; notifyObservers(); }
@@ -220,4 +246,5 @@ void Towers::setPower(double towerPower) { power = towerPower; notifyObservers()
 void Towers::setRateOfFire(double fireRate) { rateOfFire = fireRate; notifyObservers(); }
 void Towers::setLevel(double newLevel) { level = newLevel; notifyObservers(); }
 void Towers::setTargetingType(std::string targType) {targetingType = targType; notifyObservers(); }
+void Towers::setFireZone(std::vector<int> fZone) {fireZone = fZone; notifyObservers();}
 
