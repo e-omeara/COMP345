@@ -22,15 +22,25 @@ private:
     std::string type;
     Position position;
     std::vector<TowerObserver*> observers;
-    std::vector<int> fireZone;
 
 protected:
+    // returns if critter pointer param is in range of tower object
     inline bool isInRange(Critter* critter) const 
     {return (abs(critter->getPosition().x - position.x) <= range) 
          && (abs(critter->getPosition().y - position.y) <= range);};
     
+    //deprecated code
     // sets fireZone to the section of the path that is in range in descending order of priority. Only called on creation or movement
-    void findFireZone(const std::vector<Position>& path); //prioritizes being close to the exit, unless targ type is near
+    // void findFireZone(const std::vector<Position>& path); //prioritizes being close to the exit, unless targ type is near
+
+    // returns a critter pointer for shooting. returns a null pointer on failure
+    //only call if activeCritters size > 0
+    //findTarget() calls findWeakTarget() or findStrongTarget() for weak and strong targeting types, respectively
+    Critter* findTarget(const std::vector<Critter*>& activeCritters) const; //returns first critter according to priority. used by both exit and near
+    
+    //normally shouldn't be manually called. findTarget() will determine the appropriate method.
+    Critter* findWeakTarget(const std::vector<Critter*>& activeCritters) const; //returns weakest critter in range
+    Critter* findStrongTarget(const std::vector<Critter*>& activeCritters) const; //returns strongest critter
 
 public:
     // Constructor declaration
@@ -58,13 +68,6 @@ public:
     void removeObserver(TowerObserver* observer);
 
     void notifyObservers();
-
-    // returns a critter pointer for shooting. uses fireZone attribute. returns a null pointer on failure
-    //only call if activeCritters size > 0
-    Critter* findTarget(const std::vector<Critter*>& activeCritters) const; //returns first critter according to priority. used by both exit and near
-    Critter* findWeakTarget(const std::vector<Critter*>& activeCritters) const; //returns weakest critter in range
-    Critter* findStrongTarget(const std::vector<Critter*>& activeCritters) const; //returns strongest critter
-
 
     // Getters
     double getBuyingCost() const;

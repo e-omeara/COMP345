@@ -134,7 +134,10 @@ Position Towers::getOrigin(int x = 0, int y = 0){
 }
 
 
-
+//deprecated code:
+//used before findTarget() rework
+//associated attribute was vector<int> fireZone
+/*******************************************
 //finds which section of path is within range. sets fire zone to a vector of position indeces
 void Towers::findFireZone(const std::vector<Position>& path){
     fireZone.clear();
@@ -160,6 +163,7 @@ void Towers::findFireZone(const std::vector<Position>& path){
         }
     }
 }
+*******************************************/
 
 //determines if a critter is in range -- made this function inline
 /*bool Towers::isInRange(Critter* critter) const{
@@ -321,7 +325,6 @@ double Towers::getPower() const { return power; }
 double Towers::getRateOfFire() const { return rateOfFire; }
 double Towers::getLevel() const { return level; }
 char Towers::getTargetingType() const {return targetingType;}
-std::vector<int> Towers::getFireZone() const {return fireZone;}
 
 // Setters
 void Towers::setBuyingCost(double cost) { buyingCost = cost; notifyObservers(); }
@@ -331,5 +334,8 @@ void Towers::setPower(double towerPower) { power = towerPower; notifyObservers()
 void Towers::setRateOfFire(double fireRate) { rateOfFire = fireRate; notifyObservers(); }
 void Towers::setLevel(double newLevel) { level = newLevel; notifyObservers(); }
 void Towers::setTargetingType(char targType) {targetingType = targType; notifyObservers(); }
-void Towers::setFireZone(std::vector<int> fZone) {fireZone = fZone; notifyObservers();}
+
+
+//std::vector<int> Towers::getFireZone() const {return fireZone;}
+//void Towers::setFireZone(std::vector<int> fZone) {fireZone = fZone; notifyObservers();}
 
