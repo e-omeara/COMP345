@@ -1,3 +1,6 @@
+#ifndef PLAYER_H
+#define PLAYER_H
+
 #include <vector>
 #include <iostream>
 #include <SFML/Graphics.hpp>
@@ -9,13 +12,17 @@
 class Player {
 
     public:
-        static int balance;
+        int balance;
+        int health;
+        Player(int amount, int hp);
         
     
-        static void renderBalance(sf::RenderWindow *window);
-        static void initializePlayer(int amount);
-        static void addToAmount(int add);
+        void renderBalance(sf::RenderWindow *window);
+        void initializePlayer(int amount);
+        void addToAmount(int add);
 
 
 
 };
+
+#endif

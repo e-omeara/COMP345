@@ -13,26 +13,34 @@
 #include "MapGraphics.h"
 #include "TowerSimulator.h"
 #include "SFMLCritterSimulator.h"
+#include "CritterFactory.h"
 
 
 
 class GameRenderer {
 
-    public:
-    static sf::RenderWindow* theWindow;
-
-
+    private:
+     sf::RenderWindow* window;
+     MapGraphics* mapGraphics;
+     Map* map;
+     Player* player;
+     bool isPlaying;
+     SFMLCritterSimulator* critSim;
     
-    static void initialize();
-    static void mainWindow();
-    static void makeMapWindow();
-    static void playTime();
-    static void pauseTime();
-    static void endGame();
+
+
+    public:
+     GameRenderer(Player* player, Map* map, MapGraphics* mapGraphics, SFMLCritterSimulator* crSim);
+     void startGame();
+     void mainWindow();
+     void makeMapWindow();
+     void playTime();
+     void pauseTime();
+     void endGame();
 
 
     private:
-    static void inputLogic();
+     void inputLogic();
 
 
 };

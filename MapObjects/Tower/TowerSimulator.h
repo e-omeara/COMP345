@@ -1,3 +1,6 @@
+#ifndef TOWER_SIM_H
+#define TOWER_SIM_H
+
 #include <iostream>
 #include <string>
 #include <SFML/Graphics.hpp>
@@ -40,3 +43,7 @@ class TowerSimulator{
     private:
     //methods
 };
+
+
+
+#endif

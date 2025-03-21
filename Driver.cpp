@@ -8,6 +8,8 @@
 #include "MapGraphics.h"
 #include "TowerSimulator.h"
 #include "SFMLCritterSimulator.h"
+#include "GameRenderer.h"
+#include "Player.h"
 
 Position coordToPosition(const coord &c) {
    Position p;
@@ -18,6 +20,51 @@ Position coordToPosition(const coord &c) {
 
 
 int main() {
+
+ //testing game engine and renderer
+ MapObserver* mapobserver = new MapObserver;
+ Map* map = new Map(20, 10);
+ map->getObserver(mapobserver);
+
+ MapGraphics *mgraphics = new MapGraphics(mapobserver, map);
+
+ Player* player = new Player(100, 100);
+
+ std::vector<Position> critterPath;
+ for(auto &c : map->getPath())
+   { critterPath.push_back(coordToPosition(c));}
+ 
+ SFMLCritterSimulator* critSim;
+
+ GameRenderer renderer(player, map, mgraphics, critSim);
+
+ renderer.startGame();
+
+ delete critSim;
+ delete mapobserver;
+ delete map;
+ delete mgraphics;
+ delete player;
+ 
+
+/*
+ //Getting the made path from the map.
+ std::vector<coord> cpath = map->getPath();
+ if(cpath.empty()){
+    std::cerr << "Error: Path is empty." << std::endl;
+    return 1;
+ }
+ std::vector<Position> critterPath;
+ for(auto &c : cpath)
+    critterPath.push_back(coordToPosition(c));
+ 
+ //Critter Test Case
+ SFMLCritterSimulator simulator(map, critterPath);
+ simulator.runSimulation();
+
+
+
+
 
    //Map-Making Test Case
    MapObserver* mapobserver = new MapObserver;
@@ -60,29 +107,31 @@ int main() {
     TowerSimulator tSim(observer , archer);
     tSim.runGame();
 
-    /* std::cout << "Archer Level: " << archer.getLevel() << std::endl;
+     std::cout << "Archer Level: " << archer.getLevel() << std::endl;
     std::cout << "Archer Cost: " << archer.getBuyingCost() << std::endl;
     std::cout << "Archer Refund: " << archer.getRefundValue() << std::endl;
- */
+ 
     std::vector<Position> path { {0,0}, {1,0}, {2,0}, {3,0}, {4,0}, {5,0}, {6,0}, {7,0} };
     Critter enemy(20, 1, 3, 1, 7, path);
     
 
-    /* std::cout << "Critter health is at " << enemy.getHP() << std::endl;
+     std::cout << "Critter health is at " << enemy.getHP() << std::endl;
     archer.shoot(enemy);
 
     ballista.shoot(enemy); 
  
     catapult.shoot(enemy);  
 
-    std::cout << "Critter health is at " << enemy.getHP() << std::endl; */
+    std::cout << "Critter health is at " << enemy.getHP() << std::endl; 
 
     archer->levelUp(balance);
     archer->levelUp(balance);
 
-    /* std::cout << "Archer Level: " << archer.getLevel() << std::endl;
+     std::cout << "Archer Level: " << archer.getLevel() << std::endl;
     std::cout << "Balance: " << balance << std::endl;
  */
+
+ 
     return 0;
 
     

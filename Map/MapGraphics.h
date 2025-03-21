@@ -24,6 +24,7 @@ class MapGraphics {
         sf::RenderWindow window;
         vector<sf::RectangleShape> mapTiles;
         float tilelength;
+        float topCorner;
 
         sf::RectangleShape scenery;
         sf::RectangleShape pathTile;
@@ -43,12 +44,14 @@ class MapGraphics {
 
         string displayText(string title);
 
-        int renderMap();
+        int renderMap(sf::RenderWindow* window);
+
+        int mapMaking(sf::RenderWindow* theWindow);
 
     private:
 
         int loadingmenu();
-        int mapMaking();
+        
         int placeTowers();
         coord getMapPos(int x, int y);
 
