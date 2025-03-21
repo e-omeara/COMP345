@@ -18,7 +18,7 @@ private:
     double range;
     double power;
     double rateOfFire;
-    std::string targetingType;
+    char targetingType;
     std::string type;
     Position position;
     std::vector<TowerObserver*> observers;
@@ -36,13 +36,13 @@ public:
     // Constructor declaration
     Towers(double level = 0.0, double cost = 0.0, double refund = 0.0, double towerRange = 0.0, 
         double towerPower = 0.0, double fireRate = 0.0, std::string type = "N/A", 
-        Position pos = getOrigin(0,0), std::string targetingType = "N/A");
+        Position pos = getOrigin(0,0), char targetingType = '0');
 
     // Constructor for type
     Towers(std::string type, Position position);
 
     // Constructor for type & custom targeting method
-    Towers(std::string type, Position position, std::string targetingType);
+    Towers(std::string type, Position position, char targetingType);
 
     // Default position method
     static Position getOrigin(int x, int y);
@@ -73,7 +73,7 @@ public:
     double getPower() const;
     double getRateOfFire() const;
     double getLevel() const;
-    std::string getTargetingType() const;
+    char getTargetingType() const;
     std::vector<int> getFireZone() const;
 
     // Setters
@@ -83,7 +83,7 @@ public:
     void setPower(double towerPower);
     void setRateOfFire(double fireRate);
     void setLevel(double newLevel) ;
-    void setTargetingType(std::string targetType);
+    void setTargetingType(char targetType);
     void setFireZone(std::vector<int>); //used in rare cases when setting fire zone manually. should normally use rangeFinder
 };
 

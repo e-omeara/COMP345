@@ -18,7 +18,7 @@
 
 
 Towers::Towers(double level, double cost, double refund, double towerRange, 
-    double towerPower, double fireRate, std::string type, Position pos, std::string targType)
+    double towerPower, double fireRate, std::string type, Position pos, char targType)
 
     : level(level)
     , buyingCost(cost)
@@ -46,7 +46,7 @@ Towers::Towers(std::string type, Position pos)
         range = 3;
         power = 1;
         rateOfFire = 500; //milliseconds
-        targetingType = "exit";
+        targetingType = 'e';
     }
     else if(type == "ballista")
     {
@@ -56,7 +56,7 @@ Towers::Towers(std::string type, Position pos)
         range = 7;
         power = 5;
         rateOfFire = 1000; //milliseconds
-        targetingType = "strong";
+        targetingType = 's';
     }
     else if(type == "catapult")
     {
@@ -66,7 +66,7 @@ Towers::Towers(std::string type, Position pos)
         range = 5;
         power = 10;
         rateOfFire = 1200; //milliseconds
-        targetingType = "weak";
+        targetingType = 'w';
     }
     else
     {
@@ -76,12 +76,12 @@ Towers::Towers(std::string type, Position pos)
         range = 3;
         power = 1;
         rateOfFire = 500; //milliseconds
-        targetingType = "near";
+        targetingType = 'n';
     }
 }
 
 //Constructor for type and custom targeting method
-Towers::Towers(std::string type, Position pos, std::string targType)
+Towers::Towers(std::string type, Position pos, char targType)
     : type(type)
     , position(pos)
     , targetingType(targType)
@@ -140,7 +140,7 @@ void Towers::findFireZone(const std::vector<Position>& path){
     fireZone.clear();
     Position p;
     //clunky solution. grows at n*k; n=size of path, k = range. could implement with quicksort instead to make this faster
-    if(targetingType == "near"){//prioritizing being close to tower
+    if(targetingType == 'n'){//prioritizing being close to tower
         for(int i = 1; i <=2*range; i++){
             for(int index = path.size()-1; index>=0; index--){
                 p = path[index];
@@ -161,24 +161,61 @@ void Towers::findFireZone(const std::vector<Position>& path){
     }
 }
 
-//determines if a critter is in range
+//determines if a critter is in range -- made this function inline
 /*bool Towers::isInRange(Critter* critter) const{
     return (abs(critter->getPosition().x - position.x)) <= range && (abs(critter->getPosition().y - position.y) <= range);
 }*/
 
 // returns the pointer to the highest priority critter. uses fireZone attribute
 Critter* Towers::findTarget(const std::vector<Critter*>& activeCritters) const {
-    for(Critter* critter : activeCritters){
-        if(isInRange(critter)){
-            for(int index : fireZone){
-                if(critter->getPositionIndex()==index){
-                    return critter;
+    if(activeCritters.size() == 0)
+        return nullptr; //can't target a critter if none in play
+    switch (targetingType){
+        case 'e':{
+            //exit
+            Critter* closestToExit = activeCritters[0];
+            for(Critter* critter : activeCritters){
+                if(isInRange(critter) && (critter->getPositionIndex() > closestToExit->getPositionIndex())){
+                    closestToExit = critter;
                 }
             }
+            return closestToExit;
+            break;
+        }
+        case 'n':{//near
+                Critter* nearestCritter = activeCritters[0];
+                for(Critter* critter : activeCritters){
+                    if(isInRange(critter)){
+                        //now checking if it's closer than nearest
+                        if((abs(critter->getPosition().x - position.x)) + //not really finding distance but it's fine...
+                        (abs(critter->getPosition().y - position.y)) < //is the x distance + y distance less than
+                        ((abs(nearestCritter->getPosition().x - position.x)) + //the nearest critter's x + y distance?
+                        (abs(nearestCritter->getPosition().y - position.y)))){
+                            nearestCritter = critter;
+                        }
+                    }
+                    
+                }
+            return nearestCritter;
+            break;
+        }
+        case 's':{//strong
+                return findStrongTarget(activeCritters);
+            break;
+        }
+        case 'w':{//weak
+            return findWeakTarget(activeCritters);
+            break;
+        }
+        default:{//invalid / no targ type
+            cerr << "invalid targeting type";
+            return nullptr;
+            break;
         }
     }
-    return nullptr; //no valid critter found
+    return nullptr; //no valid critter found      
 }
+
 // returns the pointer to the least strong critter in range
 Critter* Towers::findWeakTarget(const std::vector<Critter*>& activeCritters) const {
     if(activeCritters.size() > 0){
@@ -283,7 +320,7 @@ double Towers::getRange() const { return range; }
 double Towers::getPower() const { return power; }
 double Towers::getRateOfFire() const { return rateOfFire; }
 double Towers::getLevel() const { return level; }
-std::string Towers::getTargetingType() const {return targetingType;}
+char Towers::getTargetingType() const {return targetingType;}
 std::vector<int> Towers::getFireZone() const {return fireZone;}
 
 // Setters
@@ -293,6 +330,6 @@ void Towers::setRange(double towerRange) { range = towerRange; notifyObservers()
 void Towers::setPower(double towerPower) { power = towerPower; notifyObservers(); }
 void Towers::setRateOfFire(double fireRate) { rateOfFire = fireRate; notifyObservers(); }
 void Towers::setLevel(double newLevel) { level = newLevel; notifyObservers(); }
-void Towers::setTargetingType(std::string targType) {targetingType = targType; notifyObservers(); }
+void Towers::setTargetingType(char targType) {targetingType = targType; notifyObservers(); }
 void Towers::setFireZone(std::vector<int> fZone) {fireZone = fZone; notifyObservers();}
 
