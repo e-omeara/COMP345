@@ -24,6 +24,11 @@ private:
     std::vector<TowerObserver*> observers;
     std::vector<int> fireZone;
 
+protected:
+    inline bool isInRange(Critter* critter) const 
+    {return (abs(critter->getPosition().x - position.x) <= range) 
+         && (abs(critter->getPosition().y - position.y) <= range);};
+    
     // sets fireZone to the section of the path that is in range in descending order of priority. Only called on creation or movement
     void findFireZone(const std::vector<Position>& path); //prioritizes being close to the exit, unless targ type is near
 
@@ -32,7 +37,6 @@ public:
     Towers(double level = 0.0, double cost = 0.0, double refund = 0.0, double towerRange = 0.0, 
         double towerPower = 0.0, double fireRate = 0.0, std::string type = "N/A", 
         Position pos = getOrigin(0,0), std::string targetingType = "N/A");
-    
 
     // Constructor for type
     Towers(std::string type, Position position);
@@ -55,10 +59,11 @@ public:
 
     void notifyObservers();
 
-    // returns a critter for shooting. uses fireZone attribute
-    Critter& findTarget() const; //returns first critter according to priority. used by both exit and near
-    Critter& findWeakTarget() const; //returns weakest critter in range
-    Critter& findStrongTarget() const; //returns strongest critter
+    // returns a critter pointer for shooting. uses fireZone attribute. returns a null pointer on failure
+    //only call if activeCritters size > 0
+    Critter* findTarget(const std::vector<Critter*>& activeCritters) const; //returns first critter according to priority. used by both exit and near
+    Critter* findWeakTarget(const std::vector<Critter*>& activeCritters) const; //returns weakest critter in range
+    Critter* findStrongTarget(const std::vector<Critter*>& activeCritters) const; //returns strongest critter
 
 
     // Getters
