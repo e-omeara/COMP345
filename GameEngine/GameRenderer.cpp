@@ -71,7 +71,7 @@ void GameRenderer::playTime(){
     delete window;
     window = new sf::RenderWindow(sf::VideoMode({600, 400}), "Playtime!");
     window->setTitle("Battle Time !");
-    sf::Clock* simulationClock;
+    sf::Clock* simulationClock = new sf::Clock();
     float elapsedTime = 0;
     
     
@@ -80,9 +80,22 @@ void GameRenderer::playTime(){
         {
 
             if (event->is<sf::Event::Closed>())
-               { window->close();
+               { 
+                
+                window->close();
+                delete simulationClock;
+
                 return;
             }
+
+            if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>()){
+                if (keyPressed->scancode == sf::Keyboard::Scancode::Escape){
+                    window->close();
+                    delete simulationClock;
+
+
+                    return;
+                }}
             
         }
                
@@ -149,7 +162,9 @@ void GameRenderer::startGame(){
 
  mainWindow();
  makeMapWindow();
+ 
  playTime();
+ 
     
 
     

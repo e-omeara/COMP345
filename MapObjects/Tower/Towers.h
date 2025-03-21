@@ -33,7 +33,7 @@ public:
     static Position getOrigin(int x, int y);
 
     // base shoot method
-    void shoot(Critter& critter);
+    virtual void shoot(Critter& critter);
 
     // level up method
     void levelUp(double& balance);
@@ -45,12 +45,12 @@ public:
     void notifyObservers();
 
     // Getters
-    double getBuyingCost() const;
-    double getRefundValue() const;
-    double getRange() const;
-    double getPower() const;
-    double getRateOfFire() const;
-    double getLevel() const;
+    virtual double getBuyingCost() const;
+    virtual double getRefundValue() const;
+    virtual double getRange() const;
+    virtual double getPower() const;
+    virtual double getRateOfFire() const;
+    virtual double getLevel() const;
 
 
     // Setters

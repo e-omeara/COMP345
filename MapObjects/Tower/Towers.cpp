@@ -110,7 +110,8 @@ void Towers::levelUp(double& balance)
     level += 1;
     balance -= buyingCost;
     //shoots faster
-    if(type.compare("archer"))
+
+    /*if(type.compare("archer"))
     {
         refundValue += 4;
         power += 1;
@@ -131,6 +132,7 @@ void Towers::levelUp(double& balance)
         refundValue += 10;
         power += 5;
     }
+        */
 
     notifyObservers();
 }

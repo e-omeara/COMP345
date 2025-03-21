@@ -10,6 +10,8 @@
 #include "SFMLCritterSimulator.h"
 #include "GameRenderer.h"
 #include "Player.h"
+#include "TowerDecorator.h"
+#include "ValueModifierDecorator.h"
 
 Position coordToPosition(const coord &c) {
    Position p;
@@ -46,6 +48,49 @@ int main() {
  delete mgraphics;
  delete player;
  
+
+
+
+
+
+//Tower Decorator Test Cases
+
+std::cout << "Hello, World!" << std::endl;
+
+double balance = 1000;
+
+Towers* archer = new Towers("archer", {0,0});
+Towers ballista("ballista", {0,0});
+Towers catapult("catapult", {50,50});
+
+TowerObserver* observer = new TowerObserver(*archer);
+
+TowerSimulator tSim(observer , archer);
+tSim.runGame();
+
+std::vector<Position> path { {0,0}, {1,0}, {2,0}, {3,0}, {4,0}, {5,0}, {6,0}, {7,0} };
+Critter enemy(20, 1, 3, 1, 7, path);
+
+
+std::cout << "Initial Stats: " << std::endl;
+std::cout << "Level: " << ballista.getLevel() << std::endl;
+std::cout << "Cost: " << ballista.getBuyingCost() << std::endl;
+std::cout << "Refund: " << ballista.getRefundValue() << std::endl;
+std::cout << "Range: " << ballista.getRange() << std::endl;
+std::cout << "Power: " << ballista.getPower() << std::endl;
+std::cout << "Rate Of Fire: " << ballista.getRateOfFire() << std::endl;
+ValueModifierDecorator upgradedBallista("ballista", {3,3}, ballista, 20, 10, 1, 2, 100);
+std::cout << "Upgraded Stats: " << std::endl;
+std::cout << "Level: " << upgradedBallista.getLevel() << std::endl;
+std::cout << "Cost: " << upgradedBallista.getBuyingCost() << std::endl;
+std::cout << "Refund: " << upgradedBallista.getRefundValue() << std::endl;
+std::cout << "Range: " << upgradedBallista.getRange() << std::endl;
+std::cout << "Power: " << upgradedBallista.getPower() << std::endl;
+std::cout << "Rate Of Fire: " << upgradedBallista.getRateOfFire() << std::endl;
+
+
+
+
 
 /*
  //Getting the made path from the map.

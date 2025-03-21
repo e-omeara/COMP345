@@ -39,7 +39,7 @@ int main() {
    
    //Critter Test Case
    SFMLCritterSimulator simulator(map, critterPath);
-   simulator.runSimulation();
+   //simulator.runSimulation();
 
    delete map;
    delete mapobserver;
