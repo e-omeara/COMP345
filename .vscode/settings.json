@@ -71,7 +71,10 @@
         "list": "cpp",
         "mutex": "cpp",
         "unordered_map": "cpp",
-        "xhash": "cpp"
+        "xhash": "cpp",
+        "filesystem": "cpp",
+        "unordered_set": "cpp",
+        "variant": "cpp"
     },
     "C_Cpp.errorSquiggles": "disabled"
 }
