@@ -1,15 +1,14 @@
 #include "SFMLCritterSimulator.h"
+#include "CritterFactory.h"
 #include <iostream>
 #include <thread>
 
 //Constructor, create window and load resources.
 SFMLCritterSimulator::SFMLCritterSimulator(Map* map, const std::vector<Position>& path)
-    : map(map), path(path), window(sf::VideoMode({600,400}), "Critter Simulation") {
+    : map(map), path(path), window(sf::VideoMode({600,400}), "Critter Simulation"), currentWave(1), maxWave(3) {
     loadResources();
-    // Create one of each critter type initially and put them in pending.
-    pendingCritters.push_back(new FastCritter(path));
-    pendingCritters.push_back(new TankCritter(path));
-    pendingCritters.push_back(new BossCritter(path));
+     // Create the first wave using the CritterFactory
+     pendingCritters = CritterFactory::createWave(currentWave, path);
 }
 
 //Load textures and font.
@@ -45,40 +44,55 @@ void SFMLCritterSimulator::trySpawnNextCritter() {
 }
 
 
-//Update critters: move them along the path and update sprite positions.
+//Update critters: move them along the path and update sprite positions
 void SFMLCritterSimulator::updateCritters(float dt) {
-    //For each active critter, call move() once per update interval.
-    for(size_t i = 0; i < activeCritters.size(); i++){
+    //Iterate backwards so that erasing elements does not skip any
+    for (int i = static_cast<int>(activeCritters.size()) - 1; i >= 0; --i) {
         activeCritters[i]->move();
-        Position pos = activeCritters[i]->getPosition();
-        critterSprites[i].setPosition({pos.x * 40.f, pos.y * 40.f});
+        //Check if the critter has reached the end of the path or is no longer alive (hp=0)
+        if (activeCritters[i]->hasReachedEnd() || !activeCritters[i]->isAlive()) {
+            
+            std::cout << activeCritters[i]->getType() 
+                      << " removed (reached end or dead)." << std::endl;
+            //Erase the sprite and delete the critter
+            critterSprites.erase(critterSprites.begin() + i);
+            delete activeCritters[i];
+            activeCritters.erase(activeCritters.begin() + i);
+        }
+        else {
+            //Update sprite position if still active.
+            Position pos = activeCritters[i]->getPosition();
+            critterSprites[i].setPosition({ pos.x * 40.f, pos.y * 40.f });
+        }
     }
-    //Check spawn condition.
     trySpawnNextCritter();
 }
 
-//Draw the map background for visual clarity, then all critters.
+//Draw simulation: background, critters, health bars, tooltips, and current wave info
 void SFMLCritterSimulator::drawSimulation() {
     window.clear(sf::Color::Black);
 
-    //Get mouse position for tooltip detection, when hovering over critters.
+    //Draw current wave information.
+    sf::Text waveText(font);
+    waveText.setString("Wave: " + std::to_string(currentWave));
+    waveText.setFillColor(sf::Color::Yellow);
+    waveText.setPosition({10.f, 10.f});
+    window.draw(waveText);
+
+    //Get mouse position for tooltip detection.
     sf::Vector2i mousePos = sf::Mouse::getPosition(window);
-    
+
     //Draw active critters.
-    for(size_t i = 0; i < activeCritters.size(); i++){
+    for (size_t i = 0; i < activeCritters.size(); i++) {
         window.draw(critterSprites[i]);
         
-        //Draw health bar above each critter.
-        float maxHP;
-        for (size_t i = 0; i < activeCritters.size(); i++) {
-            if (activeCritters[i] == nullptr) {
-                std::cerr << "Warning: activeCritters[" << i << "] is null.\n";
-                continue;
-            }
-            maxHP = (activeCritters[i]->getType() == "Fast Critter") ? 20.f :
-                          (activeCritters[i]->getType() == "Tank Critter") ? 50.f : 100.f;
-            
-        }
+        // Draw health bar above each critter.
+        float maxHP = (activeCritters[i]->getType() == "Fast Critter") ? 20.f :
+                      (activeCritters[i]->getType() == "Tank Critter") ? 50.f : 100.f;
+        // Adjust maxHP to account for scaling (simplistic linear scaling).
+        maxHP += (currentWave - 1) * ((activeCritters[i]->getType() == "Fast Critter") ? 5.f :
+                 (activeCritters[i]->getType() == "Tank Critter") ? 10.f : 20.f);
+                 
         float currentHP = static_cast<float>(activeCritters[i]->getHP());
         float ratio = currentHP / maxHP;
         sf::RectangleShape barBack(sf::Vector2f(40.f, 5.f));
@@ -86,28 +100,42 @@ void SFMLCritterSimulator::drawSimulation() {
         sf::RectangleShape barFront(sf::Vector2f(40.f * ratio, 5.f));
         barFront.setFillColor(sf::Color::Green);
         sf::Vector2f pos = critterSprites[i].getPosition();
-        barBack.setPosition({pos.x, pos.y - 10});
-        barFront.setPosition({pos.x, pos.y - 10});
+        barBack.setPosition({ pos.x, pos.y - 10 });
+        barFront.setPosition({ pos.x, pos.y - 10 });
         window.draw(barBack);
         window.draw(barFront);
         
-        //Draw tooltip if mouse hovers over critters
-        if(critterSprites[i].getGlobalBounds().contains({static_cast<float>(mousePos.x),
-                                                         static_cast<float>(mousePos.y)})) {
+        // Draw tooltip if mouse hovers over the critter.
+        if (critterSprites[i].getGlobalBounds().contains({ static_cast<float>(mousePos.x),
+                                                           static_cast<float>(mousePos.y) })) {
             std::string tip = activeCritters[i]->getType() +
                 "\nHP: " + std::to_string(activeCritters[i]->getHP()) +
                 "\nSpeed: " + std::to_string(activeCritters[i]->getSpeed()) +
                 "\nStrength: " + std::to_string(activeCritters[i]->getStrength());
             sf::Text tooltip(font);
-            tooltip.setString(sf::String(tip));
+            tooltip.setString(tip);
             tooltip.setFillColor(sf::Color::White);
             tooltip.setOutlineColor(sf::Color::Black);
             tooltip.setOutlineThickness(2.f);
-            tooltip.setPosition({pos.x, pos.y - 40});
+            tooltip.setPosition({ pos.x, pos.y - 40 });
             window.draw(tooltip);
         }
     }
     window.display();
+}
+
+//If no critters remain, load the next wave
+void SFMLCritterSimulator::checkAndLoadNextWave() {
+    if (activeCritters.empty() && pendingCritters.empty()) {
+        if (currentWave < maxWave) {
+            currentWave++;
+            std::cout << "Starting Wave " << currentWave << std::endl;
+            pendingCritters = CritterFactory::createWave(currentWave, path);
+        } else {
+            std::cout << "Maximum wave reached. Simulation over." << std::endl;
+            window.close();
+        }
+    }
 }
 
 //Main simulation loop
@@ -162,6 +190,7 @@ void SFMLCritterSimulator::runSimulation() {
             elapsedTime = 0.f;
         }
         drawSimulation();
+        checkAndLoadNextWave();
         std::this_thread::sleep_for(std::chrono::milliseconds(50));
     }
     

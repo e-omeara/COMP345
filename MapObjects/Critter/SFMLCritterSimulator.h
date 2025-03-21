@@ -28,9 +28,13 @@ private:
     //Active critters currently moving and their sprites.
     std::vector<Critter*> activeCritters;
     std::vector<sf::Sprite> critterSprites;
-    // Pending critters to be spawned.
+    //Pending critters to be spawned.
     std::vector<Critter*> pendingCritters;
     
+    //Keeping track of wave number
+    int currentWave;
+    int maxWave;
+
     //Helper methods:
 
     void loadResources();
@@ -40,6 +44,8 @@ private:
     void updateCritters(float dt);
     //Draw the map background (for visual clarity) and all active critters with health bars and tooltips.
     void drawSimulation();
+    //Check if the current wave is finished and load the next wave.
+    void checkAndLoadNextWave();
 };
 
 #endif
