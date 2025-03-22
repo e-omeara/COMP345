@@ -33,7 +33,8 @@ Towers::Towers(double level, double cost, double refund, double towerRange,
 //Use this one for driver
 Towers::Towers(std::string type, Position pos)
     : type(type)
-    , position(pos)
+    , position(pos),
+    targetingType('e')
 {
     level = 1;
     if(type == "archer")
@@ -42,7 +43,7 @@ Towers::Towers(std::string type, Position pos)
         buyingCost = 10;
         refundValue = 3;
         range = 3;
-        power = 1;
+        power = 2;
         rateOfFire = 500; //milliseconds
     }
     else if(type == "ballista")
@@ -73,6 +74,52 @@ Towers::Towers(std::string type, Position pos)
         rateOfFire = 500; //milliseconds
     }
 }
+
+//Constructor for type and custom targeting method
+Towers::Towers(std::string type, Position pos, char targType)  : type(type)
+, position(pos)
+, targetingType(targType)
+{
+level = 1;
+if(type == "archer")
+{
+    //std::cout << "Archer " << std::endl;
+    buyingCost = 10;
+    refundValue = 3;
+    range = 3;
+    power = 1;
+    rateOfFire = 500; //milliseconds
+}
+else if(type == "ballista")
+{
+    //std::cout << "ballista " << std::endl;
+    buyingCost = 20;
+    refundValue = 6;
+    range = 7;
+    power = 5;
+    rateOfFire = 1000; //milliseconds
+}
+else if(type == "catapult")
+{
+    //std::cout << "catapult " << std::endl;
+    buyingCost = 30;
+    refundValue = 10;
+    range = 5;
+    power = 10;
+    rateOfFire = 1200; //milliseconds
+}
+else
+{
+    //defaults to archer, but shoots near
+    buyingCost = 10;
+    refundValue = 3;
+    range = 3;
+    power = 1;
+    rateOfFire = 500; //milliseconds
+}
+}
+
+
 //Method to get the origin position
 Position Towers::getOrigin(int x = 0, int y = 0){
     Position origin;
@@ -83,6 +130,83 @@ Position Towers::getOrigin(int x = 0, int y = 0){
 }
 
 
+// returns the pointer to the highest priority critter. uses fireZone attribute
+Critter* Towers::findTarget(const std::vector<Critter*>& activeCritters) const {
+    if(activeCritters.size() == 0)
+        return nullptr; //can't target a critter if none in play
+    switch (targetingType){
+        case 'e':{
+            //exit
+            Critter* closestToExit = activeCritters[0];
+            for(Critter* critter : activeCritters){
+                if(isInRange(critter) && (critter->getPositionIndex() > closestToExit->getPositionIndex())){
+                    closestToExit = critter;
+                }
+            }
+            return closestToExit;
+            break;
+        }
+        case 'n':{//near
+                Critter* nearestCritter = activeCritters[0];
+                for(Critter* critter : activeCritters){
+                    if(isInRange(critter)){
+                        //now checking if it's closer than nearest
+                        if((abs(critter->getPosition().x - position.x)) + //not really finding distance but it's fine...
+                        (abs(critter->getPosition().y - position.y)) < //is the x distance + y distance less than
+                        ((abs(nearestCritter->getPosition().x - position.x)) + //the nearest critter's x + y distance?
+                        (abs(nearestCritter->getPosition().y - position.y)))){
+                            nearestCritter = critter;
+                        }
+                    }
+                    
+                }
+            return nearestCritter;
+            break;
+        }
+        case 's':{//strong
+                return findStrongTarget(activeCritters);
+            break;
+        }
+        case 'w':{//weak
+            return findWeakTarget(activeCritters);
+            break;
+        }
+        default:{//invalid / no targ type
+            cerr << "invalid targeting type";
+            return nullptr;
+            break;
+        }
+    }
+    return nullptr; //no valid critter found      
+}
+
+// returns the pointer to the least strong critter in range
+Critter* Towers::findWeakTarget(const std::vector<Critter*>& activeCritters) const {
+    if(activeCritters.size() > 0){
+        Critter* weakest = activeCritters[0];
+        for(Critter* critter : activeCritters){
+            if(isInRange(critter) && critter->getStrength() < weakest->getStrength()){
+                weakest = critter;
+            }
+        }
+        return weakest;
+    }
+    return nullptr; //no valid critter found
+}
+// returns the pointer to the strongest critter in range
+Critter* Towers::findStrongTarget(const std::vector<Critter*>& activeCritters) const {
+    if(activeCritters.size() > 0){
+        Critter* strongest = activeCritters[0];
+        for(Critter* critter : activeCritters){
+            if(isInRange(critter) && critter->getStrength() > strongest->getStrength()){
+                strongest = critter;
+            }
+        }
+        return strongest;
+    }
+    return nullptr; //no valid critter found
+}
+
 //recursive shoot method that allows for variable sized parameter
 //parameter size >1 mostly for catapult allowing to hit more enemies
 //Critter will not get hit if it is out of range
@@ -92,16 +216,19 @@ void Towers::shoot(Critter& critter)
     //std::cout << std::abs(critter.getPosition().y - position.y) << std::endl;
     //std::cout << range << std::endl;
     //std::cout << (std::abs(critter.getPosition().x - position.x) < range) << std::endl;
-    if(std::abs(critter.getPosition().x - position.x) < range || std::abs(critter.getPosition().y - position.y) < range)
+    if(isInRange(&critter))
     {
-        critter.setHP(critter.getHP()-power);
-        std::cout << "Hit!" << std::endl;
+        critter.takeDamage(int(power));
+        std::cout << "Hit critter at position x: " << critter.getPosition().x  << ", y: " << critter.getPosition().y << std::endl;
     }
     else
     {
         std::cout << "Out of Range!" << std::endl;
     }
 }
+
+
+
 
 
 //level up method where balance is the player's gold balance
@@ -148,6 +275,8 @@ void Towers::removeObserver(TowerObserver* observer) {
 }
 
 void Towers::notifyObservers() {
+    cerr << "notifying observers..." << endl;
+    
     for (TowerObserver* observer : observers) {
         observer->update(level, buyingCost, refundValue, range, power, rateOfFire, position, type);
     }

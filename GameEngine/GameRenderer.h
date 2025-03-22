@@ -26,6 +26,7 @@ class GameRenderer {
      Player* player;
      bool isPlaying;
      SFMLCritterSimulator* critSim;
+     Towers* myTower;
     
 
 

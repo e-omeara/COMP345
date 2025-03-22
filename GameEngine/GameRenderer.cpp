@@ -15,6 +15,8 @@ GameRenderer::GameRenderer(Player* theplayer, Map* themap,  MapGraphics* themapG
     map = themap;
     mapGraphics = themapGraphics;
     critSim = crSim;
+    myTower =  new Towers("archer", {5, 5});
+
 
 }
 
@@ -73,6 +75,9 @@ void GameRenderer::playTime(){
     window->setTitle("Battle Time !");
     sf::Clock* simulationClock = new sf::Clock();
     float elapsedTime = 0;
+    vector<Critter *>  mycritters;
+    Critter* critt;
+   // Critter* critt;
     
     
     while(window->isOpen()){
@@ -113,6 +118,16 @@ void GameRenderer::playTime(){
     elapsedTime = critSim->checkClock(elapsedTime, simulationClock);
     critSim->drawSimulation(window);
     critSim->checkAndLoadNextWave(window);
+    mycritters = critSim->getCritters();
+    //
+    if(elapsedTime == 0.f){
+        critt = myTower->findTarget(mycritters);
+        if(critt != NULL){
+            myTower->shoot(*critt);
+        }
+    }
+    
+    
     //render hover stats
 
     window->display();
@@ -164,6 +179,8 @@ void GameRenderer::startGame(){
  makeMapWindow();
  
  playTime();
+
+ 
  
     
 

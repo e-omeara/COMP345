@@ -23,6 +23,12 @@ Position coordToPosition(const coord &c) {
 
 int main() {
 
+
+
+
+
+
+
  //testing game engine and renderer
  MapObserver* mapobserver = new MapObserver;
  Map* map = new Map(20, 10);
@@ -51,15 +57,13 @@ int main() {
 
 
 
-
-
 //Tower Decorator Test Cases
 
 std::cout << "Hello, World!" << std::endl;
 
 double balance = 1000;
 
-Towers* archer = new Towers("archer", {0,0});
+Towers* archer = new Towers("archer", {5,5});
 Towers ballista("ballista", {0,0});
 Towers catapult("catapult", {50,50});
 
@@ -68,6 +72,59 @@ TowerObserver* observer = new TowerObserver(*archer);
 TowerSimulator tSim(observer , archer);
 tSim.runGame();
 
+
+
+
+
+
+
+//testing targeting strategy
+
+std::vector<Position> mypath { {4,3}, {4,4}, {4,5}, {4,6}, {5,6}, {6,6}, {6,7}, {7,7}, {8,6}, {9,5}, {10,6}, {10,7}, {9,7}, {8,7}, {8,8}, {9,9} };
+Towers mytower("archer", {5, 5}, 'n');
+CritterGroup newcrits(1, mypath);
+vector<Critter> mycritvector = newcrits.getCritters();
+vector<Critter*> mycritters;
+int moves = 0;
+for(auto &c : mycritvector){
+   for(int i = 0; i < moves/2; i++){
+      c.move();
+   }
+   moves++;
+   mycritters.push_back(&c);
+}
+//mytower.findTarget(mycritters);
+Critter* critt = mytower.findTarget(mycritters);
+mytower.shoot(*critt);
+
+
+for(int j = 0; j < 9; j++){
+   for(auto &c : mycritters){
+      c->move();
+   }
+   critt = mytower.findTarget(mycritters);
+   mytower.shoot(*critt);
+   
+
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//Tower
+/*
 std::vector<Position> path { {0,0}, {1,0}, {2,0}, {3,0}, {4,0}, {5,0}, {6,0}, {7,0} };
 Critter enemy(20, 1, 3, 1, 7, path);
 
@@ -87,6 +144,25 @@ std::cout << "Refund: " << upgradedBallista.getRefundValue() << std::endl;
 std::cout << "Range: " << upgradedBallista.getRange() << std::endl;
 std::cout << "Power: " << upgradedBallista.getPower() << std::endl;
 std::cout << "Rate Of Fire: " << upgradedBallista.getRateOfFire() << std::endl;
+
+
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

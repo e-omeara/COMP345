@@ -6,6 +6,8 @@
 #include "TowerSimulator.h"
 #include "TowerObserver.h"
 #include "Towers.h"
+#include "TowerDecorator.h"
+#include "ValueModifierDecorator.h"
 
 
 
@@ -38,7 +40,12 @@ int TowerSimulator::createWindow(){
                 } else if (keyPressed->scancode == sf::Keyboard::Scancode::U){
                     //level up the tower
                     double balance = 1000;
-                    tower->levelUp(balance);
+                    //tower->levelUp(balance);
+                    tower = new ValueModifierDecorator("archer", {5,5}, *tower, 20, 10, 1, 2, 100);
+                    tObserver->update(tower->getLevel(), tower->getBuyingCost(), tower->getRefundValue(), tower->getRange(), tower->getPower(), tower->getRateOfFire(), {5,5}, "value modifier" );
+                    cerr << tower->getPower();
+                    
+                    
                 }
                 
                     

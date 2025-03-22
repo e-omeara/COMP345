@@ -269,7 +269,7 @@ int MapGraphics::renderMap(sf::RenderWindow* theWindow){
     topCorner = 100.f;
     sf::Vector2f tileSize(tilelength, tilelength);
 
-    scenery.setFillColor(sf::Color::Green);
+    scenery.setFillColor(sf::Color::Magenta);
     scenery.setSize(tileSize);
     scenery.setPosition(sf::Vector2f(100.f, 100.f));
 
@@ -292,7 +292,11 @@ int MapGraphics::renderMap(sf::RenderWindow* theWindow){
     for(int i = 0; i < width; i++){
         for(int j = 0; j < height; j++){
             char tilechar = map[j*width + i];
-            if(tilechar == '-'){
+            if(i == 5 && j == 5){
+                tower.setPosition(sf::Vector2f(topCorner + tilelength*i, topCorner + tilelength*j));
+                theWindow->draw(tower);
+            }
+            else if(tilechar == '-'){
                 scenery.setPosition(sf::Vector2f(topCorner + tilelength*i, topCorner + tilelength*j));
                 theWindow->draw(scenery);
             }else if(tilechar == 'P'){

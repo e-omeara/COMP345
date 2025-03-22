@@ -11,4 +11,5 @@ ValueModifierDecorator::ValueModifierDecorator(std::string type, Position pos, T
     setRange(decoratedTower.getRange()+rangeMod);
     setPower(decoratedTower.getPower()+powerMod);
     setRateOfFire(decoratedTower.getRateOfFire()-rofMod);
+    
 }

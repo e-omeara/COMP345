@@ -22,6 +22,8 @@ public:
     //Check if the current wave is finished and load the next wave.
     void checkAndLoadNextWave(sf::RenderWindow* theWindow);
 
+    std::vector<Critter*> getCritters();
+
 private:
 
     Map* map;                    

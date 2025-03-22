@@ -131,6 +131,10 @@ CritterGroup::CritterGroup(int waveLevel, std::vector<Position> path) {
     generateWave(waveLevel, path);
 }
 
+std::__1::vector<Critter> CritterGroup::getCritters(){
+    return critters;
+}
+
 //Generate a wave of critters
 void CritterGroup::generateWave(int waveLevel, std::vector<Position> path) {
     for (int i = 0; i < 3; ++i) critters.emplace_back(FastCritter(path));

@@ -18,6 +18,7 @@ private:
     double power;
     double rateOfFire;
     std::string type;
+    char targetingType;
     Position position;
     std::vector<TowerObserver*> observers;
 
@@ -29,6 +30,9 @@ public:
 
     // Constructor for type
     Towers(std::string type, Position position);
+
+    // Constructor for type
+    Towers(std::string type, Position position, char targType);
     // Default position method
     static Position getOrigin(int x, int y);
 
@@ -37,6 +41,19 @@ public:
 
     // level up method
     void levelUp(double& balance);
+
+
+    inline bool isInRange(Critter* critter) const 
+    {return (abs(critter->getPosition().x - position.x) <= range) 
+         && (abs(critter->getPosition().y - position.y) <= range);};
+
+
+    //findTarget() calls findWeakTarget() or findStrongTarget() for weak and strong targeting types, respectively
+    Critter* findTarget(const std::vector<Critter*>& activeCritters) const; //returns first critter according to priority. used by both exit and near
+    
+    //normally shouldn't be manually called. findTarget() will determine the appropriate method.
+    Critter* findWeakTarget(const std::vector<Critter*>& activeCritters) const; //returns weakest critter in range
+    Critter* findStrongTarget(const std::vector<Critter*>& activeCritters) const; //returns strongest critter
 
     void addObserver(TowerObserver* observer);
 

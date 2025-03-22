@@ -23,6 +23,10 @@ void SFMLCritterSimulator::loadResources() {
         std::cerr << "Error loading arial.ttf\n";
 }
 
+std::__1::vector<Critter *> SFMLCritterSimulator::getCritters(){
+    return activeCritters;
+}
+
 //Try to spawn the next critter, conditions are: if no active critters exist or the last one reached halfway through the path.
 void SFMLCritterSimulator::trySpawnNextCritter() {
     float topCorner = 100.f;
@@ -31,7 +35,7 @@ void SFMLCritterSimulator::trySpawnNextCritter() {
 
     if (pendingCritters.empty())
         return;
-    if (activeCritters.empty() || activeCritters.back()->getPositionIndex() >= (path.size() / 2)) {
+    if (activeCritters.empty() || activeCritters.back()->getPositionIndex() >= (path.size() / 4)) {
         Critter* next = pendingCritters.front();
         pendingCritters.erase(pendingCritters.begin());
         activeCritters.push_back(next);

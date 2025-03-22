@@ -19,7 +19,7 @@ TowerObserver::TowerObserver(Towers& tower) : tower(tower)
 
 void TowerObserver::update(double tlevel, double buyingCost, double refundValue, double trange, double tpower, double rateOfFire, Position tposition, string tType)
 {
-    std::cout << "Updated Tower View: " << std::endl <<
+    std::cerr << "Updated Tower View: " << std::endl <<
     "Level: " << tlevel <<  std::endl <<
     "BuyingCost " << buyingCost <<  std::endl <<
     "Refund Value " << refundValue <<  std::endl <<
