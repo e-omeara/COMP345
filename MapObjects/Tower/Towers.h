@@ -55,10 +55,12 @@ public:
     Critter* findWeakTarget(const std::vector<Critter*>& activeCritters) const; //returns weakest critter in range
     Critter* findStrongTarget(const std::vector<Critter*>& activeCritters) const; //returns strongest critter
 
+
     void addObserver(TowerObserver* observer);
 
     void removeObserver(TowerObserver* observer);
 
+    //TODO: make virtual
     void notifyObservers();
 
     // Getters

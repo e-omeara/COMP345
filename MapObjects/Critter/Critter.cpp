@@ -148,6 +148,7 @@ void CritterGroup::moveCritters(int& playerCoins) {
     for (auto& critter : critters) {
         if (critter.isAlive()) {
             if (critter.hasReachedEnd()) {
+                //TODO: add player class and steal coins
                 playerCoins -= critter.stealCoins();
                 //Test Case
                 std::cout << "Critter reached the exit! Player lost " << critter.stealCoins() << " coins!\n";

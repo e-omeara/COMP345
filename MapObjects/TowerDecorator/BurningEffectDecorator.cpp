@@ -40,7 +40,7 @@ void BurningEffectDecorator::updateBurningEffects(){
         }
     }
 }
-
+//getter methods
 double BurningEffectDecorator::getBurnDamage(){
     return burnDamagePerTick;
 }

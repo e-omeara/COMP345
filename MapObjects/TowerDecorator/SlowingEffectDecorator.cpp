@@ -56,6 +56,7 @@ void SlowingEffectDecorator::updateSlowingEffects() {
     }
 }
 
+//getter methods
 double SlowingEffectDecorator::getSlowFactor(){
     return slowFactor;
 }

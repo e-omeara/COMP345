@@ -11,14 +11,17 @@
 
 
 
-
+//default constructor
 TowerObserver::TowerObserver(Towers& tower) : tower(tower)
 {
+    //add observer to tower
     tower.addObserver(this);
 }
 
+//update function
 void TowerObserver::update(double tlevel, double buyingCost, double refundValue, double trange, double tpower, double rateOfFire, Position tposition, string tType)
 {
+    //set new stats for the tower
     std::cerr << "Updated Tower View: " << std::endl <<
     "Level: " << tlevel <<  std::endl <<
     "BuyingCost " << buyingCost <<  std::endl <<
@@ -32,7 +35,7 @@ void TowerObserver::update(double tlevel, double buyingCost, double refundValue,
     range = trange;
     level = tlevel;
 }
-
+//getter methods
 Position TowerObserver::getPosition(){
     return position;
 }

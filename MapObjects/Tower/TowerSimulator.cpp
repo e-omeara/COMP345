@@ -122,7 +122,7 @@ int TowerSimulator::renderTowers(){
     return 0;
 }
 
-
+//entry point to simulator
 int TowerSimulator::runGame(){
 
     createWindow();

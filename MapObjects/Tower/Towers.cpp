@@ -264,6 +264,7 @@ void Towers::levelUp(double& balance)
     notifyObservers();
 }
 
+
 void Towers::addObserver(TowerObserver* observer)
 {
     observers.push_back(observer);
@@ -273,7 +274,7 @@ void Towers::addObserver(TowerObserver* observer)
 void Towers::removeObserver(TowerObserver* observer) {
     observers.erase(remove(observers.begin(), observers.end(), observer), observers.end());
 }
-
+//TODO: make virtual
 void Towers::notifyObservers() {
     cerr << "notifying observers..." << endl;
     

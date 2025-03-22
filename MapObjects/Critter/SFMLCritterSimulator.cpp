@@ -217,6 +217,7 @@ void SFMLCritterSimulator::runSimulation(sf::RenderWindow window) {
 
 }
 
+//check to see if it is time to move the critters
 float SFMLCritterSimulator::checkClock(float elapsedTime, sf::Clock* simulationClock){
 
     

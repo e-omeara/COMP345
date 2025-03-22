@@ -26,13 +26,13 @@ class TowerSimulator{
     public:
     //methods
     TowerSimulator(TowerObserver* towerObserver, Towers* tower);
-
+    //entry point to simulator
     int runGame();
-
+    //create the window
     int createWindow();
-
+    //render the hover stats
     int renderTowers();
-
+    //TODO: create tower menu items
     int updatevisuals();
 
     
