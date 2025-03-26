@@ -2,10 +2,11 @@
 #include "CritterFactory.h"
 #include <iostream>
 #include <thread>
+#include <vector>
 
 //Constructor, create window and load resources.
 SFMLCritterSimulator::SFMLCritterSimulator(Map* map, const std::vector<Position>& path)
-    : map(map), path(path), window(sf::VideoMode({600,400}), "Critter Simulation"), currentWave(1), maxWave(3) {
+    : map(map), path(path), currentWave(1), maxWave(3), coinsRewarded(0), healthLost(0) {
     loadResources();
      // Create the first wave using the CritterFactory
      pendingCritters = CritterFactory::createWave(currentWave, path);
@@ -23,14 +24,27 @@ void SFMLCritterSimulator::loadResources() {
         std::cerr << "Error loading arial.ttf\n";
 }
 
+std::vector<Critter *> SFMLCritterSimulator::getCritters(){
+    return activeCritters;
+}
+
 //Try to spawn the next critter, conditions are: if no active critters exist or the last one reached halfway through the path.
 void SFMLCritterSimulator::trySpawnNextCritter() {
+    float topCorner = 100.f;
+    float tileSize = 20.f;
+    
+
     if (pendingCritters.empty())
         return;
-    if (activeCritters.empty() || activeCritters.back()->getPositionIndex() >= (path.size() / 2)) {
+    if (activeCritters.empty() || activeCritters.back()->getPositionIndex() >= (path.size() / 4)) {
         Critter* next = pendingCritters.front();
         pendingCritters.erase(pendingCritters.begin());
         activeCritters.push_back(next);
+
+        //For smooth critter movement, track progress data
+        critterMoveProgress.push_back(0.f);
+        prevPositions.push_back(path[0]); //Starting position.
+
         std::string type = activeCritters.back()->getType();
         sf::Sprite sprite = (type == "Fast Critter") 
      ? sf::Sprite(fastTexture)
@@ -39,6 +53,7 @@ void SFMLCritterSimulator::trySpawnNextCritter() {
         : sf::Sprite(bossTexture);
 
         sprite.setScale({0.5f, 0.5f});
+        sprite.setPosition({topCorner + path[0].x * tileSize, topCorner + path[0].y * tileSize});
         critterSprites.push_back(sprite);
     }
 }
@@ -46,45 +61,83 @@ void SFMLCritterSimulator::trySpawnNextCritter() {
 
 //Update critters: move them along the path and update sprite positions
 void SFMLCritterSimulator::updateCritters(float dt) {
+
+    float tileSize = 20.f;
+    float topCorner = 100.f;
+    float simulationInterval = 0.5f; //Time (in seconds) to move one grid cell
+    
     //Iterate backwards so that erasing elements does not skip any
     for (int i = static_cast<int>(activeCritters.size()) - 1; i >= 0; --i) {
-        activeCritters[i]->move();
-        //Check if the critter has reached the end of the path or is no longer alive (hp=0)
-        if (activeCritters[i]->hasReachedEnd() || !activeCritters[i]->isAlive()) {
-            
-            std::cout << activeCritters[i]->getType() 
-                      << " removed (reached end or dead)." << std::endl;
-            //Erase the sprite and delete the critter
-            critterSprites.erase(critterSprites.begin() + i);
+        //Increment the move progress.
+        critterMoveProgress[i] += dt;
+        if (critterMoveProgress[i] >= simulationInterval) {
+            //Record the current grid cell before moving
+            prevPositions[i] = activeCritters[i]->getPosition();
+            //Advance the critter.
+            activeCritters[i]->move();
+            critterMoveProgress[i] -= simulationInterval;
+        }
+
+        //Calculation for smooth movement
+        float fraction = critterMoveProgress[i] / simulationInterval;
+        Position startPos = prevPositions[i];
+        Position endPos = activeCritters[i]->getPosition();
+        float interpX = startPos.x + (endPos.x - startPos.x) * fraction;
+        float interpY = startPos.y + (endPos.y - startPos.y) * fraction;
+        critterSprites[i].setPosition({ topCorner + interpX * tileSize, topCorner + interpY * tileSize });
+        
+        //Removal conditions
+        if(activeCritters[i]->hasReachedEnd()) {
+            healthLost += activeCritters[i]->stealCoins();
+            std::cout << activeCritters[i]->getType() << " reached the exit! Player lost " 
+                      << activeCritters[i]->stealCoins() << " health.\n";
             delete activeCritters[i];
             activeCritters.erase(activeCritters.begin() + i);
-        }
-        else {
-            //Update sprite position if still active.
-            Position pos = activeCritters[i]->getPosition();
-            critterSprites[i].setPosition({ pos.x * 40.f, pos.y * 40.f });
+            critterSprites.erase(critterSprites.begin() + i);
+            critterMoveProgress.erase(critterMoveProgress.begin() + i);
+            prevPositions.erase(prevPositions.begin() + i);
+        } else if(!activeCritters[i]->isAlive()) {
+            coinsRewarded += activeCritters[i]->getReward();
+            std::cout << activeCritters[i]->getType() << " killed! Player earned " 
+                      << activeCritters[i]->getReward() << " coins.\n";
+            delete activeCritters[i];
+            activeCritters.erase(activeCritters.begin() + i);
+            critterSprites.erase(critterSprites.begin() + i);
+            critterMoveProgress.erase(critterMoveProgress.begin() + i);
+            prevPositions.erase(prevPositions.begin() + i);
         }
     }
     trySpawnNextCritter();
 }
 
+bool SFMLCritterSimulator::isWaveComplete() const {
+    return activeCritters.empty() && pendingCritters.empty();
+}
+
+void SFMLCritterSimulator::startNextWave() {
+    if(currentWave < maxWave) {
+        currentWave++;
+        pendingCritters = CritterFactory::createWave(currentWave, path);
+    }
+}
+
 //Draw simulation: background, critters, health bars, tooltips, and current wave info
-void SFMLCritterSimulator::drawSimulation() {
-    window.clear(sf::Color::Black);
+void SFMLCritterSimulator::drawSimulation(sf::RenderWindow* theWindow) {
+    //theWindow->clear(sf::Color::Black);
 
     //Draw current wave information.
     sf::Text waveText(font);
     waveText.setString("Wave: " + std::to_string(currentWave));
     waveText.setFillColor(sf::Color::Yellow);
     waveText.setPosition({10.f, 10.f});
-    window.draw(waveText);
+    theWindow->draw(waveText);
 
     //Get mouse position for tooltip detection.
-    sf::Vector2i mousePos = sf::Mouse::getPosition(window);
+    sf::Vector2i mousePos = sf::Mouse::getPosition(*theWindow);
 
     //Draw active critters.
     for (size_t i = 0; i < activeCritters.size(); i++) {
-        window.draw(critterSprites[i]);
+        theWindow->draw(critterSprites[i]);
         
         // Draw health bar above each critter.
         float maxHP = (activeCritters[i]->getType() == "Fast Critter") ? 20.f :
@@ -102,8 +155,8 @@ void SFMLCritterSimulator::drawSimulation() {
         sf::Vector2f pos = critterSprites[i].getPosition();
         barBack.setPosition({ pos.x, pos.y - 10 });
         barFront.setPosition({ pos.x, pos.y - 10 });
-        window.draw(barBack);
-        window.draw(barFront);
+        theWindow->draw(barBack);
+        theWindow->draw(barFront);
         
         // Draw tooltip if mouse hovers over the critter.
         if (critterSprites[i].getGlobalBounds().contains({ static_cast<float>(mousePos.x),
@@ -118,28 +171,35 @@ void SFMLCritterSimulator::drawSimulation() {
             tooltip.setOutlineColor(sf::Color::Black);
             tooltip.setOutlineThickness(2.f);
             tooltip.setPosition({ pos.x, pos.y - 40 });
-            window.draw(tooltip);
+            theWindow->draw(tooltip);
         }
     }
-    window.display();
+    //theWindow->display();
 }
 
-//If no critters remain, load the next wave
-void SFMLCritterSimulator::checkAndLoadNextWave() {
-    if (activeCritters.empty() && pendingCritters.empty()) {
+//If wave is complete, load the next wave
+void SFMLCritterSimulator::checkAndLoadNextWave(sf::RenderWindow* theWindow) {
+    if (isWaveComplete()) {
         if (currentWave < maxWave) {
-            currentWave++;
-            std::cout << "Starting Wave " << currentWave << std::endl;
-            pendingCritters = CritterFactory::createWave(currentWave, path);
+            std::cout << "Wave " << currentWave << " complete. Ready for next wave.\n";
         } else {
-            std::cout << "Maximum wave reached. Simulation over." << std::endl;
-            window.close();
+            std::cout << "Maximum wave reached. Simulation over.\n";
         }
     }
+}
+
+float SFMLCritterSimulator::checkClock(float elapsedTime, sf::Clock* simulationClock){
+    float simulationInterval = 0.5f; //Updates every 0.5 sec
+    elapsedTime += simulationClock->restart().asSeconds();
+    if(elapsedTime >= simulationInterval){
+        updateCritters(elapsedTime);
+        elapsedTime = 0.f;
+    }
+    return elapsedTime;
 }
 
 //Main simulation loop
-void SFMLCritterSimulator::runSimulation() {
+void SFMLCritterSimulator::runSimulation(sf::RenderWindow window) {
     sf::Clock simulationClock;
     float simulationInterval = 0.5f; // update every 0.5 sec
     float elapsedTime = 0.f;
@@ -184,15 +244,15 @@ void SFMLCritterSimulator::runSimulation() {
             }
         
         
-        elapsedTime += simulationClock.restart().asSeconds();
-        if(elapsedTime >= simulationInterval){
-            updateCritters(elapsedTime);
-            elapsedTime = 0.f;
-        }
-        drawSimulation();
-        checkAndLoadNextWave();
+        elapsedTime = checkClock(elapsedTime, &simulationClock);
+        window.clear();
+        drawSimulation(&window);
+        checkAndLoadNextWave(&window);
+        window.display();
         std::this_thread::sleep_for(std::chrono::milliseconds(50));
     }
+
+    
     
     //Cleanup: delete dynamically allocated critters
     for(auto c : activeCritters)
