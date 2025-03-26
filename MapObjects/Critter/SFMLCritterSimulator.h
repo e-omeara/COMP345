@@ -5,6 +5,7 @@
 #include <vector>
 #include "Critter.h"
 #include "Map.h"
+#include "CritterFactory.h"
 
 class SFMLCritterSimulator {
 
@@ -23,6 +24,17 @@ public:
     void checkAndLoadNextWave(sf::RenderWindow* theWindow);
 
     std::vector<Critter*> getCritters();
+
+    //Wave control functions
+    bool isWaveComplete() const;
+    void startNextWave();
+
+    //Accumulated rewards/damage
+    int coinsRewarded;
+    int healthLost;
+
+    //Update active critters (move them along the path) and update their sprite positions
+    void updateCritters(float dt);
 
 private:
 
@@ -44,13 +56,14 @@ private:
     int currentWave;
     int maxWave;
 
-    //Helper methods:
+    //For smooth movement, track progress
+    std::vector<float> critterMoveProgress;
+    std::vector<Position> prevPositions;
 
+    //Helper methods:
     void loadResources();
     //Spawn the next critter if the last one has reached at least halfway along the path.
     void trySpawnNextCritter();
-    //Update active critters (move them along the path) and update their sprite positions.
-    void updateCritters(float dt);
 
 };
 

@@ -1,3 +1,6 @@
+#ifndef GAMERENDERER_H
+#define GAMERENDERER_H
+
 #include <vector>
 #include <iostream>
 #include <SFML/Graphics.hpp>
@@ -50,6 +53,8 @@ class GameRenderer {
      void playTime();
      //tower purchase phase
      void pauseTime();
+     //Initial tower purchase phase
+     void pauseTimeInit();
      //end graphics and stats
      void endGame();
 
@@ -60,3 +65,5 @@ class GameRenderer {
 
 
 };
+
+#endif
