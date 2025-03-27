@@ -18,7 +18,6 @@ private:
     double range;
     double power;
     double rateOfFire;
-    char targetingType;
     std::string type;
     char targetingType;
     Position position;
@@ -34,15 +33,6 @@ protected:
     // sets fireZone to the section of the path that is in range in descending order of priority. Only called on creation or movement
     // void findFireZone(const std::vector<Position>& path); //prioritizes being close to the exit, unless targ type is near
 
-    // returns a critter pointer for shooting. returns a null pointer on failure
-    //only call if activeCritters size > 0
-    //findTarget() calls findWeakTarget() or findStrongTarget() for weak and strong targeting types, respectively
-    Critter* findTarget(const std::vector<Critter*>& activeCritters) const; //returns first critter according to priority. used by both exit and near
-    
-    //normally shouldn't be manually called. findTarget() will determine the appropriate method.
-    Critter* findWeakTarget(const std::vector<Critter*>& activeCritters) const; //returns weakest critter in range
-    Critter* findStrongTarget(const std::vector<Critter*>& activeCritters) const; //returns strongest critter
-
 public:
     // Constructor declaration
     Towers(double level = 0.0, double cost = 0.0, double refund = 0.0, double towerRange = 0.0, 
@@ -52,14 +42,8 @@ public:
     // Constructor for type
     Towers(std::string type, Position position);
 
-<<<<<<< HEAD
-    // Constructor for type & custom targeting method
-    Towers(std::string type, Position position, char targetingType);
-
-=======
     // Constructor for type
     Towers(std::string type, Position position, char targType);
->>>>>>> libby
     // Default position method
     static Position getOrigin(int x, int y);
 
@@ -70,9 +54,9 @@ public:
     void levelUp(double& balance);
 
 
-    inline bool isInRange(Critter* critter) const 
-    {return (abs(critter->getPosition().x - position.x) <= range) 
-         && (abs(critter->getPosition().y - position.y) <= range);};
+    //inline bool isInRange(Critter* critter) const 
+    //{return (abs(critter->getPosition().x - position.x) <= range) 
+    //     && (abs(critter->getPosition().y - position.y) <= range);};
 
 
     //findTarget() calls findWeakTarget() or findStrongTarget() for weak and strong targeting types, respectively
@@ -89,24 +73,14 @@ public:
     void notifyObservers();
 
     // Getters
-<<<<<<< HEAD
-    double getBuyingCost() const;
-    double getRefundValue() const;
-    double getRange() const;
-    double getPower() const;
-    double getRateOfFire() const;
-    double getLevel() const;
-    char getTargetingType() const;
-    std::vector<int> getFireZone() const;
-=======
     virtual double getBuyingCost() const;
     virtual double getRefundValue() const;
     virtual double getRange() const;
     virtual double getPower() const;
     virtual double getRateOfFire() const;
     virtual double getLevel() const;
+    virtual char getTargetingType() const;
 
->>>>>>> libby
 
     // Setters
     void setBuyingCost(double cost);

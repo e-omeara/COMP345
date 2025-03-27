@@ -125,7 +125,7 @@ Towers::Towers(std::string type, Position pos, char targType)
         rateOfFire = 500; //milliseconds
     }
 }
-
+/*
 //Constructor for type and custom targeting method
 Towers::Towers(std::string type, Position pos, char targType)  : type(type)
 , position(pos)
@@ -168,7 +168,7 @@ else
     power = 1;
     rateOfFire = 500; //milliseconds
 }
-}
+}*/
 
 
 //Method to get the origin position
@@ -181,45 +181,6 @@ Position Towers::getOrigin(int x = 0, int y = 0){
 }
 
 
-<<<<<<< HEAD
-//deprecated code:
-//used before findTarget() rework
-//associated attribute was vector<int> fireZone
-/*******************************************
-//finds which section of path is within range. sets fire zone to a vector of position indeces
-void Towers::findFireZone(const std::vector<Position>& path){
-    fireZone.clear();
-    Position p;
-    //clunky solution. grows at n*k; n=size of path, k = range. could implement with quicksort instead to make this faster
-    if(targetingType == 'n'){//prioritizing being close to tower
-        for(int i = 1; i <=2*range; i++){
-            for(int index = path.size()-1; index>=0; index--){
-                p = path[index];
-                //if x,y distance isn't > range, then push if x distance + y distance = i.
-                if((abs(p.x-position.x)<=range && abs(p.y-position.y)<=range) && ((abs(p.x-position.x) + abs(p.y-position.y))==i)){
-                    fireZone.push_back(index);
-                }
-            }
-        }
-    }
-    else{//prioritizing being close to exit
-        for(int index = path.size()-1; index>=0; index--){
-            p = path[index];
-            if(abs(p.x-position.x)<=range && abs(p.y-position.y)<=range){
-                fireZone.push_back(index);
-            }
-        }
-    }
-}
-*******************************************/
-
-//determines if a critter is in range -- made this function inline
-/*bool Towers::isInRange(Critter* critter) const{
-    return (abs(critter->getPosition().x - position.x)) <= range && (abs(critter->getPosition().y - position.y) <= range);
-}*/
-
-=======
->>>>>>> libby
 // returns the pointer to the highest priority critter. uses fireZone attribute
 Critter* Towers::findTarget(const std::vector<Critter*>& activeCritters) const {
     if(activeCritters.size() == 0)
