@@ -35,7 +35,8 @@ Towers::Towers(double level, double cost, double refund, double towerRange,
 //Use this one for driver
 Towers::Towers(std::string type, Position pos)
     : type(type)
-    , position(pos)
+    , position(pos),
+    targetingType('e')
 {
     level = 1;
     if(type == "archer")
@@ -44,7 +45,7 @@ Towers::Towers(std::string type, Position pos)
         buyingCost = 10;
         refundValue = 3;
         range = 3;
-        power = 1;
+        power = 2;
         rateOfFire = 500; //milliseconds
         targetingType = 'e';
     }
@@ -124,6 +125,52 @@ Towers::Towers(std::string type, Position pos, char targType)
         rateOfFire = 500; //milliseconds
     }
 }
+
+//Constructor for type and custom targeting method
+Towers::Towers(std::string type, Position pos, char targType)  : type(type)
+, position(pos)
+, targetingType(targType)
+{
+level = 1;
+if(type == "archer")
+{
+    //std::cout << "Archer " << std::endl;
+    buyingCost = 10;
+    refundValue = 3;
+    range = 3;
+    power = 1;
+    rateOfFire = 500; //milliseconds
+}
+else if(type == "ballista")
+{
+    //std::cout << "ballista " << std::endl;
+    buyingCost = 20;
+    refundValue = 6;
+    range = 7;
+    power = 5;
+    rateOfFire = 1000; //milliseconds
+}
+else if(type == "catapult")
+{
+    //std::cout << "catapult " << std::endl;
+    buyingCost = 30;
+    refundValue = 10;
+    range = 5;
+    power = 10;
+    rateOfFire = 1200; //milliseconds
+}
+else
+{
+    //defaults to archer, but shoots near
+    buyingCost = 10;
+    refundValue = 3;
+    range = 3;
+    power = 1;
+    rateOfFire = 500; //milliseconds
+}
+}
+
+
 //Method to get the origin position
 Position Towers::getOrigin(int x = 0, int y = 0){
     Position origin;
@@ -134,6 +181,7 @@ Position Towers::getOrigin(int x = 0, int y = 0){
 }
 
 
+<<<<<<< HEAD
 //deprecated code:
 //used before findTarget() rework
 //associated attribute was vector<int> fireZone
@@ -170,6 +218,8 @@ void Towers::findFireZone(const std::vector<Position>& path){
     return (abs(critter->getPosition().x - position.x)) <= range && (abs(critter->getPosition().y - position.y) <= range);
 }*/
 
+=======
+>>>>>>> libby
 // returns the pointer to the highest priority critter. uses fireZone attribute
 Critter* Towers::findTarget(const std::vector<Critter*>& activeCritters) const {
     if(activeCritters.size() == 0)
@@ -258,8 +308,8 @@ void Towers::shoot(Critter& critter)
     //std::cout << (std::abs(critter.getPosition().x - position.x) < range) << std::endl;
     if(isInRange(&critter))
     {
-        critter.setHP(critter.getHP()-power);
-        std::cout << "Hit!" << std::endl;
+        critter.takeDamage(int(power));
+        std::cout << "Hit critter at position x: " << critter.getPosition().x  << ", y: " << critter.getPosition().y << std::endl;
     }
     else
     {
@@ -268,13 +318,17 @@ void Towers::shoot(Critter& critter)
 }
 
 
+
+
+
 //level up method where balance is the player's gold balance
 void Towers::levelUp(double& balance)
 {
     level += 1;
     balance -= buyingCost;
     //shoots faster
-    if(type.compare("archer"))
+
+    /*if(type.compare("archer"))
     {
         refundValue += 4;
         power += 1;
@@ -295,6 +349,7 @@ void Towers::levelUp(double& balance)
         refundValue += 10;
         power += 5;
     }
+        */
 
     notifyObservers();
 }
@@ -310,6 +365,8 @@ void Towers::removeObserver(TowerObserver* observer) {
 }
 
 void Towers::notifyObservers() {
+    cerr << "notifying observers..." << endl;
+    
     for (TowerObserver* observer : observers) {
         observer->update(level, buyingCost, refundValue, range, power, rateOfFire, position, type, targetingType);
     }

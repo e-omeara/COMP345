@@ -154,10 +154,10 @@ using namespace std;
             makeY = y;
 
             //set first entry in the path vector
-            coord start;
-            start.x = x;
-            start.y = y;
-            path.push_back(start);
+            
+            path[0].x = x;
+            path[0].y = y;
+            cout << path[0].x << "position" << path[0].y;
             //Set entrance coordinate to N for entrance
             map[getPos(x, y)] = 'N';
             //printMap();
