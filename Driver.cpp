@@ -18,6 +18,7 @@ Position coordToPosition(const coord &c) {
 
 
 int main() {
+   std::cout << SFML_VERSION_MAJOR << "." << SFML_VERSION_MINOR << std::endl;
 
    //Map-Making Test Case
    MapObserver* mapobserver = new MapObserver;
