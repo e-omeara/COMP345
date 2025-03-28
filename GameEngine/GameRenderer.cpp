@@ -40,13 +40,10 @@ void GameRenderer::mainWindow(){
             else if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>()){
                 if (keyPressed->scancode == sf::Keyboard::Scancode::Escape)
                     window->close();
-                if(keyPressed->scancode == sf::Keyboard::Scancode::Up){
+                if(keyPressed->scancode == sf::Keyboard::Scancode::Up)
                     menu.moveUp();
-                    cerr << "\n\n\n\n\nmoveUP";
-                }
-                if(keyPressed->scancode == sf::Keyboard::Scancode::Down){
+                if(keyPressed->scancode == sf::Keyboard::Scancode::Down)
                     menu.moveDown();
-                }
             }
         }
         //draws entire main menu
