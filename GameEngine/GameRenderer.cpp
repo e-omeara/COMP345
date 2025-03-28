@@ -12,7 +12,7 @@ Position coordToPosition2(const coord &c) {
  }
 
  //constructor class
-GameRenderer::GameRenderer(Player* theplayer, Map* themap,  MapGraphics* themapGraphics, SFMLCritterSimulator* crSim){
+GameRenderer::GameRenderer(Player* theplayer, Map* themap,  MapGraphics* themapGraphics, SFMLCritterSimulator* crSim, TowerSimulator* toSim){
     //initialize data
     window = new sf::RenderWindow(sf::VideoMode({600, 400}), "SFML works!");
     player = theplayer;
@@ -20,6 +20,7 @@ GameRenderer::GameRenderer(Player* theplayer, Map* themap,  MapGraphics* themapG
     mapGraphics = themapGraphics;
     critSim = crSim;
     myTower =  new Towers("archer", {5, 5});
+    tSim = toSim;
 
 
 }
@@ -76,11 +77,21 @@ void GameRenderer::playTime(){
     window->setTitle("Battle Time !");
     //initialize clock abilities for tower shoot and critter movement
     sf::Clock* simulationClock = new sf::Clock();
+    sf::Clock* towerClock = new sf::Clock();
+    float simulationInterval = 0.5f; //Updates every 0.5 sec
     float elapsedTime = 0.f;
+    float shootTime = 0.f;
+
+
 
     bool gameOver = false;
 
+    int mouseX;
+    int mouseY;
+
+    //initial tower purchasing phase
     pauseTimeInit();
+    window->display();
     bool resume = false;
     while(!resume && window->isOpen()){
         while(auto pauseEvent = window->pollEvent()){
@@ -94,8 +105,23 @@ void GameRenderer::playTime(){
                 window->close();
                 delete simulationClock;
                 return;
+            }else if(pauseEvent->is<sf::Event::MouseButtonPressed>()){
+                tSim->click(window);
+                
             }
         }
+
+    window->clear();
+    //render map
+    mapGraphics->renderMap(window);
+    //render towers and tower menu
+    tSim->renderTowers(window);
+    
+    pauseTimeInit();
+    //render player balance
+    player->renderBalance(window);
+    //send click to towerBuy and towerUpgrade
+    window->display();        
 
     }
 
@@ -112,6 +138,9 @@ void GameRenderer::playTime(){
                 delete simulationClock;
 
                 return;
+            } else if(event->is<sf::Event::MouseButtonPressed>()){
+                tSim->click(window);
+                
             }
 
             if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>()){
@@ -128,6 +157,28 @@ void GameRenderer::playTime(){
     //Update simulation and player's stats before drawing
     elapsedTime = critSim->checkClock(elapsedTime, simulationClock);
     critSim->updateCritters(elapsedTime);
+
+    
+
+ 
+
+    // run tower tageting algorithm
+    
+    shootTime += towerClock->restart().asSeconds();
+    if(shootTime >= simulationInterval){
+        cout << "resetting clock!" << endl;
+        
+        shootTime = 0.f;
+    }
+ 
+
+    if(shootTime  == 0.f){
+        cout << "attempting to shoot critters" << endl;
+        tSim->shoot(critSim);
+
+        
+    }
+
     
     //Update player's stats based on simulation changes
     if(critSim->coinsRewarded > 0 || critSim->healthLost > 0) {
@@ -146,7 +197,9 @@ void GameRenderer::playTime(){
     window->clear();
     //render map
     mapGraphics->renderMap(window);
-    //render tower menu
+    //render towers and tower menu
+    tSim->renderTowers(window);
+    
 
     //render player balance
     player->renderBalance(window);
@@ -219,6 +272,7 @@ void GameRenderer::playTime(){
      //If wave is complete and game is not over, pause to allow tower upgrades
      if(!gameOver && critSim->isWaveComplete()){
         pauseTime();
+        window->display();
         bool resume = false;
         while(!resume && window->isOpen()){
             while(auto pauseEvent = window->pollEvent()){
@@ -232,8 +286,23 @@ void GameRenderer::playTime(){
                     window->close();
                     delete simulationClock;
                     return;
+                }else if(pauseEvent->is<sf::Event::MouseButtonPressed>()){
+                    tSim->click(window);
+                    
                 }
             }
+
+            window->clear();
+            //render map
+            mapGraphics->renderMap(window);
+            //render towers and tower menu
+            tSim->renderTowers(window);
+            
+            pauseTime();
+            //render player balance
+            player->renderBalance(window);
+            //send click to towerBuy and towerUpgrade
+            window->display(); 
 
         }
         critSim->startNextWave();
@@ -250,12 +319,7 @@ delete simulationClock;
 void GameRenderer::pauseTime(){
     window->setTitle("Place and upgrade your towers !");
 
-    //render map
-    mapGraphics->renderMap(window);
-    //render tower menu
-    //render player menu
-    player->renderBalance(window);
-    //send click to towerBuy and towerUpgrade
+    
     //render hoverstats
 
     
@@ -269,7 +333,7 @@ void GameRenderer::pauseTime(){
              continueText.setString("Wave Complete! Press Enter to start the next wave!");
              continueText.setPosition({100.f, 350.f});
              window->draw(continueText);
-             window->display();
+            
 
     return;
 }
@@ -279,10 +343,6 @@ void GameRenderer::pauseTimeInit(){
     window->setTitle("Place and upgrade your towers !");
 
     //render map
-    mapGraphics->renderMap(window);
-    //render tower menu
-    //render player menu
-    player->renderBalance(window);
     //send click to towerBuy and towerUpgrade
     //render hoverstats
 
@@ -297,7 +357,7 @@ void GameRenderer::pauseTimeInit(){
              continueText.setString("Press Enter to Start the Wave after Purchasing Towers!");
              continueText.setPosition({75.f, 350.f});
              window->draw(continueText);
-             window->display();
+             
 
     return;
 }
@@ -326,6 +386,7 @@ void GameRenderer::startGame(){
  makeMapWindow();
 
  //tower purchase phase
+ tSim->addMap(map);
  
 
  //critter attack phase

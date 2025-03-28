@@ -288,15 +288,13 @@ int MapGraphics::renderMap(sf::RenderWindow* theWindow){
     exit.setSize(tileSize);
 
     
+
+    
     //looping through the map vector, place the appropriate color rectangle
     for(int i = 0; i < width; i++){
         for(int j = 0; j < height; j++){
             char tilechar = map[j*width + i];
-            if(i == 5 && j == 5){
-                tower.setPosition(sf::Vector2f(topCorner + tilelength*i, topCorner + tilelength*j));
-                theWindow->draw(tower);
-            }
-            else if(tilechar == '-'){
+            if(tilechar == '-'){
                 scenery.setPosition(sf::Vector2f(topCorner + tilelength*i, topCorner + tilelength*j));
                 theWindow->draw(scenery);
             }else if(tilechar == 'P'){

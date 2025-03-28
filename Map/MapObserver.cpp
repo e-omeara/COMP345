@@ -33,6 +33,9 @@ void MapObserver::update(int nheight, int nwidth, vector<char> nmap, vector<coor
     status = nstatus;
     message = nmsg;
 
+
+    
+
 }
 
 void MapObserver::update(string msg){

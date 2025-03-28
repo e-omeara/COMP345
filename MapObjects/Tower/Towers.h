@@ -70,6 +70,7 @@ public:
     virtual double getPower() const;
     virtual double getRateOfFire() const;
     virtual double getLevel() const;
+    TowerObserver* getTowerObserver();
 
 
     // Setters

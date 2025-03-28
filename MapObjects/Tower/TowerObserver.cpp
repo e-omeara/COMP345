@@ -12,10 +12,14 @@
 
 
 //default constructor
-TowerObserver::TowerObserver(Towers& tower) : tower(tower)
-{
+TowerObserver::TowerObserver(Towers& thetower) {
     //add observer to tower
-    tower.addObserver(this);
+    thetower.addObserver(this);
+}
+
+TowerObserver::TowerObserver(Towers* thetower) {
+    //add observer to tower
+    thetower->addObserver(this);
 }
 
 //update function

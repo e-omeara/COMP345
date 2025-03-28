@@ -61,7 +61,6 @@ void SFMLCritterSimulator::trySpawnNextCritter() {
 
 //Update critters: move them along the path and update sprite positions
 void SFMLCritterSimulator::updateCritters(float dt) {
-
     float tileSize = 20.f;
     float topCorner = 100.f;
     float simulationInterval = 0.5f; //Time (in seconds) to move one grid cell
@@ -192,6 +191,7 @@ float SFMLCritterSimulator::checkClock(float elapsedTime, sf::Clock* simulationC
     float simulationInterval = 0.5f; //Updates every 0.5 sec
     elapsedTime += simulationClock->restart().asSeconds();
     if(elapsedTime >= simulationInterval){
+        cout << "resetting clock!" << endl;
         updateCritters(elapsedTime);
         elapsedTime = 0.f;
     }

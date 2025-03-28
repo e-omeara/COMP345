@@ -9,7 +9,7 @@
 #include "TowerObserver.h"
 #include "Critter.h"
 
-
+using namespace std;
 
 //Default Constructor
 
@@ -292,6 +292,7 @@ double Towers::getRange() const { return range; }
 double Towers::getPower() const { return power; }
 double Towers::getRateOfFire() const { return rateOfFire; }
 double Towers::getLevel() const { return level; }
+TowerObserver* Towers::getTowerObserver() {return observers.at(0);}
 
 // Setters
 void Towers::setBuyingCost(double cost) { buyingCost = cost; notifyObservers(); }

@@ -23,6 +23,9 @@ Position coordToPosition(const coord &c) {
 
 int main() {
 
+
+   /*
+   */
  //testing game engine and renderer
  MapObserver* mapobserver = new MapObserver;
  Map* map = new Map(20, 10);
@@ -37,8 +40,9 @@ int main() {
    { critterPath.push_back(coordToPosition(c));}
  
  SFMLCritterSimulator* critSim;
+ TowerSimulator* tSim = new TowerSimulator;
 
- GameRenderer renderer(player, map, mgraphics, critSim);
+ GameRenderer renderer(player, map, mgraphics, critSim, tSim);
 
  renderer.startGame();
 
@@ -57,14 +61,21 @@ std::cout << "Hello, World!" << std::endl;
 
 double balance = 1000;
 
+vector<Towers*>* towerV = new vector<Towers*>();
+
+
 Towers* archer = new Towers("archer", {5,5});
 Towers ballista("ballista", {0,0});
 Towers catapult("catapult", {50,50});
+TowerObserver* testObs;
 
-TowerObserver* observer = new TowerObserver(*archer);
+towerV->push_back(archer);
 
-TowerSimulator tSim(observer , archer);
-tSim.runGame();
+TowerObserver* observer = new TowerObserver(archer);
+
+TowerSimulator tSim2;
+
+tSim2.runGame();
 
 
 
@@ -73,7 +84,7 @@ tSim.runGame();
 
 
 //testing targeting strategy
-
+/*
 std::vector<Position> mypath { {4,3}, {4,4}, {4,5}, {4,6}, {5,6}, {6,6}, {6,7}, {7,7}, {8,6}, {9,5}, {10,6}, {10,7}, {9,7}, {8,7}, {8,8}, {9,9} };
 Towers mytower("archer", {5, 5}, 'n');
 CritterGroup newcrits(1, mypath);
@@ -104,7 +115,7 @@ for(int j = 0; j < 9; j++){
 
 
 
-
+*/
 
 
 

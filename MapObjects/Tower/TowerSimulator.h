@@ -9,6 +9,9 @@
 #include <SFML/Network.hpp>
 #include "TowerObserver.h"
 #include "Towers.h"
+#include "Map.h"
+#include "SFMLCritterSimulator.h"
+#include "Critter.h"
 
 using namespace std;
 
@@ -17,23 +20,34 @@ class TowerSimulator{
 
     private:
     //attributes
-    TowerObserver* tObserver;
-    Towers* tower;
-    sf::RenderWindow window;
+    //TowerObserver* tObserver;
+    vector<Towers*>* towers;
+    bool placing;
+    Map* map;
+    
 
 
 
     public:
     //methods
-    TowerSimulator(TowerObserver* towerObserver, Towers* tower);
+    //Constructors
+    TowerSimulator(vector<Towers*>* mytowers);
+    TowerSimulator();
+    //add map
+    int addMap(Map* theMap);
     //entry point to simulator
     int runGame();
     //create the window
     int createWindow();
     //render the hover stats
-    int renderTowers();
+    int renderTowers(sf::RenderWindow* window);
     //TODO: create tower menu items
-    int updatevisuals();
+    int renderPurchaseMenu(sf::RenderWindow* window);
+    //Create reaction to "click"
+    int click(sf::RenderWindow* window);
+    //
+    void shoot(SFMLCritterSimulator* critSim);
+    
 
     
 

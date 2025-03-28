@@ -37,12 +37,14 @@ class GameRenderer {
      SFMLCritterSimulator* critSim;
      //tower class -> TODO: turn into tower vector...?
      Towers* myTower;
+     //
+     TowerSimulator* tSim;
     
 
 
     public:
     //constructor
-     GameRenderer(Player* player, Map* map, MapGraphics* mapGraphics, SFMLCritterSimulator* crSim);
+     GameRenderer(Player* player, Map* map, MapGraphics* mapGraphics, SFMLCritterSimulator* crSim, TowerSimulator* t0Sim);
      // entry point to game
      void startGame();
      //main menu

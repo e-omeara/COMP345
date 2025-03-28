@@ -296,7 +296,9 @@ using namespace std;
             int pos = getPos(x, y);
             if(map[pos] == '-'){
                 map[pos] = 'T';
+                cout << pos << endl;
                 updateObserver("placed tower");
+                printMap();
 
                 return 0;
             } else {
