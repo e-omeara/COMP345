@@ -6,7 +6,7 @@
 #include "MainMenu.h"
 
 //constructor
-MainMenu::MainMenu(sf::RenderWindow* theWindow, sf::Font font) 
+MainMenu::MainMenu(sf::RenderWindow* theWindow, sf::Font& font) 
     : font(font) , window(theWindow) {
     if(!font.openFromFile("Arial Unicode.ttf")){
         cerr << "unable to load font from file";
@@ -14,24 +14,10 @@ MainMenu::MainMenu(sf::RenderWindow* theWindow, sf::Font font)
     }
 
     menuSelected = 0;
-
-    
-}
-
-//draws main menu | DOES NOT LOOP... MUST LOOP FUNCTION !!
-void MainMenu::draw(){
-    //cerr << "\n drawing\n";
-    //clear and redraw the frame with updated text
-    window->clear(ColorSchemeConstants::BACKGROUND_COLOR);
-    //cerr << "finished clearing";
-
-    sf::Text asdf(font, "testestestest");
+    //cerr << "beginning main menu initilization";
 
     int width = window->getSize().x;
     int height = window->getSize().y;
-
-    //cerr << "beginning main menu initilization";
-
     // Load Map
     //default selection
     mainMenuText[0] = new sf::Text(font);    
@@ -76,16 +62,15 @@ void MainMenu::draw(){
     mainMenuText[4]->setString("Quit");
     mainMenuText[4]->setCharacterSize(35);
     mainMenuText[4]->setPosition(sf::Vector2f(30, height * 5 / 6));
+    
+}
 
-    //window->draw(*mainMenuText[4]);
-
-    //cerr << "\nfinished 4";
-
-
-    //window->draw(asdf);
-    //cerr << "\nfinished drawing asdf test";
-
-    window->draw(*mainMenuText[0]);
+//draws main menu | DOES NOT LOOP... MUST LOOP FUNCTION !!
+void MainMenu::draw(){
+    //cerr << "\n drawing\n";
+    //clear and redraw the frame with updated text
+    window->clear(ColorSchemeConstants::BACKGROUND_COLOR);
+    //cerr << "finished clearing";
 
     for(int i = 0; i < 5; i++){
         window->draw(*mainMenuText[i]);
@@ -110,10 +95,12 @@ void MainMenu::moveUp(){
     if(menuSelected < 0){
         menuSelected = 4; //4 is the bottom of the menu
     }
+    cerr << "\nset to " << menuSelected;
     //set menuSelected color to accent color
     mainMenuText[menuSelected]->setFillColor(ColorSchemeConstants::ACCENT_COLOR);
     cerr << "\nset to accent";
 
+    this->draw();
 }
 
 //increments the menuSelected index integer to go down in the menu

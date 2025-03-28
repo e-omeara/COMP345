@@ -23,7 +23,7 @@ class MainMenu {
     //functions
     public:
 
-        MainMenu(sf::RenderWindow* theWindow, sf::Font font);
+        MainMenu(sf::RenderWindow* theWindow, sf::Font& font);
         void draw();
         void moveUp();
         void moveDown();

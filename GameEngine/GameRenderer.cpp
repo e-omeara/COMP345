@@ -44,8 +44,9 @@ void GameRenderer::mainWindow(){
                     menu.moveUp();
                     cerr << "\n\n\n\n\nmoveUP";
                 }
-                if(keyPressed->scancode == sf::Keyboard::Scancode::Down)
+                if(keyPressed->scancode == sf::Keyboard::Scancode::Down){
                     menu.moveDown();
+                }
             }
         }
         //draws entire main menu
@@ -184,9 +185,9 @@ void GameRenderer::startGame(){
     
 
  mainWindow();
- makeMapWindow();
+ //makeMapWindow();
  
- playTime();
+ //playTime();
 
  
  

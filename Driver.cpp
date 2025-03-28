@@ -65,7 +65,7 @@ int main() {
    TowerObserver* observer = new TowerObserver(*archer);
 
    TowerSimulator tSim(observer , archer);
-   tSim.runGame();
+   //tSim.runGame();
 
 
 
