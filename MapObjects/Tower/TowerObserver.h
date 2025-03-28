@@ -11,7 +11,7 @@
 
 using namespace std;
 
-
+class Towers;
 class TowerObserver
 {
     private:

@@ -1,3 +1,6 @@
+#ifndef GAME_RENDERER_H
+#define GAME_RENDERER_H
+
 #pragma once
 
 #include <vector>
@@ -50,3 +53,5 @@ class GameRenderer {
 
 
 };
+
+#endif
