@@ -89,11 +89,6 @@ int MapGraphics::loadingmenu()
 
 
 int MapGraphics::mapMaking(sf::RenderWindow* window){
-
-   
-    
-
-
     int mouseX;
     int mouseY;
 
