@@ -5,22 +5,17 @@
 #include <SFML/Network.hpp>
 #include "MainMenu.h"
 #include "MapObserver.h"
-#include "Map.h"
+
 
 //the initial loading menu
-int MainMenu::loadingmenu()
+int MainMenu::showMenu()
 {
     // rendering window
     window = sf::RenderWindow(sf::VideoMode({800, 600}), "SFML works!");
 
     // loading font
-    sf::Font font;
-    /*if(!font.loadFromFile("Arial Unicode.ttf")){
-        std::cerr << "Error loading font file";
-        return -1;
-    }*/
+    sf::Font font("Arial Unicode.ttf");
     sf::Text text(font); // a font is required to make a text object
-
 
     // set the string to display
     string textstr = "Welcome to Our Tower Defense Game!\n Make Map \n Load Map";

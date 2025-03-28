@@ -1,5 +1,5 @@
-#ifndef MENUGRAPHICS_H
-#define MENUGRAPHICS_H
+#ifndef MAINMENU_H
+#define MAINMENU_H
 
 
 
@@ -21,25 +21,17 @@ class MainMenu {
 
         sf::RenderWindow window;
 
-        sf::Text menuText;
-        static const sf::Color primaryColor();
-        static const sf::Color secondaryColor();
-        static const sf::Color accentColor();
-        static const sf::Color backgroundColor();
-
-        
-
-
-
 
         sf::RectangleShape background;
 
     //functions
     public:
 
+        //MainMenu(sf::Text menuText, sf::Window renderWindow);
+
         MainMenu();
 
-        int runGame();
+        int showMenu();
 
         int updatevisuals();
 
@@ -47,7 +39,6 @@ class MainMenu {
 
     private:
 
-        int loadingmenu();
 
 
 };

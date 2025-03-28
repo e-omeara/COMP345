@@ -13,10 +13,6 @@
 
 
 //Default Constructor
-
-
-
-
 Towers::Towers(double level, double cost, double refund, double towerRange, 
     double towerPower, double fireRate, std::string type, Position pos, char targType)
 

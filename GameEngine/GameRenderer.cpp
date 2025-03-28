@@ -20,7 +20,12 @@ GameRenderer::GameRenderer(Player* theplayer, Map* themap,  MapGraphics* themapG
 
 }
 
-
+//color scheme for the program / main menu
+const sf::Color GameRenderer::TEXT_COLOR(224, 226, 219); // soft white
+const sf::Color GameRenderer::BACKGROUND_COLOR(46, 53, 50); // soft black
+const sf::Color GameRenderer::PRIMARY_COLOR(139, 38, 53); // dark red
+const sf::Color GameRenderer::SECONDARY_COLOR( 240, 162, 2); // light sienna
+const sf::Color GameRenderer::ACCENT_COLOR( 105, 143, 63); // sage green
 
 void GameRenderer::mainWindow(){
     
@@ -33,19 +38,33 @@ void GameRenderer::mainWindow(){
     string textstr = "Welcome to Our Tower Defense Game!\n Make Map \n Load Map";
     text.setString(textstr);
 
-    // set the character size
+    // set the text attributes
     text.setCharacterSize(24); 
-
-    // set the color
-    text.setFillColor(sf::Color::Red);
+    text.setFillColor(TEXT_COLOR);
 
     // set the text style
     text.setStyle(sf::Text::Bold | sf::Text::Underlined);
 
     window->draw(text);
 
-    //render main menu
+    while(window->isOpen()){
+        while(const std::optional event = window->pollEvent()){
+            if (event->is<sf::Event::Closed>()){ 
+                    window->close();    
+                    return;
+                }
 
+        // Clear window
+        window->clear(sf::Color::Black);
+        
+        // Draw the text
+        window->draw(text);
+        
+        // Display the content
+        window->display();
+        }
+
+    }
 
     return;
 }
