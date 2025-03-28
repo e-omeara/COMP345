@@ -1,11 +1,15 @@
 #ifndef TOWER_H
 #define TOWER_H
 
+#pragma once
+
 #include <string>
 #include <vector>
 #include <algorithm>
 #include "Critter.h"
-#include "Map.h"
+#include "TowerObserver.h"
+
+
 //#include "TowerObserver.h"
 
 class TowerObserver;

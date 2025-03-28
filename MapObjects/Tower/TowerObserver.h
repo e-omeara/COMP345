@@ -1,6 +1,8 @@
 #ifndef TOWER_OBS
 #define TOWER_OBS
 
+#pragma once
+
 #include <string>
 #include <vector>
 #include <algorithm>

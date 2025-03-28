@@ -1,3 +1,5 @@
+#pragma once
+
 #include <vector>
 #include <iostream>
 #include <SFML/Graphics.hpp>
@@ -14,6 +16,7 @@
 #include "TowerSimulator.h"
 #include "SFMLCritterSimulator.h"
 #include "CritterFactory.h"
+#include "MainMenu.h"
 
 
 
@@ -27,13 +30,8 @@ class GameRenderer {
         bool isPlaying;
         SFMLCritterSimulator* critSim;
         Towers* myTower;
-     
-    public:
-        static const sf::Color TEXT_COLOR;
-        static const sf::Color BACKGROUND_COLOR;
-        static const sf::Color PRIMARY_COLOR;
-        static const sf::Color SECONDARY_COLOR;
-        static const sf::Color ACCENT_COLOR;
+        float windowWidth;
+        float windowHeight;
     
 
 

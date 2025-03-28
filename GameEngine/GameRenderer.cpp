@@ -10,7 +10,9 @@ Position coordToPosition2(const coord &c) {
  }
 
 GameRenderer::GameRenderer(Player* theplayer, Map* themap,  MapGraphics* themapGraphics, SFMLCritterSimulator* crSim){
-    window = new sf::RenderWindow(sf::VideoMode({600, 400}), "SFML works!");
+    windowWidth = 600;
+    windowHeight = 400;
+    window = new sf::RenderWindow(sf::VideoMode({windowWidth, windowHeight}), "SFML works!");
     player = theplayer;
     map = themap;
     mapGraphics = themapGraphics;
@@ -20,13 +22,6 @@ GameRenderer::GameRenderer(Player* theplayer, Map* themap,  MapGraphics* themapG
 
 }
 
-//color scheme for the program / main menu
-const sf::Color GameRenderer::TEXT_COLOR(224, 226, 219); // soft white
-const sf::Color GameRenderer::BACKGROUND_COLOR(46, 53, 50); // soft black
-const sf::Color GameRenderer::PRIMARY_COLOR(139, 38, 53); // dark red
-const sf::Color GameRenderer::SECONDARY_COLOR( 240, 162, 2); // light sienna
-const sf::Color GameRenderer::ACCENT_COLOR( 105, 143, 63); // sage green
-
 void GameRenderer::mainWindow(){
     
     window->setTitle("Tower Defense: Main Menu");
@@ -34,37 +29,27 @@ void GameRenderer::mainWindow(){
     sf::Font font("Arial Unicode.ttf");
     sf::Text text(font); // a font is required to make a text object
 
-    // set the string to display
-    string textstr = "Welcome to Our Tower Defense Game!\n Make Map \n Load Map";
-    text.setString(textstr);
+    MainMenu menu(windowWidth, windowHeight, window, font);
 
-    // set the text attributes
-    text.setCharacterSize(24); 
-    text.setFillColor(TEXT_COLOR);
-
-    // set the text style
-    text.setStyle(sf::Text::Bold | sf::Text::Underlined);
-
-    window->draw(text);
-
-    while(window->isOpen()){
-        while(const std::optional event = window->pollEvent()){
-            if (event->is<sf::Event::Closed>()){ 
-                    window->close();    
-                    return;
-                }
-
-        // Clear window
-        window->clear(sf::Color::Black);
-        
-        // Draw the text
-        window->draw(text);
-        
-        // Display the content
-        window->display();
+    //create the render window
+    while (window->isOpen())
+    {
+        while (const std::optional event = window->pollEvent())
+        {
+            //check for key inputs
+            if (event->is<sf::Event::Closed>())
+                window->close();
+            else if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>()){
+                if (keyPressed->scancode == sf::Keyboard::Scancode::Escape)
+                    window->close();
+            }
         }
-
+        //draws entire main menu
+        menu.draw();
     }
+
+    
+
 
     return;
 }
