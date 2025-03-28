@@ -6,8 +6,8 @@
 #include "MainMenu.h"
 
 //constructor
-MainMenu::MainMenu(float width, float height, sf::RenderWindow* window, sf::Font font) 
-    : font(font) , window(window){
+MainMenu::MainMenu(sf::RenderWindow* theWindow, sf::Font font) 
+    : font(font) , window(theWindow) {
     if(!font.openFromFile("Arial Unicode.ttf")){
         cerr << "unable to load font from file";
         return;
@@ -15,63 +15,95 @@ MainMenu::MainMenu(float width, float height, sf::RenderWindow* window, sf::Font
 
     menuSelected = 0;
 
-    // Load Map
-    mainMenuText[0]->setFont(font);
-    mainMenuText[0]->setFillColor(ColorSchemeConstants::TEXT_COLOR);
-    mainMenuText[0]->setString("Play");
-    mainMenuText[0]->setCharacterSize(70);
-    mainMenuText[0]->setPosition(sf::Vector2f(width / 2, height / 6));
+    
+}
 
+//draws main menu | DOES NOT LOOP... MUST LOOP FUNCTION !!
+void MainMenu::draw(){
+    //cerr << "\n drawing\n";
+    //clear and redraw the frame with updated text
+    window->clear(ColorSchemeConstants::BACKGROUND_COLOR);
+    //cerr << "finished clearing";
+
+    sf::Text asdf(font, "testestestest");
+
+    int width = window->getSize().x;
+    int height = window->getSize().y;
+
+    //cerr << "beginning main menu initilization";
+
+    // Load Map
+    //default selection
+    mainMenuText[0] = new sf::Text(font);    
+    mainMenuText[0]->setFont(font);
+    mainMenuText[0]->setFillColor(ColorSchemeConstants::ACCENT_COLOR); //whatever is currently selected is ACCENT_COLOR
+    mainMenuText[0]->setString("Play");
+    mainMenuText[0]->setCharacterSize(35);
+    mainMenuText[0]->setPosition(sf::Vector2f(30, height / 6));
+
+    //cerr << "finished 0";
     // Make Map
+    mainMenuText[1] = new sf::Text(font);
     mainMenuText[1]->setFont(font);
     mainMenuText[1]->setFillColor(ColorSchemeConstants::TEXT_COLOR);
     mainMenuText[1]->setString("Make a Map");
-    mainMenuText[1]->setPosition(sf::Vector2f(width / 2, height / 3));
+    mainMenuText[1]->setCharacterSize(35);
+    mainMenuText[1]->setPosition(sf::Vector2f(30, height / 3));
 
+    //cerr << "\nfinished 1";
     //Options
+    mainMenuText[2] = new sf::Text(font);
     mainMenuText[2]->setFont(font);
     mainMenuText[2]->setFillColor(ColorSchemeConstants::TEXT_COLOR);
     mainMenuText[2]->setString("Options");
-    mainMenuText[2]->setPosition(sf::Vector2f(width / 2, height / 2));
+    mainMenuText[2]->setCharacterSize(35);
+    mainMenuText[2]->setPosition(sf::Vector2f(30, height / 2));
 
+    //cerr << "\nfinished 2";
     //About
+    mainMenuText[3] = new sf::Text(font);
     mainMenuText[3]->setFont(font);
     mainMenuText[3]->setFillColor(ColorSchemeConstants::TEXT_COLOR);
     mainMenuText[3]->setString("About");
-    mainMenuText[3]->setPosition(sf::Vector2f(width / 2, height * 4 / 6));
+    mainMenuText[3]->setCharacterSize(35);
+    mainMenuText[3]->setPosition(sf::Vector2f(30, height * 4 / 6));
 
+    //cerr << "\nfinished 3";
     //Quit
+    mainMenuText[4] = new sf::Text(font);
     mainMenuText[4]->setFont(font);
     mainMenuText[4]->setFillColor(ColorSchemeConstants::TEXT_COLOR);
     mainMenuText[4]->setString("Quit");
-    mainMenuText[4]->setPosition(sf::Vector2f(width / 2, height * 5 / 6));
-}
+    mainMenuText[4]->setCharacterSize(35);
+    mainMenuText[4]->setPosition(sf::Vector2f(30, height * 5 / 6));
 
-//the initial loading menu
+    //window->draw(*mainMenuText[4]);
 
-void MainMenu::draw()
-{
-    int mouseX;
-    int mouseY;
+    //cerr << "\nfinished 4";
 
-    
 
-        //clear and redraw the frame with updated text
-        window->clear(ColorSchemeConstants::BACKGROUND_COLOR);
-        for(sf::Text* text : mainMenuText){
-            window->draw(*text);
-        }
-        window->display();
-    
+    //window->draw(asdf);
+    //cerr << "\nfinished drawing asdf test";
+
+    window->draw(*mainMenuText[0]);
+
+    for(int i = 0; i < 5; i++){
+        window->draw(*mainMenuText[i]);
+    }
+    //cerr << "\nfinished drawing\n";
+    window->display();
+    //cerr << "\nfinished displaying\n";
+
 }
 
 //decrements the menuSelected index integer to go up in the menu
 void MainMenu::moveUp(){
     //set currently selected to white
     mainMenuText[menuSelected]->setFillColor(ColorSchemeConstants::TEXT_COLOR);
-
+    cerr << "\nset to white";
     //decrement menuSelected
     menuSelected--;
+    cerr << "\nmenu selected value: " << menuSelected;
 
     //check if <0
     //<0 -> set to 4 = go to bottom
@@ -80,6 +112,7 @@ void MainMenu::moveUp(){
     }
     //set menuSelected color to accent color
     mainMenuText[menuSelected]->setFillColor(ColorSchemeConstants::ACCENT_COLOR);
+    cerr << "\nset to accent";
 
 }
 

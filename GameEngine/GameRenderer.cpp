@@ -1,4 +1,5 @@
 #include "GameRenderer.h"
+#include "MainMenu.h"
 
 using namespace std;
 
@@ -10,9 +11,7 @@ Position coordToPosition2(const coord &c) {
  }
 
 GameRenderer::GameRenderer(Player* theplayer, Map* themap,  MapGraphics* themapGraphics, SFMLCritterSimulator* crSim){
-    windowWidth = 600;
-    windowHeight = 400;
-    window = new sf::RenderWindow(sf::VideoMode({windowWidth, windowHeight}), "SFML works!");
+    window = new sf::RenderWindow(sf::VideoMode({800, 600}), "SFML works!");
     player = theplayer;
     map = themap;
     mapGraphics = themapGraphics;
@@ -27,9 +26,8 @@ void GameRenderer::mainWindow(){
     window->setTitle("Tower Defense: Main Menu");
 
     sf::Font font("Arial Unicode.ttf");
-    sf::Text text(font); // a font is required to make a text object
 
-    MainMenu menu(windowWidth, windowHeight, window, font);
+    MainMenu menu(window, font);
 
     //create the render window
     while (window->isOpen())
@@ -42,6 +40,12 @@ void GameRenderer::mainWindow(){
             else if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>()){
                 if (keyPressed->scancode == sf::Keyboard::Scancode::Escape)
                     window->close();
+                if(keyPressed->scancode == sf::Keyboard::Scancode::Up){
+                    menu.moveUp();
+                    cerr << "\n\n\n\n\nmoveUP";
+                }
+                if(keyPressed->scancode == sf::Keyboard::Scancode::Down)
+                    menu.moveDown();
             }
         }
         //draws entire main menu

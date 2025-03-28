@@ -27,6 +27,9 @@ clang++ -std=c++20 -c MapObjects/Tower/TowerSimulator.cpp -I 'MapObjects/TowerDe
 clang++ -std=c++20 -c -g GameEngine/GameRenderer.cpp -I 'MapObjects/TowerDecorator' -I 'GameEngine/' -I 'Player/' -I 'Map/' -I 'MapObjects/Tower/' -I 'MapObjects/Critter/' -I '/opt/homebrew/Cellar/sfml/3.0.0_1/include';
 clang++ -std=c++20 -c Player/Player.cpp -I 'MapObjects/TowerDecorator' -I 'GameEngine/' -I 'Player/' -I 'Map/' -I 'MapObjects/Tower/' -I 'MapObjects/Critter/' -I '/opt/homebrew/Cellar/sfml/3.0.0_1/include';
 
+clang++ -std=c++20 -c GameEngine/ColorSchemeConstants.cpp -I 'GameEngine/' -I '/opt/homebrew/Cellar/sfml/3.0.0_1/include';
+clang++ -std=c++20 -c -g GameEngine/MainMenu.cpp -I 'GameEngine/' -I '/opt/homebrew/Cellar/sfml/3.0.0_1/include';
+
 g++ *.o -L/opt/homebrew/Cellar/sfml/3.0.0_1/lib -lsfml-graphics -lsfml-window -lsfml-system -o myapp;
 
 rm *.o;

@@ -33,8 +33,6 @@ class GameRenderer {
         bool isPlaying;
         SFMLCritterSimulator* critSim;
         Towers* myTower;
-        float windowWidth;
-        float windowHeight;
     
 
 
