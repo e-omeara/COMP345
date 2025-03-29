@@ -49,6 +49,7 @@ class MapGraphics {
 
         int renderMap(sf::RenderWindow* window);
 
+        int getParameters(sf::RenderWindow* window);
         int mapMaking(sf::RenderWindow* theWindow);
 
     private:

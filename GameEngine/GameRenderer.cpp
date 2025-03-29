@@ -81,6 +81,14 @@ int GameRenderer::mainWindow(){
 
 }
 
+void GameRenderer::getParamsWindow(){
+    delete window;
+    window = new sf::RenderWindow(sf::VideoMode({600, 400}), "Making Map!");
+    window->setTitle("Tower Defense: Determine Map Parameters");
+    mapGraphics->getParameters(window);
+
+}
+
 
 //Rendering the mapmaking portion of the game
 void GameRenderer::makeMapWindow(){
@@ -420,8 +428,10 @@ void GameRenderer::startGame(){
  mainWindow();
  cerr << "done main menu" << endl;
 
- //making map menu
+ //get width, height, entrance coordinates
+ getParamsWindow();
  
+ //make map
  makeMapWindow();
 
  //tower purchase phase

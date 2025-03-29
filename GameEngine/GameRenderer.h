@@ -50,6 +50,8 @@ class GameRenderer {
      void startGame();
      //main menu
      int mainWindow();
+     //get map size and start entrance
+     void getParamsWindow();
      //make map
      void makeMapWindow();
      //critter attack phase

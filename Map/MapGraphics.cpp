@@ -17,7 +17,7 @@ MapGraphics::MapGraphics(MapObserver* plugin, Map* theMap){
     map = theMap;
     cout << map->getHeight() << endl;
     map->printMap();
-    map->setEntrance(1,1);
+    //map->setEntrance(1,1);
     map->printMap();
     cout << map->stringMap();
     
@@ -88,6 +88,216 @@ int MapGraphics::loadingmenu()
     }
     return 0;
     
+}
+
+int MapGraphics::getParameters(sf::RenderWindow* window){
+
+    int mouseX;
+    int mouseY;
+    sf::Font font("Arial Unicode.ttf");
+    sf::Text text(font); // a font is required to make a text object
+    text.setCharacterSize(24);
+    text.setFillColor(ColorSchemeConstants::TEXT_COLOR);
+    text.setStyle(sf::Text::Bold);
+    //copying format for user input text
+    sf::Text inputText = text;
+
+
+
+    //making menu text
+    sf::Text mapMakerMenuText[5] = { sf::Text(font), sf::Text(font), sf::Text(font), sf::Text(font), sf::Text(font)};
+    //copying text formatting
+    for (int i = 0; i <3; i++){
+        mapMakerMenuText[i] = text;
+    }
+    mapMakerMenuText[0].setPosition(sf::Vector2f{28, static_cast<float>(window->getSize().y/6)});
+    mapMakerMenuText[0].setCharacterSize(32);
+    mapMakerMenuText[0].setFillColor(ColorSchemeConstants::ACCENT_COLOR);
+    mapMakerMenuText[0].setString("Welcome to the Map Maker!");
+
+    mapMakerMenuText[1].setPosition(sf::Vector2f{30, static_cast<float>(window->getSize().y/6) + 35});
+    mapMakerMenuText[1].setString("Please enter your desired width");
+
+    mapMakerMenuText[2].setPosition(sf::Vector2f{30, static_cast<float>(window->getSize().y/6) + 95}); //extra space alotted for user input
+    mapMakerMenuText[2].setString("Please enter your desired height");
+    
+    sf::Text inputTextX = text;
+    inputTextX.setPosition(sf::Vector2f{30, static_cast<float>(window->getSize().y/6) + 65});
+
+    sf::Text inputTextY = text;
+    inputTextY.setPosition(sf::Vector2f{30, static_cast<float>(window->getSize().y/6) + 125});
+
+    
+    //MapMaking Menu
+    cerr << "\n\n\n\n\n\nmapmaking";
+    cerr << window->isOpen();
+    std::string inputStringX = "";
+    std::string inputStringY = "";
+    
+    int mapX = 0;
+    int mapY = 0;
+
+
+        //asking for width and height
+    /******************************************************/
+    while (window->isOpen()){
+        while (const std::optional event = window->pollEvent()){
+            if (event->is<sf::Event::Closed>()) 
+                window->close();
+            else if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>()){
+                if (keyPressed->scancode == sf::Keyboard::Scancode::Escape){
+                    window->close();
+                    return 1;
+                }
+                if (keyPressed->scancode == sf::Keyboard::Scancode::Enter ){
+                    if(mapX == 0 && inputStringX !=""){
+                        mapX = std::stoi(inputStringX);
+                    }
+                    else if(mapX != 0 && inputStringY !=""){
+                        mapY = std::stoi(inputStringY);
+                        break;
+                    }
+                }
+                // Check if a number key is pressed
+                sf::Keyboard::Scancode key = keyPressed->scancode;
+                if (key >= sf::Keyboard::Scancode::Num1 && key <= sf::Keyboard::Scancode::Num9) {
+                    if(mapX == 0){
+                        inputStringX += static_cast<char>('1' + (static_cast<int>(key) - static_cast<int>(sf::Keyboard::Scancode::Num1)));
+                        inputTextX.setString(inputStringX);
+                    }
+                    if(mapX !=0){
+                        inputStringY += static_cast<char>('1' + (static_cast<int>(key) - static_cast<int>(sf::Keyboard::Scancode::Num1)));
+                        inputTextY.setString(inputStringY);
+                    }
+                } else if (key == sf::Keyboard::Scancode::Num0) {
+                    if(mapX == 0){
+                        inputStringX += '0';
+                        inputTextX.setString(inputStringX);
+                    }
+                    if(mapX !=0){
+                        inputStringY += '0';
+                        inputTextY.setString(inputStringY);
+                    }
+                }
+                // Handle Backspace
+                else if (key == sf::Keyboard::Scancode::Backspace) {
+                    if(inputStringX.length() != 0)
+                        inputStringX.pop_back();
+                    else if(inputStringY.length() != 0)
+                        inputStringY.pop_back();
+                }
+            }
+            
+        }
+        window->clear(ColorSchemeConstants::BACKGROUND_COLOR);
+        window->draw(mapMakerMenuText[0]);
+        window->draw(mapMakerMenuText[1]);
+        window->draw(inputTextX);
+        window->draw(mapMakerMenuText[2]);
+        window->draw(inputTextY);
+        
+        window->display();
+        if(mapY!=0)
+            break;
+    }   
+    /******************************************************/
+
+    map->resize(mapX, mapY);
+
+        //asking for entrance coords
+    /******************************************************/
+    mapMakerMenuText[0].setString("Welcome to the Map Maker!");
+    mapMakerMenuText[1].setString("Please enter the X coordinate of the entrance");
+    mapMakerMenuText[2].setString("Please enter the Y coordinate of the entrance");
+
+    int entranceX = -1;
+    int entranceY = -1;
+
+    //resetting input variables
+    inputStringX = "";
+    inputStringY = "";
+
+    inputTextX = text;
+    inputTextY = text;
+    inputTextX.setPosition(sf::Vector2f{30, static_cast<float>(window->getSize().y/6) + 65});
+    inputTextY.setPosition(sf::Vector2f{30, static_cast<float>(window->getSize().y/6) + 125});
+
+
+    while (window->isOpen()){
+        while (const std::optional event = window->pollEvent()){
+            if (event->is<sf::Event::Closed>()) 
+                window->close();
+            else if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>()){
+                if (keyPressed->scancode == sf::Keyboard::Scancode::Escape){
+                    window->close();
+                    return 1;
+                }
+                if (keyPressed->scancode == sf::Keyboard::Scancode::Enter ){
+                    if(entranceX == -1 && inputStringX !=""){
+                        if(std::stoi(inputStringX) >= mapX){ //out of bounds
+                            inputStringX = "";
+                            cerr << "\nout of bounds\n";
+                        }
+                        else{entranceX = std::stoi(inputStringX);}
+                    }
+                    else if(entranceX != -1 && inputStringY !=""){
+                        if(std::stoi(inputStringY) >= mapY){ //out of bounds
+                            inputStringY = "";
+                            cerr << "\nout of bounds\n";
+                        }
+                        else{entranceY = std::stoi(inputStringY);}
+                            
+                        break;
+                    }
+                }
+                // Check if a number key is pressed
+                sf::Keyboard::Scancode key = keyPressed->scancode;
+                if (key >= sf::Keyboard::Scancode::Num1 && key <= sf::Keyboard::Scancode::Num9) {
+                    if(entranceX == -1){
+                        inputStringX += static_cast<char>('1' + (static_cast<int>(key) - static_cast<int>(sf::Keyboard::Scancode::Num1)));
+                        inputTextX.setString(inputStringX);
+                    }
+                    if(entranceX != -1){
+                        inputStringY += static_cast<char>('1' + (static_cast<int>(key) - static_cast<int>(sf::Keyboard::Scancode::Num1)));
+                        inputTextY.setString(inputStringY);
+                    }
+                } else if (key == sf::Keyboard::Scancode::Num0) {
+                    if(entranceX == -1){
+                        inputStringX += '0';
+                        inputTextX.setString(inputStringX);
+                    }
+                    if(entranceX != -1){
+                        inputStringY += '0';
+                        inputTextY.setString(inputStringY);
+                    }
+                }
+                // Handle Backspace
+                else if (key == sf::Keyboard::Scancode::Backspace) {
+                    if(inputStringX.length() != 0)
+                        inputStringX.pop_back();
+                    else if(inputStringY.length() != 0)
+                        inputStringY.pop_back();
+                }
+            }
+            
+        }
+        window->clear(ColorSchemeConstants::BACKGROUND_COLOR);
+        window->draw(mapMakerMenuText[0]);
+        window->draw(mapMakerMenuText[1]);
+        window->draw(inputTextX);
+        window->draw(mapMakerMenuText[2]);
+        window->draw(inputTextY);
+        
+        window->display();
+        if(entranceY!=-1){
+            map->setEntrance(entranceX, entranceY);
+            break;
+        }
+    }   
+    /******************************************************/
+
+    return 0;
+
 }
 
 

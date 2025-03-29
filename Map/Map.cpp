@@ -151,6 +151,16 @@ using namespace std;
 
         }
 
+
+        void Map::resize(int x, int y){
+            map.resize(x*y, '-');
+            width = x;
+            height = y;
+            updateObserver("changed map size");
+            return;
+
+        }
+
         //Specifies the entrance, which is the first coord of the path
         void Map::setEntrance(int x, int y){
 
@@ -170,6 +180,7 @@ using namespace std;
             cout << path[0].x << "position" << path[0].y;
             //Set entrance coordinate to N for entrance
             map[getPos(x, y)] = 'N';
+            updateObserver("set entrance");
             //printMap();
             return;
 
