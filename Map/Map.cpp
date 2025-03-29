@@ -133,6 +133,16 @@ using namespace std;
             return height;
         }
 
+        int Map::upgrade(char type, int xPos, int yPos){
+            int index = getPos(xPos, yPos);
+            if(map[index] == 'T'){
+                map[index] = toupper(type);
+                updateObserver("upgraded tower");
+                return 0;
+            }
+            return 1;
+        }
+
 
         //To use in the larger game
         void Map::initiateMaking(){

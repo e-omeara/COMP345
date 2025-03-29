@@ -17,6 +17,7 @@
 #include "TowerSimulator.h"
 #include "SFMLCritterSimulator.h"
 #include "CritterFactory.h"
+#include "ColorSchemeConstants.h"
 
 
 
@@ -48,7 +49,7 @@ class GameRenderer {
      // entry point to game
      void startGame();
      //main menu
-     void mainWindow();
+     int mainWindow();
      //make map
      void makeMapWindow();
      //critter attack phase

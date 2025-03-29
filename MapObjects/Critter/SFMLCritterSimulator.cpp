@@ -4,6 +4,8 @@
 #include <thread>
 #include <vector>
 
+using namespace ColorSchemeConstants;
+
 //Constructor, create window and load resources.
 SFMLCritterSimulator::SFMLCritterSimulator(Map* map, const std::vector<Position>& path)
     : map(map), path(path), currentWave(1), maxWave(3), coinsRewarded(0), healthLost(0) {
@@ -127,7 +129,7 @@ void SFMLCritterSimulator::drawSimulation(sf::RenderWindow* theWindow) {
     //Draw current wave information.
     sf::Text waveText(font);
     waveText.setString("Wave: " + std::to_string(currentWave));
-    waveText.setFillColor(sf::Color::Yellow);
+    waveText.setFillColor(ACCENT_COLOR);
     waveText.setPosition({10.f, 10.f});
     theWindow->draw(waveText);
 

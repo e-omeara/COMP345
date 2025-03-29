@@ -6,6 +6,7 @@
 #include "Critter.h"
 #include "Map.h"
 #include "CritterFactory.h"
+#include "ColorSchemeConstants.h"
 
 class SFMLCritterSimulator {
 

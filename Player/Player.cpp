@@ -2,6 +2,7 @@
 #include <iostream>
 
 using namespace std;
+using namespace ColorSchemeConstants;
 
 
 Player::Player(int amount, int hp){
@@ -31,14 +32,14 @@ void Player::renderBalance(sf::RenderWindow *window){
     //Text for coin balance.
     sf::Text coinText(font);
     coinText.setCharacterSize(20);
-    coinText.setFillColor(sf::Color::White);
+    coinText.setFillColor(TEXT_COLOR);
     coinText.setPosition({400.f, 20.f});
     coinText.setString("Coins: " + std::to_string(balance));
     
     //Text for player's health.
     sf::Text healthText(font);
     healthText.setCharacterSize(20);
-    healthText.setFillColor(sf::Color::White);
+    healthText.setFillColor(TEXT_COLOR);
     healthText.setPosition({250.f, 20.f});
     healthText.setString("Health: " + std::to_string(health));
     

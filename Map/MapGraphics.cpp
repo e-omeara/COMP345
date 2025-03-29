@@ -6,6 +6,9 @@
 #include "MapGraphics.h"
 #include "MapObserver.h"
 #include "Map.h"
+#include "ColorSchemeConstants.h"
+
+using namespace ColorSchemeConstants;
 
 //constructor with observer and map
 MapGraphics::MapGraphics(MapObserver* plugin, Map* theMap){
@@ -79,7 +82,7 @@ int MapGraphics::loadingmenu()
         }
 
         //clear and redraw the frame with updated text
-        window.clear();
+        window.clear(BACKGROUND_COLOR);
         window.draw(text);
         window.display();
     }
@@ -105,7 +108,7 @@ int MapGraphics::mapMaking(sf::RenderWindow* window){
     cout << map->stringMap();
     text.setString(textstr);
     text.setCharacterSize(24);
-    text.setFillColor(sf::Color::Red);
+    text.setFillColor(TEXT_COLOR);
     text.setStyle(sf::Text::Bold | sf::Text::Underlined);
 
 
@@ -161,7 +164,7 @@ int MapGraphics::mapMaking(sf::RenderWindow* window){
         }
 
         //clear the window, update the text, and render any graphics
-        window->clear();
+        window->clear(BACKGROUND_COLOR);
         string textstr = map->stringMap();
         text.setString(displayText("Make Map"));
         window->draw(text);
@@ -190,7 +193,7 @@ int MapGraphics::placeTowers(){
     cout << map->stringMap();
     text.setString(textstr);
     text.setCharacterSize(20); 
-    text.setFillColor(sf::Color::Red);
+    text.setFillColor(TEXT_COLOR);
     text.setStyle(sf::Text::Bold | sf::Text::Underlined);
 
 
@@ -230,7 +233,7 @@ int MapGraphics::placeTowers(){
         }
 
         //clear and render anew the window
-        window.clear();
+        window.clear(BACKGROUND_COLOR);
         string textstr = map->stringMap();
         text.setString(displayText("Play game"));
         
@@ -269,7 +272,7 @@ int MapGraphics::renderMap(sf::RenderWindow* theWindow){
     topCorner = 100.f;
     sf::Vector2f tileSize(tilelength, tilelength);
 
-    scenery.setFillColor(sf::Color::Magenta);
+    scenery.setFillColor(PRIMARY_COLOR);
     scenery.setSize(tileSize);
     scenery.setPosition(sf::Vector2f(100.f, 100.f));
 
@@ -281,6 +284,15 @@ int MapGraphics::renderMap(sf::RenderWindow* theWindow){
 
     entry.setFillColor(sf::Color::Black);
     entry.setSize(tileSize);
+
+    upgrade.setFillColor(ACCENT_COLOR);
+    upgrade.setSize(tileSize);
+
+    fire.setFillColor(sf::Color::Red);
+    fire.setSize(tileSize);
+
+    ice.setFillColor(sf::Color::Cyan);
+    ice.setSize(tileSize);
 
     exit.setFillColor(sf::Color::White);
     exit.setSize(tileSize);
@@ -310,6 +322,18 @@ int MapGraphics::renderMap(sf::RenderWindow* theWindow){
             else if(tilechar == 'T'){
                 tower.setPosition(sf::Vector2f(topCorner + tilelength*i, topCorner + tilelength*j));
                 theWindow->draw(tower);
+            }
+            else if(tilechar == 'U'){
+                upgrade.setPosition(sf::Vector2f(topCorner + tilelength*i, topCorner + tilelength*j));
+                theWindow->draw(upgrade);
+            }
+            else if(tilechar == 'I'){
+                ice.setPosition(sf::Vector2f(topCorner + tilelength*i, topCorner + tilelength*j));
+                theWindow->draw(ice);
+            }
+            else if(tilechar == 'F'){
+                fire.setPosition(sf::Vector2f(topCorner + tilelength*i, topCorner + tilelength*j));
+                theWindow->draw(fire);
             }
     
         }

@@ -13,7 +13,7 @@ public:
 
     //virtual ~TowerDecorator() {};
     
-    void shoot(Critter& critter) override ;
+    virtual void shoot(Critter& critter) ;
 };
 
 #endif // TOWER_DECORATOR_H

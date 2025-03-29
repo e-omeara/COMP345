@@ -11,6 +11,7 @@ void BurningEffectDecorator::shoot(Critter &critter) {
 
     // Apply normal damage
     decoratedTower.shoot(critter);
+    std::cout << "Fire shoot!" << std::endl;
         
     // Apply burning effect
     burningEnemies[&critter] = burnDuration;

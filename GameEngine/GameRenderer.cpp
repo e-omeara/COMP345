@@ -1,7 +1,9 @@
 #include "GameRenderer.h"
+#include "MainMenu.h"
 #include <iostream>
 
 using namespace std;
+using namespace ColorSchemeConstants;
 
 //helper method
 Position coordToPosition2(const coord &c) {
@@ -27,31 +29,63 @@ GameRenderer::GameRenderer(Player* theplayer, Map* themap,  MapGraphics* themapG
 
 
 //Rendering the main / welcome window
-void GameRenderer::mainWindow(){
+int GameRenderer::mainWindow(){
     
     window->setTitle("Tower Defense: Main Menu");
 
     sf::Font font("Arial Unicode.ttf");
-    sf::Text text(font); 
-    // set the string to display
-    string textstr = "Welcome to Our Tower Defense Game!\n Make Map \n Load Map";
-    text.setString(textstr);
-    // set the character size
-    text.setCharacterSize(24); 
-    // set the color
-    text.setFillColor(sf::Color::Red);
-    // set the text style
-    text.setStyle(sf::Text::Bold | sf::Text::Underlined);
 
-    window->clear();
-    window->draw(text);
-    window->display();
+    MainMenu menu(window, font);
+    int menuChoice;
+
+    //create the render window
+    while (window->isOpen())
+    {
+        while (const std::optional event = window->pollEvent())
+        {
+            //check for key inputs
+            if (event->is<sf::Event::Closed>())
+                window->close();
+            else if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>()){
+                if (keyPressed->scancode == sf::Keyboard::Scancode::Escape)
+                    window->close();
+                if(keyPressed->scancode == sf::Keyboard::Scancode::Up)
+                    menu.moveUp();
+                if(keyPressed->scancode == sf::Keyboard::Scancode::Down)
+                    menu.moveDown();
+                if(keyPressed->scancode == sf::Keyboard::Scancode::Enter || keyPressed->scancode == sf::Keyboard::Scancode::Right){
+                    menu.selectMenu();
+                }
+            }
+        }
+        //draws entire main menu. 
+        menuChoice = menu.draw();
+    }
+    switch (menuChoice){
+        case 0:{//play map
+            cerr << "Map loading functionality not implemented\n";
+            break;
+        }
+        case 1:{//Make a Map
+            return menuChoice;
+            break;
+        }
+        default:{
+            break;
+        }
+    }
+    
+
+
+    return -1; // no choice made
 
 }
 
 
 //Rendering the mapmaking portion of the game
 void GameRenderer::makeMapWindow(){
+    delete window;
+    window = new sf::RenderWindow(sf::VideoMode({600, 400}), "Making Map!");
     window->setTitle("Tower Defense: Make Map");
 
     //render mapMaker graphics
@@ -75,6 +109,7 @@ void GameRenderer::playTime(){
     delete window;
     window = new sf::RenderWindow(sf::VideoMode({600, 400}), "Playtime!");
     window->setTitle("Battle Time !");
+    
     //initialize clock abilities for tower shoot and critter movement
     sf::Clock* simulationClock = new sf::Clock();
     sf::Clock* towerClock = new sf::Clock();
@@ -111,7 +146,7 @@ void GameRenderer::playTime(){
             }
         }
 
-    window->clear();
+    window->clear(BACKGROUND_COLOR);
     //render map
     mapGraphics->renderMap(window);
     //render towers and tower menu
@@ -195,7 +230,7 @@ void GameRenderer::playTime(){
 }
         
 
-    window->clear();
+    window->clear(BACKGROUND_COLOR);
     //render map
     mapGraphics->renderMap(window);
     //render towers and tower menu
@@ -247,7 +282,7 @@ void GameRenderer::playTime(){
             promptText.setFillColor(sf::Color::White);
             promptText.setString("Restart the game? Press Y or N");
             promptText.setPosition({140.f, 200.f});
-            window->clear();
+            window->clear(BACKGROUND_COLOR);
             window->draw(gameOverText);
             window->draw(promptText);
             window->display();
@@ -293,7 +328,7 @@ void GameRenderer::playTime(){
                 }
             }
 
-            window->clear();
+            window->clear(BACKGROUND_COLOR);
             //render map
             mapGraphics->renderMap(window);
             //render towers and tower menu
@@ -331,7 +366,7 @@ void GameRenderer::pauseTime(){
         }
              sf::Text continueText(font);
              continueText.setCharacterSize(20);
-             continueText.setFillColor(sf::Color::Yellow);
+             continueText.setFillColor(ACCENT_COLOR);
              continueText.setString("Wave Complete! Press Enter to start the next wave!");
              continueText.setPosition({100.f, 350.f});
              window->draw(continueText);
@@ -383,8 +418,10 @@ void GameRenderer::startGame(){
     
 //main menu
  mainWindow();
+ cerr << "done main menu" << endl;
 
  //making map menu
+ 
  makeMapWindow();
 
  //tower purchase phase

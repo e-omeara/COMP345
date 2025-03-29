@@ -7,6 +7,7 @@
 #include <SFML/System.hpp>
 #include <SFML/Audio.hpp>
 #include <SFML/Network.hpp>
+#include "ColorSchemeConstants.h"
 
 
 class Player {

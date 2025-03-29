@@ -15,6 +15,7 @@ SlowingEffectDecorator::SlowingEffectDecorator(std::string type, Position pos, T
 
 void SlowingEffectDecorator::shoot(Critter &critter){
             // Apply normal damage
+            cout << "Ice shoot!" << endl;
             decoratedTower.shoot(critter);
         
             // Apply slowing effect

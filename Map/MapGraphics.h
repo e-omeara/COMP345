@@ -31,6 +31,9 @@ class MapGraphics {
         sf::RectangleShape tower;
         sf::RectangleShape entry;
         sf::RectangleShape exit;
+        sf::RectangleShape upgrade;
+        sf::RectangleShape fire;
+        sf::RectangleShape ice;
 
 
     //functions

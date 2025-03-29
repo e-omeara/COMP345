@@ -14,3 +14,7 @@ ValueModifierDecorator::ValueModifierDecorator(std::string type, Position pos, T
     setRateOfFire(decoratedTower.getRateOfFire()-rofMod);
     
 }
+
+void ValueModifierDecorator::shoot(Critter &critter){
+    Towers::shoot(critter);
+}

@@ -13,6 +13,10 @@
 #include "Player.h"
 #include "SFMLCritterSimulator.h"
 #include "Critter.h"
+#include "ColorSchemeConstants.h"
+#include "ValueModifierDecorator.h"
+#include "SlowingEffectDecorator.h"
+#include "BurningEffectDecorator.h"
 
 using namespace std;
 
@@ -23,6 +27,8 @@ class TowerSimulator{
     //attributes
     //TowerObserver* tObserver;
     vector<Towers*>* towers;
+    vector<BurningEffectDecorator*>* burners;
+    vector<SlowingEffectDecorator*>* icers;
     bool placing;
     Map* map;
     Player* player;

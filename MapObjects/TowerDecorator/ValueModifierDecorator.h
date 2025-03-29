@@ -13,11 +13,10 @@ private:
     double rofModifier;
 
 public:
-ValueModifierDecorator(std::string type, Position pos, Towers tower, double costMod, double refundMod, double rangeMod, double powerMod, double rofMod);
+    ValueModifierDecorator(std::string type, Position pos, Towers tower, double costMod, double refundMod, double rangeMod, double powerMod, double rofMod);
 
-void shoot(Critter &critter){
+    void shoot(Critter &critter);
 
-}
 
 };
 

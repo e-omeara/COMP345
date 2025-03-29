@@ -54,7 +54,7 @@ class Map{
 
         int getHeight();
 
-
+        int upgrade(char type, int xPos, int yPos);
 
         //methods to make the map
         void initiateMaking();

@@ -8,7 +8,9 @@
 #include "Towers.h"
 #include "Player.h"
 #include "TowerDecorator.h"
-#include "ValueModifierDecorator.h"
+
+
+using namespace ColorSchemeConstants;
 
 
 
@@ -16,17 +18,21 @@
 
 TowerSimulator::TowerSimulator(vector<Towers*>* mytowers){
     
-    cout << "\n Initializing Tower Simulator\n";
+    cout << "\n BAD TOWERSIM INIT\n";
     placing = false;
     towers = mytowers;
+    burners = new vector<BurningEffectDecorator*>;
+    icers = new vector<SlowingEffectDecorator*>;
     
     
 }
 
 TowerSimulator::TowerSimulator(){
-    cout << "\n Initializing Tower Simulator\n";
+    cout << "\n BAD TOWERSIM INIT\n";
     placing = false;
     towers = new vector<Towers*>;
+    burners = new vector<BurningEffectDecorator*>;
+    icers = new vector<SlowingEffectDecorator*>;
     
     
 }
@@ -35,6 +41,8 @@ TowerSimulator::TowerSimulator(Player* thePlayer){
     cout << "\n Initializing Tower Simulator\n";
     placing = false;
     towers = new vector<Towers*>;
+    burners = new vector<BurningEffectDecorator*>;
+    icers = new vector<SlowingEffectDecorator*>;
     player = thePlayer;
     towerSelect = -1;
     
@@ -141,7 +149,7 @@ int TowerSimulator::renderTowers(sf::RenderWindow* window){
         sf::Text tooltip(font);
         tooltip.setCharacterSize(16);
         tooltip.setString(sf::String(tip));
-        tooltip.setFillColor(sf::Color::White);
+        tooltip.setFillColor(TEXT_COLOR);
         tooltip.setOutlineColor(sf::Color::Black);
         tooltip.setOutlineThickness(2.f);
         tooltip.setPosition({shapex + 30.f, shapey - 20.f});
@@ -163,17 +171,17 @@ int TowerSimulator::renderPurchaseMenu(sf::RenderWindow* window){
     sf::RectangleShape button;
     button.setSize({100.f,40.f});
     button.setFillColor(sf::Color::Transparent);
-    button.setOutlineColor(sf::Color::Green);
+    button.setOutlineColor(ACCENT_COLOR);
     button.setOutlineThickness(1.f);
 
     sf::Font font("Arial Unicode.ttf");
     sf::Text text(font); 
     text.setCharacterSize(16);
-    text.setFillColor(sf::Color::White);
+    text.setFillColor(TEXT_COLOR);
 
     text.setString("Archer\n" + to_string(Towers::archerCost) + " coin");
     if(selected == 'a'){
-        button.setFillColor(sf::Color::Red);
+        button.setFillColor(SECONDARY_COLOR);
     } else {
         button.setFillColor(sf::Color::Transparent);
     }
@@ -184,7 +192,7 @@ int TowerSimulator::renderPurchaseMenu(sf::RenderWindow* window){
 
     text.setString("Ballista\n" + to_string(Towers::ballistaCost) + " coin");
     if(selected == 'b'){
-        button.setFillColor(sf::Color::Red);
+        button.setFillColor(SECONDARY_COLOR);
     } else {
         button.setFillColor(sf::Color::Transparent);
     }
@@ -195,7 +203,7 @@ int TowerSimulator::renderPurchaseMenu(sf::RenderWindow* window){
 
     text.setString("Catapult\n" + to_string(Towers::catapultCost) + " coin");
     if(selected == 'c'){
-        button.setFillColor(sf::Color::Red);
+        button.setFillColor(SECONDARY_COLOR);
     } else {
         button.setFillColor(sf::Color::Transparent);
     }
@@ -282,6 +290,7 @@ int TowerSimulator::click(sf::RenderWindow *window){
             cout << "Successfully created new tower!" << endl;
             selected = 'n';
             placing = false;
+            return 0;
         } else {
             cout << "You can't place a tower there!";
         }
@@ -289,8 +298,8 @@ int TowerSimulator::click(sf::RenderWindow *window){
 
 
         //place tower
-        return 0;
-    } else {
+        //return 0;
+    } 
 
         sf::Vector2i mousePos = sf::Mouse::getPosition(*window);
         float x = mousePos.x;
@@ -332,14 +341,46 @@ int TowerSimulator::click(sf::RenderWindow *window){
 
         if(towerSelect >= 0){
             cout << "\npressing button?" << endl;
+            Towers* toUpgrade = towers->at(towerSelect);
+            TowerObserver* upgradeObserver = toUpgrade->getTowerObserver();
+            int towerX = towers->at(towerSelect)->getPosition().x;
+            int towerY = towers->at(towerSelect)->getPosition().y;
             if(x > 10 & x < 90){
                 if(y > 100 & y < 140){
                     cout << "\n click upgrade" << endl;
+                    int success = map->upgrade('U', towerX, towerY);
+                    if(success == 0){
+                        ValueModifierDecorator* newTower = new ValueModifierDecorator(upgradeObserver->getType(), {towerX,towerY}, *toUpgrade, 20, 10, 1, 2, 100);
+                        upgradeObserver = new TowerObserver(newTower);
+                        towers->erase(towers->begin() + towerSelect);
+                        towers->push_back(newTower);
+                        //toUpgrade = newTower;
+                        //upgradeObserver->update(toUpgrade->getLevel(), toUpgrade->getBuyingCost(), toUpgrade->getRefundValue(), toUpgrade->getRange(), toUpgrade->getPower(), toUpgrade->getRateOfFire(), {towerX,towerY}, "upgraded" );
+                    }
                 } else if(y > 150 & y < 190){
                     cout << "\n click fire" << endl;
+                    int success = map->upgrade('F', towerX, towerY);
+                    if(success == 0){
+                        BurningEffectDecorator* newTower = new BurningEffectDecorator(upgradeObserver->getType(), {towerX,towerY}, *toUpgrade,0.5, 2);
+                        upgradeObserver = new TowerObserver(newTower);
+                        towers->erase(towers->begin() + towerSelect);
+                        towers->push_back(newTower);
+                        burners->push_back(newTower);
+                        //upgradeObserver->update(toUpgrade->getLevel(), toUpgrade->getBuyingCost(), toUpgrade->getRefundValue(), toUpgrade->getRange(), toUpgrade->getPower(), toUpgrade->getRateOfFire(), {towerX,towerY}, "fire" );
+                    }
                 }
                 else if(y > 200 & y < 240){
                     cout << "\n click ice" << endl;
+                    int success = map->upgrade('I', towerX, towerY);
+                    if(success == 0){
+                        SlowingEffectDecorator* newTower = new SlowingEffectDecorator(upgradeObserver->getType(), {towerX,towerY}, *toUpgrade,0.5, 2);
+                        upgradeObserver = new TowerObserver(newTower);
+                        towers->erase(towers->begin() + towerSelect);
+                        towers->push_back(newTower);
+                        icers->push_back(newTower);
+                        //upgradeObserver->update(toUpgrade->getLevel(), toUpgrade->getBuyingCost(), toUpgrade->getRefundValue(), toUpgrade->getRange(), toUpgrade->getPower(), toUpgrade->getRateOfFire(), {towerX,towerY}, "ice" );
+
+                    }
                 }
                 
             }
@@ -369,7 +410,7 @@ int TowerSimulator::click(sf::RenderWindow *window){
 
         return 0;
 
-    }
+    
 }
 
 void TowerSimulator::shoot(SFMLCritterSimulator *critSim){
@@ -383,6 +424,14 @@ void TowerSimulator::shoot(SFMLCritterSimulator *critSim){
             t->shoot(*critt);
         }
 
+    }
+    for (auto b : *burners){
+        cout << "update burning" << endl;
+        //b->updateBurningEffects();
+    }
+    for (auto i: *icers){
+        cout << "update slowing" << endl;
+        //i->updateSlowingEffects();
     }
 
 
