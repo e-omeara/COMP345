@@ -21,13 +21,14 @@ GameRenderer::GameRenderer(Player* theplayer, Map* themap,  MapGraphics* themapG
 
 }
 
-void GameRenderer::mainWindow(){
+int GameRenderer::mainWindow(){
     
     window->setTitle("Tower Defense: Main Menu");
 
     sf::Font font("Arial Unicode.ttf");
 
     MainMenu menu(window, font);
+    int menuChoice;
 
     //create the render window
     while (window->isOpen())
@@ -49,14 +50,26 @@ void GameRenderer::mainWindow(){
                 }
             }
         }
-        //draws entire main menu
-        menu.draw();
+        //draws entire main menu. 
+        menuChoice = menu.draw();
     }
-
+    switch (menuChoice){
+        case 0:{//play map
+            cerr << "Map loading functionality not implemented\n";
+            break;
+        }
+        case 1:{//Make a Map
+            return menuChoice;
+            break;
+        }
+        default:{
+            break;
+        }
+    }
     
 
 
-    return;
+    return -1; // no choice made
 }
 
 void GameRenderer::makeMapWindow(){
@@ -181,18 +194,12 @@ void GameRenderer::endGame(){
 
 void GameRenderer::startGame(){
 
+    int choice = mainWindow();
+    if(choice == 1)
+        makeMapWindow();
     
-    
+    //playTime();
+    //cerr << "CHOICE : " << choice << std::endl;
 
- mainWindow();
- makeMapWindow();
- 
- //playTime();
-
- 
- 
-    
-
-    
 
 }

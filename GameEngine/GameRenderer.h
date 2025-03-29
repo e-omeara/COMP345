@@ -39,7 +39,7 @@ class GameRenderer {
     public:
         GameRenderer(Player* player, Map* map, MapGraphics* mapGraphics, SFMLCritterSimulator* crSim);
         void startGame();
-        void mainWindow();
+        int mainWindow(); //returns the choice made in the main menu
         void makeMapWindow();
         void playTime();
         void pauseTime();

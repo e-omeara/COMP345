@@ -27,7 +27,7 @@ class MainMenu {
     public:
 
         MainMenu(sf::RenderWindow* theWindow, sf::Font& font);
-        void draw();
+        int draw();
         void moveUp();
         void moveDown();
         void selectMenu();

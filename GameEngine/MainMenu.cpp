@@ -92,7 +92,7 @@ void MainMenu::createMenuText(){
 }
 
 //draws main menu | DOES NOT LOOP... MUST LOOP FUNCTION !!
-void MainMenu::draw(){
+int MainMenu::draw(){
     //clear and redraw the frame with updated text
     window->clear(ColorSchemeConstants::BACKGROUND_COLOR);
 
@@ -104,6 +104,18 @@ void MainMenu::draw(){
             for(int i = 0; i < 5; i++){
                 window->draw(*mainMenuText[i]);
             }
+            break;
+        }
+        case 0:{
+            //play a map
+            window->close();
+            return 0;
+            break;
+        }
+        case 1 :{
+            //make a map
+            window->close();
+            return 1;
             break;
         }
         case 2 :{ // options
@@ -123,8 +135,7 @@ void MainMenu::draw(){
         }
     }
     window->display();
-
-
+    return -1; //didn't start playing game
 }
 
 //decrements the menuSelected index integer to go up in the menu
@@ -166,9 +177,8 @@ void MainMenu::moveDown(){
 }
 
 void MainMenu::selectMenu(){
-    if(currentMenuID != -1){
+    if(currentMenuID == -1)// currently on main menu, so go to menu selected
+        currentMenuID = menuSelected;
+    else // returning to main menu
         currentMenuID = -1;
-        return;
-    }
-    currentMenuID = menuSelected;
 }
