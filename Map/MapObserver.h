@@ -30,7 +30,7 @@ class MapObserver{
 
         MapObserver();
     
-        void update(int nheight, int nwidth, vector<char> nmap, vector<coord> npath, int nmakeX, int nmakeY, string nstatus, string nmsg);
+        void update(int nheight, int nwidth, const vector<char>& nmap, const vector<coord>& npath, int nmakeX, int nmakeY, const string& nstatus, const string& nmsg);
 
         void update(string msg);
 

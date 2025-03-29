@@ -41,9 +41,7 @@ using namespace std;
             map.resize(x*y, '-');
             cout << "done making map\n";
 
-            
-
-
+            observer = new MapObserver();
         }
 
         Map::Map(){
@@ -171,9 +169,9 @@ using namespace std;
         }
 
         //Take a char as parameter, adds a 'P' to the map vector as necessary, checks for doubleback
-        void Map::laypath(char dir){
+        void Map::laypath(const char& dir){
 
-
+            cerr << "\nentered laypath\n";
             //make sure we're in the mapmaking mode
             if (isMaking == false){
                 cout << "you're not making a map!\n";
@@ -202,19 +200,24 @@ using namespace std;
                 
             }
             else if(dir == 'd' || dir == 'D'){
+                cerr << "\n\n\n\n down";
                 //go down
                 if(prevDir == 'u' || prevDir == 'U'){
                     cout << "You just came from there!\n\n";
                     updateObserver("You just came from there!");
                     return;
                 }
+                cerr << "\n\n\n\n past first if";
+
                 if(makeY == height - 1){
                     cout << "You can't go there!\n\n";
                     updateObserver("You can't go there!");
                     return;
                 }
+                cerr << "\n\n\n\n past second if\n";
                 makeY++;
-                map[getPos(makeX, makeY)] = 'P';
+                map[getPos(makeX, makeY)] = 'P'; //affects the vector<char> map
+                cerr << "\nsuccessfully made\n";
             }
             else if(dir == 'l' || dir == 'L'){
                 //go left
@@ -252,28 +255,30 @@ using namespace std;
             pathstep.x = makeX;
             pathstep.y = makeY;
             path.push_back(pathstep); // Add the new coordinates to the path
-
+            cerr << "\nwe get whatever this is done";
             //update the previous direction variable, used to prevent doubling back
             prevDir = dir;
+            cerr << "\nwe get whatever this is done";
             updateObserver("use the arrows keys to create the map, \n press e to create the exit");
             //printMapMaker(); <-- for testing purposes
+            cerr << "\nEnd of function";
             return;
         }
 
         //signals the player is done creating the path
         int Map::setExit(){
-            
+            cerr << "\nenter Map::setExitn";
             //refuses exit if there is no path (i.e. there is only an entrance)
             int cnt = count(map.begin(), map.end(), 'P');
             if(cnt == 0){
                 cout << "You haven't made a path!\n";
-                return 1;
+                return 1; // no path / invalid
             }
 
             //in the map array, set the exist coord to X for exit
             map[getPos(makeX, makeY)] = 'X';
-            updateObserver("Place a tower");
-            cout << "You've finalized the exit!\n";
+            //updateObserver("Place a tower");
+            //cout << "You've finalized the exit!\n";
             //printMap();
 
             //the map cannot be modified any more
@@ -284,12 +289,8 @@ using namespace std;
             pathstep.x = makeX;
             pathstep.y = makeY;
             path.push_back(pathstep);
-
-            return 0;
-
-            
-
-            
+            cerr << "\n end of Map::setExit";
+            return 0; // valid path
         }
 
         int Map::setTower(int x, int y){
@@ -339,7 +340,8 @@ using namespace std;
             }  
 
 
-            void Map::updateObserver(string msg){
+            void Map::updateObserver(const string& msg){
+                cerr << "\nentered Map::updateObserver()";
 
                 observer->update(height, width, map, path, makeX, makeY, "status", msg);
                 //observer->update(msg);

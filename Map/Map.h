@@ -63,7 +63,7 @@ class Map{
 
         void setEntrance(int x, int y);
 
-        void laypath(char dir);
+        void laypath(const char& dir);
 
         int setExit();
 
@@ -73,7 +73,7 @@ class Map{
 
     private:
 
-        void updateObserver(string msg);
+        void updateObserver(const string& msg);
 
         int getPos(int x, int y);
 

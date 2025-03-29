@@ -202,6 +202,7 @@ int MapGraphics::mapMaking(sf::RenderWindow* window){
     /******************************************************/
 
     //cerr << "\n\n\n\nescaped\n";
+    delete map;
     map = new Map(mapX, mapY);
     //cerr << "\nset size\n";
     //asking for entrance coords
@@ -294,14 +295,14 @@ int MapGraphics::mapMaking(sf::RenderWindow* window){
     /******************************************************/
 
     map->setEntrance(entranceX,entranceY);
-    cerr << "Entrance set to \n" << entranceX << ", " << entranceY;
+    map->getPath();
+    cerr << "\nEntrance set to (" << entranceX << ", " << entranceY << ")\n";
     
     // set the string to display and properties
     std::string textstr = map->stringMap();
     //cerr << "\nset textstr\n";
     cout << map->stringMap();
     text.setString(textstr);
-
     
     //create the render window
     //delete window;
@@ -345,10 +346,12 @@ int MapGraphics::mapMaking(sf::RenderWindow* window){
                 else if (keyPressed->scancode == sf::Keyboard::Scancode::E || keyPressed->scancode == sf::Keyboard::Scancode::Enter){
                     //user is trying to place the exit... validate map
                     int valid = map->setExit(); 
+                    cerr << "\nvalid 1\n";
                     if(valid == 0){
                         window->close();
                         return 0;
                     }
+                    cerr << "\nvalid 2";
                     
                 }
             }
@@ -453,6 +456,7 @@ string MapGraphics::displayText(string title){
 
 //renders the map tiles with path and tower info
 int MapGraphics::renderMap(sf::RenderWindow* theWindow){
+    //cerr << "\nrendering map\n";
 
     vector<char> map = observer->getMap();
     int height = observer->getHeight();
@@ -463,14 +467,14 @@ int MapGraphics::renderMap(sf::RenderWindow* theWindow){
     topCorner = 100.f;
     sf::Vector2f tileSize(tilelength, tilelength);
 
-    scenery.setFillColor(sf::Color::Magenta);
+    scenery.setFillColor(ColorSchemeConstants::SECONDARY_COLOR);
     scenery.setSize(tileSize);
     scenery.setPosition(sf::Vector2f(100.f, 100.f));
 
-    pathTile.setFillColor(sf::Color{ 88, 57, 39});
+    pathTile.setFillColor(ColorSchemeConstants::PRIMARY_COLOR);
     pathTile.setSize(tileSize);
 
-    tower.setFillColor(sf::Color::Blue);
+    tower.setFillColor(ColorSchemeConstants::ACCENT_COLOR);
     tower.setSize(tileSize);
     tower.setOutlineThickness(2.f);
     tower.setOutlineColor(sf::Color::Black);

@@ -23,15 +23,24 @@ MapObserver::MapObserver(){
 
 }
 
-void MapObserver::update(int nheight, int nwidth, vector<char> nmap, vector<coord> npath, int nmakeX, int nmakeY, string nstatus, string nmsg){
+void MapObserver::update(int nheight, int nwidth, const vector<char>& nmap, const vector<coord>& npath, int nmakeX, int nmakeY, const string& nstatus, const string& nmsg){
+    cerr << "\nentered MapObserver::update()";
     height = nheight;
+    cerr << "height";
     width = nwidth;
+    cerr << "width";
     map = nmap;
+    cerr << "map";
     path = npath;
+    cerr << "path";
     makeX = nmakeX;
+    cerr << "makeX";
     makeY = nmakeY;
+    cerr << "makeY";
     status = nstatus;
+    cerr << "status";
     message = nmsg;
+    cerr << "\nFinished MapObserver::update()";
 
 }
 
