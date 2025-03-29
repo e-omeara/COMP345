@@ -47,8 +47,7 @@ using namespace std;
         }
 
         Map::Map(){
-            this->width = 20;
-            this->height = 20;
+            cerr << "Empty Map created\n";
             isMaking = true;
             prevDir = 'x';
             map.resize(this->height * this->width, '-');
@@ -139,6 +138,12 @@ using namespace std;
             isMaking = true;
             return;
 
+        }
+
+        //resizes the map. only to be called by the mapmaker MENU before creation
+        void Map::setSize(int x, int y){
+            width = x;
+            height = y;
         }
 
         //Specifies the entrance, which is the first coord of the path

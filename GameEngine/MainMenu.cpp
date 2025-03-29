@@ -114,12 +114,11 @@ int MainMenu::draw(){
         }
         case 1 :{
             //make a map
-            window->close();
             return 1;
             break;
         }
         case 2 :{ // options
-            optionsText[menuSelected]->setFillColor(ColorSchemeConstants::ACCENT_COLOR); //whatever is currently selected is ACCENT_COLOR
+            //optionsText[menuSelected]->setFillColor(ColorSchemeConstants::ACCENT_COLOR); //whatever is currently selected is ACCENT_COLOR
             for(int i = 0; i < 5; i++){
                 window->draw(*optionsText[i]);
             }

@@ -25,7 +25,7 @@ int main() {
 
    //testing game engine and renderer
    MapObserver* mapobserver = new MapObserver;
-   Map* map = new Map(20, 10);
+   Map* map = new Map(); //need to change size later
    map->getObserver(mapobserver);
 
    MapGraphics *mgraphics = new MapGraphics(mapobserver, map);

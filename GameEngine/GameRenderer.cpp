@@ -50,10 +50,11 @@ int GameRenderer::mainWindow(){
                 }
             }
         }
-        //draws entire main menu. 
+        //draws main menu. 
         menuChoice = menu.draw();
-    }
-    switch (menuChoice){
+
+        //if player chooses map maker or play, return choice
+        switch (menuChoice){
         case 0:{//play map
             cerr << "Map loading functionality not implemented\n";
             break;
@@ -66,6 +67,8 @@ int GameRenderer::mainWindow(){
             break;
         }
     }
+    }
+
     
 
 

@@ -58,6 +58,8 @@ class Map{
 
         //methods to make the map
         void initiateMaking();
+        
+        void setSize(int x, int y);
 
         void setEntrance(int x, int y);
 
