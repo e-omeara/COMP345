@@ -93,7 +93,11 @@ void GameRenderer::getParamsWindow(){
 //Rendering the mapmaking portion of the game
 void GameRenderer::makeMapWindow(){
     delete window;
-    window = new sf::RenderWindow(sf::VideoMode({600, 400}), "Making Map!");
+    int mapheight = map->getHeight();
+    int mapwidth = map->getWidth();
+    winwidth = static_cast<unsigned int>(max(20*mapwidth + 200, 600));
+    winheight = static_cast<unsigned int>(max(20*mapheight + 200, 400));
+    window = new sf::RenderWindow(sf::VideoMode({winwidth, winheight}), "Making Map!");
     window->setTitle("Tower Defense: Make Map");
 
     //render mapMaker graphics
@@ -115,7 +119,7 @@ void GameRenderer::makeMapWindow(){
 void GameRenderer::playTime(){
     //delete window and create a new one
     delete window;
-    window = new sf::RenderWindow(sf::VideoMode({600, 400}), "Playtime!");
+    window = new sf::RenderWindow(sf::VideoMode({winwidth, winheight}), "Playtime!");
     window->setTitle("Battle Time !");
     
     //initialize clock abilities for tower shoot and critter movement
@@ -376,7 +380,7 @@ void GameRenderer::pauseTime(){
              continueText.setCharacterSize(20);
              continueText.setFillColor(ACCENT_COLOR);
              continueText.setString("Wave Complete! Press Enter to start the next wave!");
-             continueText.setPosition({100.f, 350.f});
+             continueText.setPosition({100.f, float(winheight) - 50.f});
              window->draw(continueText);
             
 
@@ -400,7 +404,7 @@ void GameRenderer::pauseTimeInit(){
              continueText.setCharacterSize(20);
              continueText.setFillColor(sf::Color::White);
              continueText.setString("Press Enter to Start the Wave after Purchasing Towers!");
-             continueText.setPosition({75.f, 350.f});
+             continueText.setPosition({75.f, float(winheight) - 50.f});
              window->draw(continueText);
              
 

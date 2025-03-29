@@ -40,6 +40,9 @@ class GameRenderer {
      Towers* myTower;
      //
      TowerSimulator* tSim;
+     // height and width of window
+     unsigned int winwidth;
+     unsigned int winheight;
     
 
 

@@ -75,7 +75,18 @@ void SFMLCritterSimulator::updateCritters(float dt) {
             //Record the current grid cell before moving
             prevPositions[i] = activeCritters[i]->getPosition();
             //Advance the critter.
-            activeCritters[i]->move();
+            
+            for(int j = 0; j < activeCritters[i]->getSpeed(); j++){
+                activeCritters[i]->move();
+            }
+            //activeCritters[i]->move();
+            if(activeCritters[i]->getType() == "Fast Critter"){
+                cout << "this is a fast critter" << endl;
+                for(int j = 0; j < activeCritters[i]->getSpeed(); j++){
+                    activeCritters[i]->move();
+                }
+                //activeCritters[i]->move();
+            }
             critterMoveProgress[i] -= simulationInterval;
         }
 

@@ -144,17 +144,18 @@ Critter* Towers::findTarget(const std::vector<Critter*>* activeCritters) const {
         case 'e':{
             //exit
             Critter* closestToExit = activeCritters->at(0);
-            int targetIndex = -1;
+            
             int size = activeCritters->size();
+            int targetIndex = size + 1;
             for(int i = 0; i < size; i++){
                 Critter* critter = activeCritters->at(i);
-                if(isInRange(critter) && (i > targetIndex)){
+                if(isInRange(critter) && (i < targetIndex)){
                     cout << "selecting new target" <<endl;
                     closestToExit = critter;
                     targetIndex = i;
                 }
             }
-            if(targetIndex == -1){
+            if(targetIndex == size + 1){
                 return nullptr;
             } else {
                 return activeCritters->at(targetIndex);
