@@ -55,6 +55,7 @@ int Critter::getSpeed() const {
 
 //Get current critter position
 Position Critter::getPosition() const {
+    
     return path[positionIndex];
 }
 

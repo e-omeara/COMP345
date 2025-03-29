@@ -40,7 +40,7 @@ int main() {
    { critterPath.push_back(coordToPosition(c));}
  
  SFMLCritterSimulator* critSim;
- TowerSimulator* tSim = new TowerSimulator;
+ TowerSimulator* tSim = new TowerSimulator(player);
 
  GameRenderer renderer(player, map, mgraphics, critSim, tSim);
 

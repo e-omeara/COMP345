@@ -21,6 +21,7 @@ private:
     char targetingType;
     Position position;
     std::vector<TowerObserver*> observers;
+    
 
 public:
     // Constructor declaration
@@ -49,11 +50,11 @@ public:
 
 
     //findTarget() calls findWeakTarget() or findStrongTarget() for weak and strong targeting types, respectively
-    Critter* findTarget(const std::vector<Critter*>& activeCritters) const; //returns first critter according to priority. used by both exit and near
+    Critter* findTarget(const std::vector<Critter*>* activeCritters) const; //returns first critter according to priority. used by both exit and near
     
     //normally shouldn't be manually called. findTarget() will determine the appropriate method.
-    Critter* findWeakTarget(const std::vector<Critter*>& activeCritters) const; //returns weakest critter in range
-    Critter* findStrongTarget(const std::vector<Critter*>& activeCritters) const; //returns strongest critter
+    Critter* findWeakTarget(const std::vector<Critter*>* activeCritters) const; //returns weakest critter in range
+    Critter* findStrongTarget(const std::vector<Critter*>* activeCritters) const; //returns strongest critter
 
 
     void addObserver(TowerObserver* observer);
@@ -71,6 +72,7 @@ public:
     virtual double getRateOfFire() const;
     virtual double getLevel() const;
     TowerObserver* getTowerObserver();
+    Position getPosition();
 
 
     // Setters
@@ -80,6 +82,13 @@ public:
     void setPower(double towerPower);
     void setRateOfFire(double fireRate);
     void setLevel(double newLevel) ;
+
+
+
+    //towers costs
+    static int archerCost;
+    static int ballistaCost;
+    static int catapultCost;
 };
 
 

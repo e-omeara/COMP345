@@ -278,8 +278,6 @@ int MapGraphics::renderMap(sf::RenderWindow* theWindow){
 
     tower.setFillColor(sf::Color::Blue);
     tower.setSize(tileSize);
-    tower.setOutlineThickness(2.f);
-    tower.setOutlineColor(sf::Color::Black);
 
     entry.setFillColor(sf::Color::Black);
     entry.setSize(tileSize);

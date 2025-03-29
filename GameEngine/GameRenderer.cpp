@@ -116,6 +116,7 @@ void GameRenderer::playTime(){
     mapGraphics->renderMap(window);
     //render towers and tower menu
     tSim->renderTowers(window);
+    tSim->renderPurchaseMenu(window);
     
     pauseTimeInit();
     //render player balance
@@ -199,7 +200,7 @@ void GameRenderer::playTime(){
     mapGraphics->renderMap(window);
     //render towers and tower menu
     tSim->renderTowers(window);
-    
+    tSim->renderPurchaseMenu(window);
 
     //render player balance
     player->renderBalance(window);
@@ -297,6 +298,7 @@ void GameRenderer::playTime(){
             mapGraphics->renderMap(window);
             //render towers and tower menu
             tSim->renderTowers(window);
+            tSim->renderPurchaseMenu(window);
             
             pauseTime();
             //render player balance

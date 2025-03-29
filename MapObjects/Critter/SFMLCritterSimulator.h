@@ -23,7 +23,7 @@ public:
     //Check if the current wave is finished and load the next wave.
     void checkAndLoadNextWave(sf::RenderWindow* theWindow);
 
-    std::vector<Critter*> getCritters();
+    std::vector<Critter*>* getCritters();
 
     //Wave control functions
     bool isWaveComplete() const;

@@ -10,6 +10,7 @@
 #include "TowerObserver.h"
 #include "Towers.h"
 #include "Map.h"
+#include "Player.h"
 #include "SFMLCritterSimulator.h"
 #include "Critter.h"
 
@@ -24,6 +25,9 @@ class TowerSimulator{
     vector<Towers*>* towers;
     bool placing;
     Map* map;
+    Player* player;
+    char selected;
+    int towerSelect;
     
 
 
@@ -32,6 +36,7 @@ class TowerSimulator{
     //methods
     //Constructors
     TowerSimulator(vector<Towers*>* mytowers);
+    TowerSimulator(Player* thePlayer);
     TowerSimulator();
     //add map
     int addMap(Map* theMap);

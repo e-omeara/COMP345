@@ -24,8 +24,8 @@ void SFMLCritterSimulator::loadResources() {
         std::cerr << "Error loading arial.ttf\n";
 }
 
-std::vector<Critter *> SFMLCritterSimulator::getCritters(){
-    return activeCritters;
+std::vector<Critter *>* SFMLCritterSimulator::getCritters(){
+    return &activeCritters;
 }
 
 //Try to spawn the next critter, conditions are: if no active critters exist or the last one reached halfway through the path.
@@ -36,7 +36,7 @@ void SFMLCritterSimulator::trySpawnNextCritter() {
 
     if (pendingCritters.empty())
         return;
-    if (activeCritters.empty() || activeCritters.back()->getPositionIndex() >= (path.size() / 4)) {
+    if (activeCritters.empty() || activeCritters.back()->getPositionIndex() >= ((path.size() / (currentWave*2)) + 1)) {
         Critter* next = pendingCritters.front();
         pendingCritters.erase(pendingCritters.begin());
         activeCritters.push_back(next);
@@ -166,6 +166,7 @@ void SFMLCritterSimulator::drawSimulation(sf::RenderWindow* theWindow) {
                 "\nStrength: " + std::to_string(activeCritters[i]->getStrength());
             sf::Text tooltip(font);
             tooltip.setString(tip);
+            tooltip.setCharacterSize(16);
             tooltip.setFillColor(sf::Color::White);
             tooltip.setOutlineColor(sf::Color::Black);
             tooltip.setOutlineThickness(2.f);

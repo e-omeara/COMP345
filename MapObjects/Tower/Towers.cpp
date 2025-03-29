@@ -14,7 +14,9 @@ using namespace std;
 //Default Constructor
 
 
-
+int Towers::archerCost = 10;
+int Towers::ballistaCost = 20;
+int Towers::catapultCost = 40;
 
 Towers::Towers(double level, double cost, double refund, double towerRange, 
     double towerPower, double fireRate, std::string type, Position pos)
@@ -27,7 +29,11 @@ Towers::Towers(double level, double cost, double refund, double towerRange,
     , rateOfFire(fireRate)
     , type(type)
     , position(pos)
-{}
+{
+    
+
+
+}
 
 //Constructor to make defined tower types
 //Use this one for driver
@@ -40,7 +46,7 @@ Towers::Towers(std::string type, Position pos)
     if(type == "archer")
     {
         //std::cout << "Archer " << std::endl;
-        buyingCost = 10;
+        buyingCost = archerCost;
         refundValue = 3;
         range = 3;
         power = 2;
@@ -49,7 +55,7 @@ Towers::Towers(std::string type, Position pos)
     else if(type == "ballista")
     {
         //std::cout << "ballista " << std::endl;
-        buyingCost = 20;
+        buyingCost = ballistaCost;
         refundValue = 6;
         range = 7;
         power = 5;
@@ -58,7 +64,7 @@ Towers::Towers(std::string type, Position pos)
     else if(type == "catapult")
     {
         //std::cout << "catapult " << std::endl;
-        buyingCost = 30;
+        buyingCost = catapultCost;
         refundValue = 10;
         range = 5;
         power = 10;
@@ -67,7 +73,7 @@ Towers::Towers(std::string type, Position pos)
     else
     {
         //defaults to archer
-        buyingCost = 10;
+        buyingCost = archerCost;
         refundValue = 3;
         range = 3;
         power = 1;
@@ -131,24 +137,37 @@ Position Towers::getOrigin(int x = 0, int y = 0){
 
 
 // returns the pointer to the highest priority critter. uses fireZone attribute
-Critter* Towers::findTarget(const std::vector<Critter*>& activeCritters) const {
-    if(activeCritters.size() == 0)
+Critter* Towers::findTarget(const std::vector<Critter*>* activeCritters) const {
+    if(activeCritters->size() == 0)
         return nullptr; //can't target a critter if none in play
     switch (targetingType){
         case 'e':{
             //exit
-            Critter* closestToExit = activeCritters[0];
-            for(Critter* critter : activeCritters){
-                if(isInRange(critter) && (critter->getPositionIndex() > closestToExit->getPositionIndex())){
+            Critter* closestToExit = activeCritters->at(0);
+            int targetIndex = -1;
+            int size = activeCritters->size();
+            for(int i = 0; i < size; i++){
+                Critter* critter = activeCritters->at(i);
+                if(isInRange(critter) && (i > targetIndex)){
+                    cout << "selecting new target" <<endl;
                     closestToExit = critter;
+                    targetIndex = i;
                 }
+            }
+            if(targetIndex == -1){
+                return nullptr;
+            } else {
+                return activeCritters->at(targetIndex);
+                break;
+
             }
             return closestToExit;
             break;
         }
         case 'n':{//near
-                Critter* nearestCritter = activeCritters[0];
-                for(Critter* critter : activeCritters){
+                Critter* nearestCritter = activeCritters->at(0);
+                for(Critter* critter : *activeCritters){
+                    
                     if(isInRange(critter)){
                         //now checking if it's closer than nearest
                         if((abs(critter->getPosition().x - position.x)) + //not really finding distance but it's fine...
@@ -181,10 +200,10 @@ Critter* Towers::findTarget(const std::vector<Critter*>& activeCritters) const {
 }
 
 // returns the pointer to the least strong critter in range
-Critter* Towers::findWeakTarget(const std::vector<Critter*>& activeCritters) const {
-    if(activeCritters.size() > 0){
-        Critter* weakest = activeCritters[0];
-        for(Critter* critter : activeCritters){
+Critter* Towers::findWeakTarget(const std::vector<Critter*>* activeCritters) const {
+    if(activeCritters->size() > 0){
+        Critter* weakest = activeCritters->at(0);
+        for(Critter* critter : *activeCritters){
             if(isInRange(critter) && critter->getStrength() < weakest->getStrength()){
                 weakest = critter;
             }
@@ -194,10 +213,10 @@ Critter* Towers::findWeakTarget(const std::vector<Critter*>& activeCritters) con
     return nullptr; //no valid critter found
 }
 // returns the pointer to the strongest critter in range
-Critter* Towers::findStrongTarget(const std::vector<Critter*>& activeCritters) const {
-    if(activeCritters.size() > 0){
-        Critter* strongest = activeCritters[0];
-        for(Critter* critter : activeCritters){
+Critter* Towers::findStrongTarget(const std::vector<Critter*>* activeCritters) const {
+    if(activeCritters->size() > 0){
+        Critter* strongest = activeCritters->at(0);
+        for(Critter* critter : *activeCritters){
             if(isInRange(critter) && critter->getStrength() > strongest->getStrength()){
                 strongest = critter;
             }
@@ -293,6 +312,7 @@ double Towers::getPower() const { return power; }
 double Towers::getRateOfFire() const { return rateOfFire; }
 double Towers::getLevel() const { return level; }
 TowerObserver* Towers::getTowerObserver() {return observers.at(0);}
+Position Towers::getPosition(){return position;}
 
 // Setters
 void Towers::setBuyingCost(double cost) { buyingCost = cost; notifyObservers(); }
