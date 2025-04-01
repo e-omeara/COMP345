@@ -55,6 +55,7 @@ int Critter::getSpeed() const {
 
 //Get current critter position
 Position Critter::getPosition() const {
+    
     return path[positionIndex];
 }
 
@@ -82,7 +83,7 @@ void Critter::setSpeed(int spd){
 //Move the critter along the path
 void Critter::move() {
     if (positionIndex + 1 < path.size()) {
-        positionIndex += speed;
+        positionIndex += 1;
         if (positionIndex >= path.size()) {
             //To prevent going over
             positionIndex = path.size() - 1; 
@@ -96,10 +97,11 @@ void Critter::move() {
 
 //FastCritter attributes(Moves Twice as Fast)
 FastCritter::FastCritter(std::vector<Position> path) 
-    : Critter(20, 1, 3, 1, 7, path) {}
+    : Critter(20, 2, 3, 1, 7, path) {}
 
 void FastCritter::move() {
-    positionIndex += (speed * 2);
+    //The simulator will move it twice
+    positionIndex += 1;
     if (positionIndex >= path.size()) {
         positionIndex = path.size() - 1;
     }
@@ -112,7 +114,7 @@ std::string FastCritter::getType() const {
 
 //TankCritter attributes (More HP but Moves Slower)
 TankCritter::TankCritter(std::vector<Position> path)
-    : Critter(50, 1, 5, 1, 10, path) {}
+    : Critter(50, 2, 5, 1, 10, path) {}
 
 std::string TankCritter::getType() const { 
     return "Tank Critter"; 
@@ -120,7 +122,7 @@ std::string TankCritter::getType() const {
 
 //BossCritter (High HP and High Strength)
 BossCritter::BossCritter(std::vector<Position> path)
-    : Critter(100, 1, 10, 1, 20, path) {}
+    : Critter(100, 2, 10, 1, 20, path) {}
 
 std::string BossCritter::getType() const { 
     return "Boss Critter"; 
@@ -129,6 +131,10 @@ std::string BossCritter::getType() const {
 //CritterGroup constructor
 CritterGroup::CritterGroup(int waveLevel, std::vector<Position> path) {
     generateWave(waveLevel, path);
+}
+
+std::__1::vector<Critter> CritterGroup::getCritters(){
+    return critters;
 }
 
 //Generate a wave of critters
@@ -144,6 +150,7 @@ void CritterGroup::moveCritters(int& playerCoins) {
     for (auto& critter : critters) {
         if (critter.isAlive()) {
             if (critter.hasReachedEnd()) {
+                //TODO: add player class and steal coins
                 playerCoins -= critter.stealCoins();
                 //Test Case
                 std::cout << "Critter reached the exit! Player lost " << critter.stealCoins() << " coins!\n";

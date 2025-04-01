@@ -43,7 +43,7 @@ class Map{
 
         string stringMap();
 
-        friend class MapMaker;
+        //friend class MapMaker;
 
         //getter methods
         vector<coord> getPath();
@@ -54,10 +54,12 @@ class Map{
 
         int getHeight();
 
-
+        int upgrade(char type, int xPos, int yPos);
 
         //methods to make the map
         void initiateMaking();
+
+        void resize(int x, int y);
 
         void setEntrance(int x, int y);
 

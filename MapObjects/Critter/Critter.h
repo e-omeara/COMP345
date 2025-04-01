@@ -99,6 +99,8 @@ private:
 
 public:
     CritterGroup(int waveLevel, std::vector<Position> path);
+    std::vector<Critter> getCritters();
+    
     
     //Move all critters
     void moveCritters(int& playerCoins);

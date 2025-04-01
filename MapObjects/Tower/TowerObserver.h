@@ -13,7 +13,7 @@ using namespace std;
 class TowerObserver
 {
     private:
-        Towers& tower;
+        //Towers& tower;
         double level;
         double buyingCost;
         double refundValue;
@@ -26,6 +26,7 @@ class TowerObserver
 
     public:
         TowerObserver(Towers& tower);
+        TowerObserver(Towers* tower);
 
         void update(double tlevel = 0, double buyingCost = 0, double refundValue = 0, double trange = 0, double tpower = 0, double rateOfFire = 0, Position tposition = {0,0}, string tType = "normal");
 

@@ -133,10 +133,30 @@ using namespace std;
             return height;
         }
 
+        int Map::upgrade(char type, int xPos, int yPos){
+            int index = getPos(xPos, yPos);
+            if(map[index] == 'T'){
+                map[index] = toupper(type);
+                updateObserver("upgraded tower");
+                return 0;
+            }
+            return 1;
+        }
+
 
         //To use in the larger game
         void Map::initiateMaking(){
             isMaking = true;
+            return;
+
+        }
+
+
+        void Map::resize(int x, int y){
+            map.resize(x*y, '-');
+            width = x;
+            height = y;
+            updateObserver("changed map size");
             return;
 
         }
@@ -154,12 +174,13 @@ using namespace std;
             makeY = y;
 
             //set first entry in the path vector
-            coord start;
-            start.x = x;
-            start.y = y;
-            path.push_back(start);
+            
+            path[0].x = x;
+            path[0].y = y;
+            cout << path[0].x << "position" << path[0].y;
             //Set entrance coordinate to N for entrance
             map[getPos(x, y)] = 'N';
+            updateObserver("set entrance");
             //printMap();
             return;
 
@@ -296,7 +317,9 @@ using namespace std;
             int pos = getPos(x, y);
             if(map[pos] == '-'){
                 map[pos] = 'T';
+                cout << pos << endl;
                 updateObserver("placed tower");
+                printMap();
 
                 return 0;
             } else {

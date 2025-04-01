@@ -18,8 +18,10 @@ private:
     double power;
     double rateOfFire;
     std::string type;
+    char targetingType;
     Position position;
     std::vector<TowerObserver*> observers;
+    
 
 public:
     // Constructor declaration
@@ -29,28 +31,48 @@ public:
 
     // Constructor for type
     Towers(std::string type, Position position);
+
+    // Constructor for type
+    Towers(std::string type, Position position, char targType);
     // Default position method
     static Position getOrigin(int x, int y);
 
     // base shoot method
-    void shoot(Critter& critter);
+    virtual void shoot(Critter& critter);
 
     // level up method
     void levelUp(double& balance);
+
+
+    inline bool isInRange(Critter* critter) const 
+    {return (abs(critter->getPosition().x - position.x) <= range) 
+         && (abs(critter->getPosition().y - position.y) <= range);};
+
+
+    //findTarget() calls findWeakTarget() or findStrongTarget() for weak and strong targeting types, respectively
+    Critter* findTarget(const std::vector<Critter*>* activeCritters) const; //returns first critter according to priority. used by both exit and near
+    
+    //normally shouldn't be manually called. findTarget() will determine the appropriate method.
+    Critter* findWeakTarget(const std::vector<Critter*>* activeCritters) const; //returns weakest critter in range
+    Critter* findStrongTarget(const std::vector<Critter*>* activeCritters) const; //returns strongest critter
+
 
     void addObserver(TowerObserver* observer);
 
     void removeObserver(TowerObserver* observer);
 
+    //TODO: make virtual
     void notifyObservers();
 
     // Getters
-    double getBuyingCost() const;
-    double getRefundValue() const;
-    double getRange() const;
-    double getPower() const;
-    double getRateOfFire() const;
-    double getLevel() const;
+    virtual double getBuyingCost() const;
+    virtual double getRefundValue() const;
+    virtual double getRange() const;
+    virtual double getPower() const;
+    virtual double getRateOfFire() const;
+    virtual double getLevel() const;
+    TowerObserver* getTowerObserver();
+    Position getPosition();
 
 
     // Setters
@@ -60,6 +82,13 @@ public:
     void setPower(double towerPower);
     void setRateOfFire(double fireRate);
     void setLevel(double newLevel) ;
+
+
+
+    //towers costs
+    static int archerCost;
+    static int ballistaCost;
+    static int catapultCost;
 };
 
 
