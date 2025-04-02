@@ -71,6 +71,8 @@ class Map{
 
         void printMapMaker();
 
+        void clearTowers();
+
     private:
 
         void updateObserver(string msg);

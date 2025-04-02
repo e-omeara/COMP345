@@ -55,6 +55,28 @@ int TowerSimulator::addMap(Map *theMap){
     return 0;
 }
 
+//Destructor to delete towers and clear vectors
+TowerSimulator::~TowerSimulator(){
+    if(towers){
+        for(auto t : *towers){
+            delete t;
+        }
+        towers->clear();
+        delete towers;
+        towers = nullptr;
+    }
+    if(burners){
+        burners->clear();
+        delete burners;
+        burners = nullptr;
+    }
+    if(icers){
+        icers->clear();
+        delete icers;
+        icers = nullptr;
+    }
+}
+
 /*
 int TowerSimulator::createWindow(){
 

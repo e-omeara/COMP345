@@ -6,11 +6,13 @@
 
 using namespace ColorSchemeConstants;
 
-//Constructor, create window and load resources.
+//Constructor, create window and load resources
 SFMLCritterSimulator::SFMLCritterSimulator(Map* map, const std::vector<Position>& path)
-    : map(map), path(path), currentWave(1), maxWave(3), coinsRewarded(0), healthLost(0) {
+    : map(map), path(path), currentWave(1), maxWave(3), coinsRewarded(0), healthLost(0), 
+    fastKilled(0), tankKilled(0), bossKilled(0) {
     loadResources();
-     // Create the first wave using the CritterFactory
+    totalCoinsEarned = 0;
+     //Create the first wave using CritterFactory
      pendingCritters = CritterFactory::createWave(currentWave, path);
 }
 
@@ -108,8 +110,21 @@ void SFMLCritterSimulator::updateCritters(float dt) {
             critterSprites.erase(critterSprites.begin() + i);
             critterMoveProgress.erase(critterMoveProgress.begin() + i);
             prevPositions.erase(prevPositions.begin() + i);
-        } else if(!activeCritters[i]->isAlive()) {
-            coinsRewarded += activeCritters[i]->getReward();
+            
+        } 
+        
+        //If critter is killed, counter increment
+        else if(!activeCritters[i]->isAlive()) {
+            int reward = activeCritters[i]->getReward();
+            coinsRewarded += reward;
+            totalCoinsEarned += reward;
+            std::string type = activeCritters[i]->getType();
+            if(type == "Fast Critter")
+                fastKilled++;
+            else if(type == "Tank Critter")
+                tankKilled++;
+            else if(type == "Boss Critter")
+                bossKilled++;
             std::cout << activeCritters[i]->getType() << " killed! Player earned " 
                       << activeCritters[i]->getReward() << " coins.\n";
             delete activeCritters[i];
@@ -151,10 +166,10 @@ void SFMLCritterSimulator::drawSimulation(sf::RenderWindow* theWindow) {
     for (size_t i = 0; i < activeCritters.size(); i++) {
         theWindow->draw(critterSprites[i]);
         
-        // Draw health bar above each critter.
+        //Draw health bar above each critter.
         float maxHP = (activeCritters[i]->getType() == "Fast Critter") ? 20.f :
                       (activeCritters[i]->getType() == "Tank Critter") ? 50.f : 100.f;
-        // Adjust maxHP to account for scaling (simplistic linear scaling).
+        //Adjust maxHP to account for scaling (simplistic linear scaling).
         maxHP += (currentWave - 1) * ((activeCritters[i]->getType() == "Fast Critter") ? 5.f :
                  (activeCritters[i]->getType() == "Tank Critter") ? 10.f : 20.f);
                  
@@ -170,7 +185,7 @@ void SFMLCritterSimulator::drawSimulation(sf::RenderWindow* theWindow) {
         theWindow->draw(barBack);
         theWindow->draw(barFront);
         
-        // Draw tooltip if mouse hovers over the critter.
+        //Draw tooltip if mouse hovers over the critter.
         if (critterSprites[i].getGlobalBounds().contains({ static_cast<float>(mousePos.x),
                                                            static_cast<float>(mousePos.y) })) {
             std::string tip = activeCritters[i]->getType() +
@@ -205,7 +220,7 @@ float SFMLCritterSimulator::checkClock(float elapsedTime, sf::Clock* simulationC
     float simulationInterval = 0.5f; //Updates every 0.5 sec
     elapsedTime += simulationClock->restart().asSeconds();
     if(elapsedTime >= simulationInterval){
-        cout << "resetting clock!" << endl;
+        std::cout << "resetting clock!" << endl;
         updateCritters(elapsedTime);
         elapsedTime = 0.f;
     }
@@ -215,7 +230,7 @@ float SFMLCritterSimulator::checkClock(float elapsedTime, sf::Clock* simulationC
 //Main simulation loop
 void SFMLCritterSimulator::runSimulation(sf::RenderWindow window) {
     sf::Clock simulationClock;
-    float simulationInterval = 0.5f; // update every 0.5 sec
+    float simulationInterval = 0.5f; //Update every 0.5 sec
     float elapsedTime = 0.f;
     
     //Opening window for simulation output

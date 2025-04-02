@@ -1,5 +1,6 @@
 #include "Critter.h"
 #include "CritterObserver.h"
+#include <vector>
 
 //Critter constructor, member initializer list since constant values 
 Critter::Critter(int hp, int spd, int str, int lvl, int reward, std::vector<Position> path)
@@ -133,7 +134,7 @@ CritterGroup::CritterGroup(int waveLevel, std::vector<Position> path) {
     generateWave(waveLevel, path);
 }
 
-std::__1::vector<Critter> CritterGroup::getCritters(){
+std::vector<Critter> CritterGroup::getCritters(){
     return critters;
 }
 

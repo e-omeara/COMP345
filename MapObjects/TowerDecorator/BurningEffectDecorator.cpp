@@ -1,8 +1,9 @@
 #include "BurningEffectDecorator.h"
+#include <string>
 
 
 
-BurningEffectDecorator::BurningEffectDecorator(std::__1::string type, Position pos, Towers tower, double burnDamage, int duration)
+BurningEffectDecorator::BurningEffectDecorator(std::string type, Position pos, Towers tower, double burnDamage, int duration)
  : TowerDecorator(type, pos, tower), burnDamagePerTick(burnDamage), burnDuration(duration) {
 
 }
