@@ -31,9 +31,18 @@ int main() {
  Map* map = new Map(20, 10);
  map->getObserver(mapobserver);
 
+
+ ////// ---------- testing load map file
+
+ map->loadMap("map1");
+ map->getMapList();
+
+
+ ///// -----------
+
  MapGraphics *mgraphics = new MapGraphics(mapobserver, map);
 
- Player* player = new Player(100, 100);
+ Player* player = new Player(80, 100);
 
  std::vector<Position> critterPath;
  for(auto &c : map->getPath())
@@ -55,7 +64,7 @@ int main() {
 
 
 
-//Tower Decorator Test Cases
+/*Tower Decorator Test Cases
 
 std::cout << "Hello, World!" << std::endl;
 
@@ -78,7 +87,7 @@ TowerSimulator tSim2;
 tSim2.runGame();
 
 
-
+*/
 
 
 

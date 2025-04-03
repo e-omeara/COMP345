@@ -73,6 +73,13 @@ class Map{
 
         void clearTowers();
 
+        void saveMap();
+
+        int loadMap(string fileName);
+
+        vector<string> getMapList();
+
+
     private:
 
         void updateObserver(string msg);

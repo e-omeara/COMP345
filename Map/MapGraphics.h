@@ -21,7 +21,7 @@ class MapGraphics {
 
         MapObserver* observer;
         Map* map;
-        sf::RenderWindow window;
+        //sf::RenderWindow window;
         vector<sf::RectangleShape> mapTiles;
         float tilelength;
         float topCorner;
@@ -52,11 +52,15 @@ class MapGraphics {
         int getParameters(sf::RenderWindow* window);
         int mapMaking(sf::RenderWindow* theWindow);
 
+        int loadingMap(sf::RenderWindow* window, vector<string> mapVect);
+
+        int viewMap(sf::RenderWindow* window);
+
     private:
 
-        int loadingmenu();
+        //int loadingmenu();
         
-        int placeTowers();
+        //int placeTowers();
         coord getMapPos(int x, int y);
 
 
