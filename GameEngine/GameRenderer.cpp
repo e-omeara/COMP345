@@ -1,6 +1,7 @@
 #include "GameRenderer.h"
 #include "MainMenu.h"
 #include <iostream>
+#include <optional>
 
 using namespace std;
 using namespace ColorSchemeConstants;
@@ -23,9 +24,8 @@ GameRenderer::GameRenderer(Player* theplayer, Map* themap,  MapGraphics* themapG
     critSim = crSim;
     myTower =  new Towers("archer", {5, 5});
     tSim = toSim;
-
-
 }
+
 
 //
 //
@@ -78,11 +78,7 @@ int GameRenderer::mainWindow(){
             break;
         }
     }
-    
-
-
     return -1; // no choice made
-
 }
 
 //
@@ -95,8 +91,8 @@ void GameRenderer::getParamsWindow(){
     window = new sf::RenderWindow(sf::VideoMode({600, 400}), "Making Map!");
     window->setTitle("Tower Defense: Determine Map Parameters");
     mapGraphics->getParameters(window);
-
 }
+
 
 //
 //
@@ -233,48 +229,18 @@ int GameRenderer::makeMapWindow(){
     for(auto &c : map->getPath())
       { critterPath.push_back(coordToPosition2(c));}
 
-
     // create critter simulator with map and critter data
     critSim = new SFMLCritterSimulator(map, critterPath);
 
-    return 0;
-
 }
 
-//
-//
-//
-//
-//
-//Critter attack phase
-void GameRenderer::playTime(){
-    //delete window and create a new one
-    delete window;
-    int mapheight = map->getHeight();
-    int mapwidth = map->getWidth();
-    winwidth = static_cast<unsigned int>(max(20*mapwidth + 200, 600));
-    winheight = static_cast<unsigned int>(max(20*mapheight + 200, 400));
-    window = new sf::RenderWindow(sf::VideoMode({winwidth, winheight}), "Playtime!");
-    window->setTitle("Battle Time !");
-    
-    //initialize clock abilities for tower shoot and critter movement
-    sf::Clock* simulationClock = new sf::Clock();
-    sf::Clock* towerClock = new sf::Clock();
-    float simulationInterval = 0.5f; //Updates every 0.5 sec
-    float elapsedTime = 0.f;
-    float shootTime = 0.f;
+//Initial tower purchase phase before wave 1
+void GameRenderer::preWavePhase(){
+    bool resume = false;
 
 
-
-    bool gameOver = false;
-
-    int mouseX;
-    int mouseY;
-
-    //initial tower purchasing phase
     pauseTimeInit();
     window->display();
-    bool resume = false;
     while(!resume && window->isOpen()){
         while(auto pauseEvent = window->pollEvent()){
             if(auto pauseEvent2=pauseEvent->getIf<sf::Event::KeyPressed>()){
@@ -285,11 +251,9 @@ void GameRenderer::playTime(){
                
             if(pauseEvent->is<sf::Event::Closed>()){
                 window->close();
-                delete simulationClock;
                 return;
             }else if(pauseEvent->is<sf::Event::MouseButtonPressed>()){
-                tSim->click(window);
-                
+                tSim->click(window);   
             }
         }
 
@@ -305,197 +269,213 @@ void GameRenderer::playTime(){
     player->renderBalance(window);
     //send click to towerBuy and towerUpgrade
     window->display();        
-
     }
+}
 
+//Runs the main simulation loop (waves, tower)
+void GameRenderer::simulateWave(){
+    sf::Clock simulationClock;
+    sf::Clock towerClock;
+    float simulationInterval = 0.5f;
+    float elapsedTime = 0.f;
+    float shootTime = 0.f;
+    bool gameOver = false;
+    
     //loop through input logic
     while(window->isOpen()){
         //receive player input
         while (const std::optional event = window->pollEvent())
         {
-
             if (event->is<sf::Event::Closed>())
                { 
-                
                 window->close();
-                delete simulationClock;
-
                 return;
-            } else if(event->is<sf::Event::MouseButtonPressed>()){
-                tSim->click(window);
-                
-            }
 
+            } else if(event->is<sf::Event::MouseButtonPressed>()){
+                tSim->click(window);           
+            }
             if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>()){
                 if (keyPressed->scancode == sf::Keyboard::Scancode::Escape){
                     window->close();
-                    delete simulationClock;
-
-
                     return;
-                }}
-            
+                }
+            }       
         }
-    
-    //Update simulation and player's stats before drawing
-    elapsedTime = critSim->checkClock(elapsedTime, simulationClock);
-    critSim->updateCritters(elapsedTime);
 
-    
+        //Update simulation and player's stats before drawing
+         elapsedTime = critSim->checkClock(elapsedTime, &simulationClock);
+         critSim->updateCritters(elapsedTime);
 
- 
+        // run tower tageting algorithm
+         shootTime += towerClock.restart().asSeconds();
+         if(shootTime >= simulationInterval){
+              cout << "resetting clock!" << endl;
+              shootTime = 0.f;
+         }
+         if(shootTime == 0.f){
+              cout << "attempting to shoot critters" << endl;
+              tSim->shoot(critSim);
+         }
 
-    // run tower tageting algorithm
-    
-    shootTime += towerClock->restart().asSeconds();
-    if(shootTime >= simulationInterval){
-        cout << "resetting clock!" << endl;
+        //Update player's stats based on simulation changes
+        if(critSim->coinsRewarded > 0 || critSim->healthLost > 0){
+              player->balance += critSim->coinsRewarded;
+              player->reduceHealth(critSim->healthLost);
+              critSim->coinsRewarded = 0;
+              critSim->healthLost = 0;
+         }
         
-        shootTime = 0.f;
+         //Check for game over (when player health <= 0)
+        if(player->getHealth() <= 0){
+              gameOver = true;
+        }
+
+         window->clear(BACKGROUND_COLOR);
+         //render map
+         mapGraphics->renderMap(window);
+         //render towers and tower menu
+         tSim->renderTowers(window);
+         tSim->renderPurchaseMenu(window);
+
+         //render player balance
+         player->renderBalance(window);
+
+         //send click to towerBuy and towerUpgrade
+         critSim->drawSimulation(window);
+
+         //If game over, show Game Over screen and prompt restart
+         if(gameOver){
+              handleGameOver();
+              return;
+         }
+
+         //If wave is complete and game is not over, pause to allow tower upgrades
+         if(critSim->isWaveComplete() && !gameOver){
+            if(critSim->getCurrentWave() < critSim->getMaxWave()){
+                 pauseTime();
+                 window->display();
+                 bool resume = false;
+                 while(!resume && window->isOpen()){
+                      while(auto pauseEvent = window->pollEvent()){
+                           if(auto keyEvent = pauseEvent->getIf<sf::Event::KeyPressed>())
+                                if(keyEvent->code == sf::Keyboard::Key::Enter)
+                                     resume = true;
+                           if(pauseEvent->is<sf::Event::Closed>()){
+                                window->close();
+                                return;
+                           } else if(pauseEvent->is<sf::Event::MouseButtonPressed>()){
+                                tSim->click(window);
+                           }
+                      }
+                      window->clear(BACKGROUND_COLOR);
+                      mapGraphics->renderMap(window);
+                      tSim->renderTowers(window);
+                      tSim->renderPurchaseMenu(window);
+                      pauseTime();
+                      player->renderBalance(window);
+                      window->display();
+                 }
+                 critSim->startNextWave();
+            } else {
+                 //Final wave complete, trigger end game menu
+                 endGame();
+                 return;
+            }
+       }
+         window->display();
+         elapsedTime = 0.f;
     }
- 
-
-    if(shootTime  == 0.f){
-        cout << "attempting to shoot critters" << endl;
-        tSim->shoot(critSim);
-
-        
-    }
-
-    
-    //Update player's stats based on simulation changes
-    if(critSim->coinsRewarded > 0 || critSim->healthLost > 0) {
-        player->balance += critSim->coinsRewarded;
-        player->reduceHealth(critSim->healthLost);
-        critSim->coinsRewarded = 0;
-        critSim->healthLost = 0;
-    }
-
-    //Check for game over (when player health <= 0)
-    if(player->getHealth() <= 0) {
-    gameOver = true;
 }
-        
 
-    window->clear(BACKGROUND_COLOR);
-    //render map
-    mapGraphics->renderMap(window);
-    //render towers and tower menu
-    tSim->renderTowers(window);
-    tSim->renderPurchaseMenu(window);
+//Function to handle game over state and restart
+void GameRenderer::handleGameOver(){
+    sf::Font font;
+    if(!font.openFromFile("arial.ttf"))
+         std::cerr << "Error loading font\n";
 
-    //render player balance
-    player->renderBalance(window);
-    //send click to towerBuy and towerUpgrade
-
-
-    critSim->drawSimulation(window);
-
-     //If game over, show Game Over screen and prompt restart
-     if(gameOver) {
-        sf::Font font;
-        if(!font.openFromFile("arial.ttf")){
-            std::cerr << "Error loading font\n";
-        }
-        sf::Text gameOverText(font);
-        gameOverText.setCharacterSize(30);
-        gameOverText.setFillColor(sf::Color::Red);
-        gameOverText.setString("GAME OVER");
-        gameOverText.setPosition({200.f, 150.f});
-        window->draw(gameOverText);
-        window->display();
+    //Display Game Over Text
+    sf::Text gameOverText(font);
+    gameOverText.setCharacterSize(30);
+    gameOverText.setFillColor(sf::Color::Red);
+    gameOverText.setString("GAME OVER");
+    gameOverText.setPosition({220.f,100.f});
     
-        //Prompt for restart
-        bool decisionMade = false;
-        bool restartGame = false;
-        
-        while(!decisionMade && window->isOpen()){
-            while(auto reEvent = window->pollEvent()){
-                if(auto restartEvent=reEvent->getIf<sf::Event::KeyPressed>()){
-                    if(restartEvent->code == sf::Keyboard::Key::Y) {
-                        restartGame = true;
-                        decisionMade = true;
-                    } else if(restartEvent->code == sf::Keyboard::Key::N) {
-                        decisionMade = true;
-                    }
-                } else if(reEvent->is<sf::Event::Closed>()){
-                    window->close();
-                    decisionMade = true;
-                }
-            }
-            //Display prompt
-            sf::Text promptText(font);
-            promptText.setCharacterSize(20);
-            promptText.setFillColor(sf::Color::White);
-            promptText.setString("Restart the game? Press Y or N");
-            promptText.setPosition({140.f, 200.f});
-            window->clear(BACKGROUND_COLOR);
-            window->draw(gameOverText);
-            window->draw(promptText);
-            window->display();
-        }
-        if(restartGame) {
-            //Reset player stats and reinitialize simulator
-            player->balance = 100;
-            player->health = 100;
-            std::vector<Position> critterPath;
-            for(auto &c : map->getPath()){
-                critterPath.push_back(coordToPosition2(c));
-            }
-            delete critSim;
-            critSim = new SFMLCritterSimulator(map, critterPath);
-            gameOver = false;
-        } else {
-            window->close();
-            delete simulationClock;
-            return;
-        }
+    //Set up two menu options: Main Menu and Quit
+    sf::Text optionMain(font);
+    sf::Text optionQuit(font);
+    optionMain.setString("Main Menu");
+    optionQuit.setString("Quit");
+    optionMain.setCharacterSize(25);
+    optionQuit.setCharacterSize(25);
+    optionMain.setPosition({220.f, 180.f});
+    optionQuit.setPosition({220.f, 220.f});
+
+    //Selected option: 0 for Main Menu, 1 for Quit
+    int selectedOption = 0;
+    optionMain.setFillColor(ACCENT_COLOR);
+    optionQuit.setFillColor(TEXT_COLOR);
+
+    bool menuDone = false;
+    while(!menuDone && window->isOpen()){
+         while(auto event = window->pollEvent()){
+              if(event->is<sf::Event::Closed>()){
+                   window->close();
+                   menuDone = true;
+              }
+              else if(auto keyEvent = event->getIf<sf::Event::KeyPressed>()){
+                   if(keyEvent->code == sf::Keyboard::Key::Up){
+                        selectedOption = (selectedOption == 0) ? 1 : 0;
+                   } else if(keyEvent->code == sf::Keyboard::Key::Down){
+                        selectedOption = (selectedOption == 1) ? 0 : 1;
+                   } else if(keyEvent->code == sf::Keyboard::Key::Enter){
+                        menuDone = true;
+                   }
+              }
+         }
+         // Update option colors based on selection.
+         if(selectedOption == 0){
+             optionMain.setFillColor(ACCENT_COLOR);
+             optionQuit.setFillColor(TEXT_COLOR);
+         } else {
+             optionMain.setFillColor(TEXT_COLOR);
+             optionQuit.setFillColor(ACCENT_COLOR);
+         }
+         window->clear(BACKGROUND_COLOR);
+         window->draw(gameOverText);
+         window->draw(optionMain);
+         window->draw(optionQuit);
+         window->display();
     }
 
-     //If wave is complete and game is not over, pause to allow tower upgrades
-     if(!gameOver && critSim->isWaveComplete()){
-        pauseTime();
-        window->display();
-        bool resume = false;
-        while(!resume && window->isOpen()){
-            while(auto pauseEvent = window->pollEvent()){
-                if(auto pauseEvent2=pauseEvent->getIf<sf::Event::KeyPressed>()){
-                    if(pauseEvent2->code == sf::Keyboard::Key::Enter){
-                        resume = true;
-                    }
-                }
-                   
-                if(pauseEvent->is<sf::Event::Closed>()){
-                    window->close();
-                    delete simulationClock;
-                    return;
-                }else if(pauseEvent->is<sf::Event::MouseButtonPressed>()){
-                    tSim->click(window);
-                    
-                }
-            }
+    if(selectedOption == 0){ // "Main Menu" selected
+         // CHANGED: Fully reset game state and go back to main menu.
+         player->balance = 100;
+         player->health = 100;
+         delete map;
+         map = new Map(20,20);
+         delete critSim;
+         critSim = nullptr;
+         delete tSim;
+         tSim = new TowerSimulator(player);
+         delete mapGraphics;
+         MapObserver* newObserver = new MapObserver;
+         map->getObserver(newObserver);
+         mapGraphics = new MapGraphics(newObserver, map);
+         startGame();
 
-            window->clear(BACKGROUND_COLOR);
-            //render map
-            mapGraphics->renderMap(window);
-            //render towers and tower menu
-            tSim->renderTowers(window);
-            tSim->renderPurchaseMenu(window);
-            
-            pauseTime();
-            //render player balance
-            player->renderBalance(window);
-            //send click to towerBuy and towerUpgrade
-            window->display(); 
+    } else {
+         window->close();
+    }
+}
 
-        }
-        critSim->startNextWave();
-    }
-    
-    window->display();
-    elapsedTime = 0.f;
-    }
-delete simulationClock;
+//Critter attack phase
+void GameRenderer::playTime(){
+    //delete window and create a new one
+    delete window;
+    window = new sf::RenderWindow(sf::VideoMode({winwidth, winheight}), "Playtime!");
+    window->setTitle("Battle Time !");
+    preWavePhase();
+    simulateWave();
     }
     
 //
@@ -555,23 +535,106 @@ void GameRenderer::pauseTimeInit(){
     return;
 }
 
+
+//endGame Menu, After final wave completion
 //
 //
 //
 //
 //
+
 void GameRenderer::endGame(){
-    window->setTitle("Tower Defense: goodbye !");
+    window->setTitle("Tower Defense: Game Completed!");
+    sf::Font font;
+    if (!font.openFromFile("arial.ttf"))
+        std::cerr << "Error loading font\n";
 
-    //render end game graphics
+    //Display the congratulatory heading and stats
+    sf::Text heading(font);
+    heading.setString("Congrats! You beat the game!");
+    heading.setCharacterSize(30);
+    heading.setFillColor(sf::Color::Red);
+    heading.setPosition({100.f, 50.f});
 
-    //display loss or win
+    std::string statsStr = "Stats:\n"
+                           "Fast Critters Killed: " + std::to_string(critSim->fastKilled) + "\n" +
+                           "Tank Critters Killed: " + std::to_string(critSim->tankKilled) + "\n" +
+                           "Boss Critters Killed: " + std::to_string(critSim->bossKilled) + "\n" +
+                           "Total Coins Earned: " + std::to_string(critSim->totalCoinsEarned);
+    sf::Text statsText(font);
+    statsText.setString(statsStr);
+    statsText.setCharacterSize(20);
+    statsText.setFillColor(sf::Color::White);
+    statsText.setPosition({100.f, 110.f});
 
-    //display stats
+    //Set up two menu options: Main Menu and Quit
+    sf::Text optionMain(font);
+    sf::Text optionQuit(font);
+    optionMain.setString("Main Menu");
+    optionQuit.setString("Quit");
+    optionMain.setCharacterSize(25);
+    optionQuit.setCharacterSize(25);
+    optionMain.setPosition({100.f, 250.f});
+    optionQuit.setPosition({100.f, 290.f});
 
+    int selectedOption = 0; //0 = Main Menu, 1 = Quit.
+    optionMain.setFillColor(ACCENT_COLOR);
+    optionQuit.setFillColor(TEXT_COLOR);
 
-    return;
+    bool menuDone = false;
+    while(!menuDone && window->isOpen()){
+         while(auto event = window->pollEvent()){
+              if(event->is<sf::Event::Closed>()){
+                   window->close();
+                   menuDone = true;
+              }
+              else if(auto keyEvent = event->getIf<sf::Event::KeyPressed>()){
+                   if(keyEvent->code == sf::Keyboard::Key::Up){
+                        selectedOption = (selectedOption == 0) ? 1 : 0;
+                   } else if(keyEvent->code == sf::Keyboard::Key::Down){
+                        selectedOption = (selectedOption == 1) ? 0 : 1;
+                   } else if(keyEvent->code == sf::Keyboard::Key::Enter){
+                        menuDone = true;
+                   }
+              }
+         }
+         if(selectedOption == 0){
+             optionMain.setFillColor(ACCENT_COLOR);
+             optionQuit.setFillColor(TEXT_COLOR);
+         } else {
+             optionMain.setFillColor(TEXT_COLOR);
+             optionQuit.setFillColor(ACCENT_COLOR);
+         }
+         window->clear(BACKGROUND_COLOR);
+         window->draw(heading);
+         window->draw(statsText);
+         window->draw(optionMain);
+         window->draw(optionQuit);
+         window->display();
+    }
+
+    //To Main Menu, Replaying the Game
+    if(selectedOption == 0){
+         player->balance = 100;
+         player->health = 100;
+
+         //Delete current map, critter simulator, tower simulator, and map graphics
+         delete map;
+         map = new Map(20,20);
+         delete critSim;
+         critSim = nullptr;
+         delete tSim;
+         tSim = new TowerSimulator(player);
+         delete mapGraphics;
+         MapObserver* newObserver = new MapObserver;
+         map->getObserver(newObserver);
+         mapGraphics = new MapGraphics(newObserver, map);
+         startGame();
+    } else {
+         window->close();
+    }
 }
+
 
 //
 //
@@ -579,9 +642,7 @@ void GameRenderer::endGame(){
 //
 //
 void GameRenderer::startGame(){
-
-    
-    
+   
 //main menu
  int choice = mainWindow();
  
@@ -600,14 +661,6 @@ if(choice == 1){
  //tower purchase phase
  tSim->addMap(map);
  
-
  //critter attack phase
  playTime();
-
- 
- 
-    
-
-    
-
 }

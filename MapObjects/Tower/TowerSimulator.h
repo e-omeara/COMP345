@@ -44,6 +44,7 @@ class TowerSimulator{
     TowerSimulator(vector<Towers*>* mytowers);
     TowerSimulator(Player* thePlayer);
     TowerSimulator();
+    ~TowerSimulator();
     //add map
     int addMap(Map* theMap);
     //entry point to simulator

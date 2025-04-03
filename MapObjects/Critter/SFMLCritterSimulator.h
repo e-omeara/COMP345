@@ -17,25 +17,36 @@ public:
 
     //Run the critter simulation loop
     void runSimulation(sf::RenderWindow window);
-    //check the clock and update the critters as necessary
+    //Check the clock and update the critters as necessary
     float checkClock(float elapsedTime, sf::Clock* simulationClock);
     //Draw the map background (for visual clarity) and all active critters with health bars and tooltips.
     void drawSimulation(sf::RenderWindow* theWindow);
     //Check if the current wave is finished and load the next wave.
     void checkAndLoadNextWave(sf::RenderWindow* theWindow);
-
-    std::vector<Critter*>* getCritters();
+    //Update active critters (move them along the path) and update their sprite positions
+    void updateCritters(float dt);
+    //Spawn the next critter if the last one has reached at least halfway along the path.
+    void trySpawnNextCritter();
 
     //Wave control functions
     bool isWaveComplete() const;
     void startNextWave();
 
+    std::vector<Critter*>* getCritters();
+
     //Accumulated rewards/damage
     int coinsRewarded;
     int healthLost;
+    int totalCoinsEarned;
 
-    //Update active critters (move them along the path) and update their sprite positions
-    void updateCritters(float dt);
+    //Kill counters for end-game stats
+    int fastKilled;
+    int tankKilled;
+    int bossKilled;
+
+     //Getters for wave information
+     int getCurrentWave() const { return currentWave; }
+     int getMaxWave() const { return maxWave; }
 
 private:
 
@@ -63,8 +74,7 @@ private:
 
     //Helper methods:
     void loadResources();
-    //Spawn the next critter if the last one has reached at least halfway along the path.
-    void trySpawnNextCritter();
+
 
 };
 

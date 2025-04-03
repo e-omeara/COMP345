@@ -67,7 +67,12 @@ class GameRenderer {
      void pauseTimeInit();
      //end graphics and stats
      void endGame();
-
+     //prewave Phase
+     void preWavePhase();
+     //main simulation loop
+     void simulateWave();
+     //gameover phase
+     void handleGameOver();
 
     private:
     //TODO: delete???

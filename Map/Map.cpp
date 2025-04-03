@@ -334,8 +334,8 @@ using namespace std;
 
         int Map::setTower(int x, int y){
 
-            if(x > width || y > width){
-                return 0;
+            if(x < 0 || x >= width || y<0 || y >= height){
+                return 1;
             }
 
             int pos = getPos(x, y);
@@ -476,6 +476,7 @@ using namespace std;
 
             void Map::updateObserver(string msg){
 
+                if (observer !=nullptr)
                 observer->update(height, width, map, path, makeX, makeY, "status", msg);
                 //observer->update(msg);
                 cout << "\nmsg: " << msg << "\n";
@@ -488,8 +489,17 @@ using namespace std;
                 return (y)*width + x;
             } 
 
-
-
+            //Removing all towers that are on the map for restart/replay purposes
+            void Map::clearTowers() {
+                for (size_t i = 0; i < map.size(); i++) {
+                    char cell = map[i];
+                    //If the cell is not one of the default map markers, clear it
+                    if (cell != '-' && cell != 'N' && cell != 'P' && cell != 'X') {
+                        map[i] = '-';
+                    }
+                }
+                updateObserver("Cleared towers from map");
+            }
 
 
 
