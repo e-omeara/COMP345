@@ -232,6 +232,8 @@ int GameRenderer::makeMapWindow(){
     // create critter simulator with map and critter data
     critSim = new SFMLCritterSimulator(map, critterPath);
 
+    return 0;
+
 }
 
 //Initial tower purchase phase before wave 1
@@ -470,6 +472,12 @@ void GameRenderer::handleGameOver(){
 
 //Critter attack phase
 void GameRenderer::playTime(){
+    //Set window height accordingly
+    int mapheight = map->getHeight();
+    int mapwidth = map->getWidth();
+    winwidth = static_cast<unsigned int>(max(20*mapwidth + 200, 600));
+    winheight = static_cast<unsigned int>(max(20*mapheight + 200, 400));
+
     //delete window and create a new one
     delete window;
     window = new sf::RenderWindow(sf::VideoMode({winwidth, winheight}), "Playtime!");
