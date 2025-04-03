@@ -71,6 +71,12 @@ class Map{
 
         void printMapMaker();
 
+        void saveMap();
+
+        int loadMap(string fileName);
+
+        vector<string> getMapList();
+
     private:
 
         void updateObserver(string msg);

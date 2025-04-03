@@ -56,7 +56,9 @@ class GameRenderer {
      //get map size and start entrance
      void getParamsWindow();
      //make map
-     void makeMapWindow();
+     int makeMapWindow();
+     //
+     int loadMapWindow();
      //critter attack phase
      void playTime();
      //tower purchase phase

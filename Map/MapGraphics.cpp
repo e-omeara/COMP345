@@ -25,6 +25,7 @@ MapGraphics::MapGraphics(MapObserver* plugin, Map* theMap){
 }
 
 //the initial loading menu
+/*
 int MapGraphics::loadingmenu()
 {
    
@@ -89,6 +90,8 @@ int MapGraphics::loadingmenu()
     return 0;
     
 }
+
+*/
 
 int MapGraphics::getParameters(sf::RenderWindow* window){
 
@@ -385,76 +388,6 @@ int MapGraphics::mapMaking(sf::RenderWindow* window){
 
 }
 
-int MapGraphics::placeTowers(){
-    //map view where the user can place towers
-
-   
-    
-
-
-    int mouseX;
-    int mouseY;
-
-    sf::Font font("Courier New.ttf");
-    sf::Text text(font);
-
-    // set the string to display and properties
-    string textstr = map->stringMap();
-    cout << map->stringMap();
-    text.setString(textstr);
-    text.setCharacterSize(20); 
-    text.setFillColor(TEXT_COLOR);
-    text.setStyle(sf::Text::Bold | sf::Text::Underlined);
-
-
-    //create the renderwindow
-    window = sf::RenderWindow(sf::VideoMode({600, 400}), "Place Towers!");
-    
-    
-
-    while (window.isOpen())
-    {
-        while (const std::optional event = window.pollEvent())
-        {
-            if (event->is<sf::Event::Closed>())
-                window.close();
-            else if(event->is<sf::Event::MouseButtonPressed>()){
-                //get the mouse click coordinates
-                sf::Vector2i position = sf::Mouse::getPosition(window);
-                mouseX = position.x;
-                mouseY = position.y;
-                cout << mouseX;
-                cout << mouseY;
-                coord towerPos = getMapPos(mouseX, mouseY);
-                //try to set a tower there
-                int ret = map->setTower(towerPos.x, towerPos.y);
-                cout << ret;
-                
-            }
-            else if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>()){
-                if (keyPressed->scancode == sf::Keyboard::Scancode::Escape)
-                    //user pressed the escape button
-                    {window.close();
-                }
-                
-                    
-                
-            }
-        }
-
-        //clear and render anew the window
-        window.clear(BACKGROUND_COLOR);
-        string textstr = map->stringMap();
-        text.setString(displayText("Play game"));
-        
-        window.draw(text);
-        renderMap(&window);
-        window.display();
-    }
-    return 0;
-
-}
-
 
 string MapGraphics::displayText(string title){
     //sets the map message into the title text
@@ -469,6 +402,9 @@ string MapGraphics::displayText(string title){
     return displaystr;
 
 }
+
+
+
 
 //renders the map tiles with path and tower info
 int MapGraphics::renderMap(sf::RenderWindow* theWindow){
@@ -555,6 +491,84 @@ int MapGraphics::renderMap(sf::RenderWindow* theWindow){
     return 0;
 }
 
+
+
+
+int MapGraphics::loadingMap(sf::RenderWindow *window, vector<string> mapVect){
+
+    sf::RectangleShape titleButton;
+    sf::Font font("arial.ttf");
+    sf::Text title(font);
+    sf::Text mapList(font);
+    title.setString("Press a number to choose a map");
+    title.setCharacterSize(24);
+    title.setFillColor(TEXT_COLOR);
+    title.setStyle(sf::Text::Bold | sf::Text::Underlined);
+    title.setPosition({50.f,50.f});
+
+    titleButton.setPosition({50.f, 50.f});
+    titleButton.setOutlineColor(ACCENT_COLOR);
+    titleButton.setOutlineThickness(1.0f);
+    titleButton.setFillColor(sf::Color::Transparent);
+    titleButton.setSize({400.f, 50.f});
+
+    
+    string mapString = "";
+
+    for(int i = 0; i < mapVect.size(); i++){
+        mapString.append(to_string(i));
+        mapString.append(". ");
+        mapString.append(mapVect[i]);
+        mapString.append("\n\n");
+    }
+
+    mapList.setString(mapString);
+    mapList.setCharacterSize(20);
+    mapList.setFillColor(TEXT_COLOR);
+
+    mapList.setPosition({50.f,100.f});
+    
+    window->draw(titleButton);
+    window->draw(title);
+    window->draw(mapList);
+
+
+
+    return 0;
+}
+
+//
+//
+//
+//
+//
+// display the loaded map
+int MapGraphics::viewMap(sf::RenderWindow *window){
+    
+
+    sf::Font font("arial.ttf");
+    sf::Text title(font);
+    sf::Text mapList(font);
+    title.setString("Press Enter to Accept or Backspace to Choose Another Map");
+    title.setCharacterSize(24);
+    title.setFillColor(TEXT_COLOR);
+    title.setStyle(sf::Text::Bold | sf::Text::Underlined);
+    title.setPosition({50.f,50.f});
+
+
+
+
+    renderMap(window);
+
+    return 0;
+
+}
+
+//
+//
+//
+//
+//
 //converts x and y position to the numerical value along the map vector
 coord MapGraphics::getMapPos(int x, int y){
     coord mapPos;
@@ -571,9 +585,9 @@ coord MapGraphics::getMapPos(int x, int y){
 
 //runs the three stages of the map GUI
 int MapGraphics::runGame(){
-    loadingmenu();
+    //loadingmenu();
     //mapMaking();
-    placeTowers();
+    //placeTowers();
     return 0;
 }
 
@@ -595,12 +609,3 @@ int mainfunc() {
 
 
 
-/*
-
-clang++ -std=c++20 -c MapObserver.cpp -I/opt/homebrew/Cellar/sfml/3.0.0_1/include;
-clang++ -std=c++20 -c MapGraphics.cpp -I/opt/homebrew/Cellar/sfml/3.0.0_1/include;
-clang++ -std=c++20 -c Map.cpp -I/opt/homebrew/Cellar/sfml/3.0.0_1/include;
-g++ MapGraphics.o MapObserver.o Map.o -L/opt/homebrew/Cellar/sfml/3.0.0_1/lib -lsfml-graphics -lsfml-window -lsfml-system -o myapp;
-./myapp
-
-*/

@@ -27,7 +27,11 @@ GameRenderer::GameRenderer(Player* theplayer, Map* themap,  MapGraphics* themapG
 
 }
 
-
+//
+//
+//
+//
+//
 //Rendering the main / welcome window
 int GameRenderer::mainWindow(){
     
@@ -63,7 +67,7 @@ int GameRenderer::mainWindow(){
     }
     switch (menuChoice){
         case 0:{//play map
-            cerr << "Map loading functionality not implemented\n";
+            return menuChoice;
             break;
         }
         case 1:{//Make a Map
@@ -81,6 +85,11 @@ int GameRenderer::mainWindow(){
 
 }
 
+//
+//
+//
+//
+//
 void GameRenderer::getParamsWindow(){
     delete window;
     window = new sf::RenderWindow(sf::VideoMode({600, 400}), "Making Map!");
@@ -89,9 +98,121 @@ void GameRenderer::getParamsWindow(){
 
 }
 
+//
+//
+//
+//
+//
+int GameRenderer::loadMapWindow(){
+    delete window;
+    window = new sf::RenderWindow(sf::VideoMode({600, 400}), "Load a Map");
+    window->setTitle("Tower Defense: Load a map");
+    
+    int selection = -1;
+    bool loaded = false;
 
+    vector<string> mapVector = map->getMapList();
+    int numberOfMaps = mapVector.size();
+    if (numberOfMaps == 0){
+        cout << "No maps found !" << endl;
+        return 1;
+    }
+
+    while (window->isOpen())
+    {
+        while (const std::optional event = window->pollEvent())
+        {
+            //check for key inputs
+            if (event->is<sf::Event::Closed>())
+                window->close();
+            else if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>()){
+                if (keyPressed->scancode == sf::Keyboard::Scancode::Escape)
+                    window->close();
+                if(keyPressed->scancode == sf::Keyboard::Scancode::Num0)
+                    //move down
+                    selection = 0;
+                if(keyPressed->scancode == sf::Keyboard::Scancode::Num1)
+                    //move up
+                    
+                    selection = 1;
+                if(keyPressed->scancode == sf::Keyboard::Scancode::Num2)
+                    //move down
+                    if(numberOfMaps >= 2){
+                        selection = 2;
+                    }
+                if(keyPressed->scancode == sf::Keyboard::Scancode::Num3)
+                    //move down
+                    if(numberOfMaps >= 3){
+                        selection = 3;
+                    }
+                if(keyPressed->scancode == sf::Keyboard::Scancode::Num4)
+                    //move down
+                    if(numberOfMaps >= 4){
+                        selection = 4;
+                    }
+                if(keyPressed->scancode == sf::Keyboard::Scancode::Num5)
+                    //move down
+                    if(numberOfMaps >= 5){
+                        selection = 5;
+                    }
+                if(keyPressed->scancode == sf::Keyboard::Scancode::Num6){
+                    //select map
+                    if(numberOfMaps >= 6){
+                        selection = 6;
+                    }
+                }
+                if(keyPressed->scancode == sf::Keyboard::Scancode::Enter){
+                    //select map
+                    if(loaded == true){
+                        //send path to critters
+                        std::vector<Position> critterPath;
+                        for(auto &c : map->getPath())
+                            { critterPath.push_back(coordToPosition2(c));}
+
+
+                        // create critter simulator with map and critter data
+                        critSim = new SFMLCritterSimulator(map, critterPath);
+                        window->close();
+                        return 0;
+                    }
+                }
+                if(keyPressed->scancode == sf::Keyboard::Scancode::Backspace){
+                    //select map
+                    if(loaded == true){
+                        selection = -1;
+                        loaded = false;
+                    }
+                }
+            }
+        }
+        window->clear(BACKGROUND_COLOR);
+        if(selection == -1){
+            mapGraphics->loadingMap(window, mapVector);
+        }else{
+            if(loaded == false){
+                map->loadMap(mapVector[selection] + ".txt");
+                loaded = true;
+            }
+            mapGraphics->viewMap(window);
+        }
+        
+        window->display();
+    }
+
+
+
+
+
+    return 0;
+}
+
+//
+//
+//
+//
+//
 //Rendering the mapmaking portion of the game
-void GameRenderer::makeMapWindow(){
+int GameRenderer::makeMapWindow(){
     delete window;
     int mapheight = map->getHeight();
     int mapwidth = map->getWidth();
@@ -101,7 +222,10 @@ void GameRenderer::makeMapWindow(){
     window->setTitle("Tower Defense: Make Map");
 
     //render mapMaker graphics
-    mapGraphics->mapMaking(window);
+    int success = mapGraphics->mapMaking(window);
+    if(success == 1){
+        return 1;
+    }
     map->printMap();
 
     //send path to critters
@@ -113,12 +237,23 @@ void GameRenderer::makeMapWindow(){
     // create critter simulator with map and critter data
     critSim = new SFMLCritterSimulator(map, critterPath);
 
+    return 0;
+
 }
 
+//
+//
+//
+//
+//
 //Critter attack phase
 void GameRenderer::playTime(){
     //delete window and create a new one
     delete window;
+    int mapheight = map->getHeight();
+    int mapwidth = map->getWidth();
+    winwidth = static_cast<unsigned int>(max(20*mapwidth + 200, 600));
+    winheight = static_cast<unsigned int>(max(20*mapheight + 200, 400));
     window = new sf::RenderWindow(sf::VideoMode({winwidth, winheight}), "Playtime!");
     window->setTitle("Battle Time !");
     
@@ -363,7 +498,11 @@ void GameRenderer::playTime(){
 delete simulationClock;
     }
     
-
+//
+//
+//
+//
+//
 //Between waves - tower purchasing phase
 void GameRenderer::pauseTime(){
     window->setTitle("Place and upgrade your towers !");
@@ -387,6 +526,11 @@ void GameRenderer::pauseTime(){
     return;
 }
 
+//
+//
+//
+//
+//
 //Initial tower purchasing phase, before wave 1 starts
 void GameRenderer::pauseTimeInit(){
     window->setTitle("Place and upgrade your towers !");
@@ -411,6 +555,11 @@ void GameRenderer::pauseTimeInit(){
     return;
 }
 
+//
+//
+//
+//
+//
 void GameRenderer::endGame(){
     window->setTitle("Tower Defense: goodbye !");
 
@@ -424,19 +573,29 @@ void GameRenderer::endGame(){
     return;
 }
 
+//
+//
+//
+//
+//
 void GameRenderer::startGame(){
 
     
     
 //main menu
- mainWindow();
- cerr << "done main menu" << endl;
-
- //get width, height, entrance coordinates
- getParamsWindow();
+ int choice = mainWindow();
  
- //make map
- makeMapWindow();
+
+if(choice == 1){
+    //make map option
+    getParamsWindow();
+    makeMapWindow();
+} else if (choice == 0){
+    loadMapWindow();
+    cerr << "done loading the map!" << endl;
+    //load map option
+
+}
 
  //tower purchase phase
  tSim->addMap(map);

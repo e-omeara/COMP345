@@ -5,6 +5,8 @@
 
 
 #include <iostream>
+#include <filesystem>
+#include <fstream> 
 #include <vector>
 #include <stdlib.h>
 #include <algorithm>
@@ -211,6 +213,11 @@ using namespace std;
                     updateObserver("You can't go there!");
                     return;
                 }
+                if(map[getPos(makeX, makeY - 1)] == 'N'){
+                    cout << "You can't go over the entrance!\n\n";
+                    updateObserver("You can't go over the entrance!");
+                    return;
+                }
                 //adjsut the player's current position in the map
                 makeY--;
                 //set the current coord in the map to P for path
@@ -229,6 +236,11 @@ using namespace std;
                     updateObserver("You can't go there!");
                     return;
                 }
+                if(map[getPos(makeX, makeY + 1)] == 'N'){
+                    cout << "You can't go over the entrance!\n\n";
+                    updateObserver("You can't go over the entrance!");
+                    return;
+                }
                 makeY++;
                 map[getPos(makeX, makeY)] = 'P';
             }
@@ -244,6 +256,11 @@ using namespace std;
                     updateObserver("You can't go there!");
                     return;
                 }
+                if(map[getPos(makeX - 1, makeY)] == 'N'){
+                    cout << "You can't go over the entrance!\n\n";
+                    updateObserver("You can't go over the entrance!");
+                    return;
+                }
                 makeX--;
                 map[getPos(makeX, makeY)] = 'P';
             }
@@ -257,6 +274,11 @@ using namespace std;
                 if(makeX == width - 1){
                     cout << "You can't go there!\n\n";
                     updateObserver("You can't go there!");
+                    return;
+                }
+                if(map[getPos(makeX + 1, makeY)] == 'N'){
+                    cout << "You can't go over the entrance!\n\n";
+                    updateObserver("You can't go over the entrance!");
                     return;
                 }
                 makeX++;
@@ -300,6 +322,8 @@ using namespace std;
             pathstep.x = makeX;
             pathstep.y = makeY;
             path.push_back(pathstep);
+
+            saveMap();
 
             return 0;
 
@@ -356,6 +380,99 @@ using namespace std;
             return;
             }  
 
+
+            void Map::saveMap(){
+
+                string fileName;
+                cout << "enter map name: " << endl;
+                cin >> fileName;
+
+                ofstream newFile("saved_maps/" + fileName + ".txt");
+
+                cout << "Saving map data" << endl;
+                newFile << width << endl;
+                newFile << height << endl;
+                for(auto c : path){
+                    newFile << c.x << ":" << c.y << endl;
+                }
+
+
+
+                return;
+            }
+
+            
+
+
+            int Map::loadMap(string fileName){
+
+                ifstream readFile("saved_maps/" + fileName);
+
+                vector<coord> inPath;
+                string inWidth;
+                string inHeight;
+                getline(readFile, inWidth);
+                cout << "\n\n\n\nWidth: " << inWidth << endl;
+                getline(readFile, inHeight);
+                cout << "\nHeight: " << inHeight << endl;
+                string pathStep;
+                int loadX;
+                int loadY;
+                while (getline (readFile, pathStep, ':')) {
+                    // Output the text from the file
+                    loadX = stoi(pathStep);
+                    getline (readFile, pathStep);
+                    loadY = stoi(pathStep);
+                    cout << loadX << endl;
+                    cout << loadY << endl;
+                    inPath.push_back({loadX, loadY});
+                    cout << "\n";
+                  }
+
+                  cout << "\n\n\n";
+
+                
+                readFile.close();
+
+                if (inPath.size() == 0){
+                    cout << "No map in this file!" << endl;
+                    return 1;
+                }
+
+                width = stoi(inWidth);
+                height = stoi(inHeight);
+                path = inPath;
+
+                
+                map.resize(0);
+                map.resize(width*height, '-');
+                map[getPos(path[0].x, path[0].y)] = 'N';
+                for(int i = 1; i < path.size(); i++){
+                    int index = getPos(path[i].x, path[i].y);
+                    map[index] = 'P';
+                }
+                map[getPos(path[path.size()-1].x, path[path.size()-1].y)] = 'X';
+
+                updateObserver("Successfully loaded map");
+
+                cout << "Successfully loaded map" << endl;
+                return 0;
+            }
+
+            vector<string> Map::getMapList()
+            {
+                string path = "./saved_maps";
+                vector<string> mapList;
+                for (const auto & entry : filesystem::directory_iterator(path)){
+                    string mapName = entry.path().stem().string();
+                    cout << entry.path().stem().string() << std::endl;
+                    mapList.push_back(mapName);
+                    
+                }
+
+
+                return mapList;
+            }
 
             void Map::updateObserver(string msg){
 
