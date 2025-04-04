@@ -32,7 +32,7 @@ public:
     // Constructor for type
     Towers(std::string type, Position position);
 
-    // Constructor for type
+    // Constructor for type & targ type
     Towers(std::string type, Position position, char targType);
     // Default position method
     static Position getOrigin(int x, int y);
@@ -73,6 +73,7 @@ public:
     virtual double getLevel() const;
     TowerObserver* getTowerObserver();
     Position getPosition();
+    char getTargetingType() const;
 
 
     // Setters
@@ -81,7 +82,8 @@ public:
     void setRange(double towerRange);
     void setPower(double towerPower);
     void setRateOfFire(double fireRate);
-    void setLevel(double newLevel) ;
+    void setLevel(double newLevel);
+    void setTargetingType(char targtype);
 
 
 

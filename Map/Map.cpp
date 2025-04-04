@@ -143,6 +143,18 @@ using namespace std;
             return 1;
         }
 
+        // takes the x & coords of a tower and 
+        //called by TowerSimulator::click
+        int Map::changeTargeting(char targType, int xPos, int yPos){
+            int index = getPos(xPos, yPos);
+            if(map[index] == 'T'){
+                //map[index];
+                updateObserver("");
+                return 0;
+            }
+            return 1;
+        }
+
 
         //To use in the larger game
         void Map::initiateMaking(){
