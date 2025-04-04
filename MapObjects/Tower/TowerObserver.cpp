@@ -23,7 +23,7 @@ TowerObserver::TowerObserver(Towers* thetower) {
 }
 
 //update function
-void TowerObserver::update(double tlevel, double buyingCost, double refundValue, double trange, double tpower, double rateOfFire, Position tposition, string tType)
+void TowerObserver::update(double tlevel, double buyingCost, double refundValue, double trange, double tpower, double rateOfFire, Position tposition, string tType, char targType)
 {
     //set new stats for the tower
     std::cerr << "Updated Tower View: " << std::endl <<
@@ -32,12 +32,14 @@ void TowerObserver::update(double tlevel, double buyingCost, double refundValue,
     "Refund Value " << refundValue <<  std::endl <<
     "Range: " << trange <<  std::endl <<
     "Power: " << tpower <<  std::endl <<
-    "Rate Of Fire: " << rateOfFire <<  std::endl;
+    "Rate Of Fire: " << rateOfFire <<  std::endl <<
+    "Targting Type: " << targType << std::endl;
     position = tposition;
-    type = tType;
+    type = tType; // tower type
     power = tpower;
     range = trange;
     level = tlevel;
+    targetingType =  targType; // tower targeting strategy/type
 }
 //getter methods
 Position TowerObserver::getPosition(){
@@ -48,6 +50,10 @@ string TowerObserver::getType(){
     return type;
 
 
+}
+
+char TowerObserver::getTargetingType(){
+    return targetingType;
 }
 
 int TowerObserver::getRange(){

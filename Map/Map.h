@@ -56,6 +56,8 @@ class Map{
 
         int upgrade(char type, int xPos, int yPos);
 
+        int changeTargeting(char targType, int xPos, int yPos);
+
         //methods to make the map
         void initiateMaking();
 

@@ -23,6 +23,7 @@ TowerSimulator::TowerSimulator(vector<Towers*>* mytowers){
     towers = mytowers;
     burners = new vector<BurningEffectDecorator*>;
     icers = new vector<SlowingEffectDecorator*>;
+    //towerChanging = false;
     
     
 }
@@ -33,6 +34,7 @@ TowerSimulator::TowerSimulator(){
     towers = new vector<Towers*>;
     burners = new vector<BurningEffectDecorator*>;
     icers = new vector<SlowingEffectDecorator*>;
+    //towerChanging = false;
     
     
 }
@@ -45,6 +47,7 @@ TowerSimulator::TowerSimulator(Player* thePlayer){
     icers = new vector<SlowingEffectDecorator*>;
     player = thePlayer;
     towerSelect = -1;
+    //towerChanging = false;
     
     
 }
@@ -237,39 +240,144 @@ int TowerSimulator::renderPurchaseMenu(sf::RenderWindow* window){
 
 
     if(towerSelect >= 0){
-        text.setCharacterSize(14);
-        button.setSize({80.f, 40.f});
-        
+        if(!towerChanging){
+            text.setCharacterSize(14);
+            button.setSize({80.f, 40.f});
+            
 
-        text.setString("Upgrade!");
-        button.setPosition({10.f, 100.f});
-        text.setPosition({20.f, 100.f});
-        button.setOutlineColor(sf::Color::Blue);
-        window->draw(button);
-        window->draw(text);
-
-
-        text.setString("Make Fire");
-        button.setPosition({10.f, 150.f});
-        text.setPosition({20.f, 150.f});
-        button.setOutlineColor(sf::Color::Red);
-        window->draw(button);
-        window->draw(text);
-
-        text.setString("Make Ice");
-        button.setPosition({10.f, 200.f});
-        text.setPosition({20.f, 200.f});
-        button.setOutlineColor(sf::Color::Cyan);
-        window->draw(button);
-        window->draw(text);
+            text.setString("Upgrade!");
+            button.setPosition({10.f, 100.f});
+            text.setPosition({20.f, 100.f});
+            button.setOutlineColor(sf::Color::Blue);
+            window->draw(button);
+            window->draw(text);
 
 
+            text.setString("Make Fire");
+            button.setPosition({10.f, 150.f});
+            text.setPosition({20.f, 150.f});
+            button.setOutlineColor(sf::Color::Red);
+            window->draw(button);
+            window->draw(text);
+
+            text.setString("Make Ice");
+            button.setPosition({10.f, 200.f});
+            text.setPosition({20.f, 200.f});
+            button.setOutlineColor(sf::Color::Cyan);
+            window->draw(button);
+            window->draw(text);
+
+            text.setString("Change\nTargeting\nStrategy");
+            button.setSize({80.f, 60.f});
+            button.setPosition({10.f, 250.f});
+            text.setPosition({20.f, 250.f});
+            button.setOutlineColor(sf::Color::Yellow);
+            window->draw(button);
+            window->draw(text);
+
+        }else{
+            //std::cout << "rendering targeting type menu\n";
+
+            //creating buttons
+            sf::RectangleShape button;
+            button.setSize({80.f,40.f});
+            button.setFillColor(sf::Color::Transparent);
+            button.setOutlineColor(ACCENT_COLOR);
+            button.setOutlineThickness(1.f);
+
+            //creating text
+            sf::Font font("Arial Unicode.ttf");
+            sf::Text text(font); 
+            text.setCharacterSize(16);
+            text.setFillColor(TEXT_COLOR);
+
+            //drawing different targeting types
+
+            text.setString("Close");
+            text.setPosition({window->getSize().x-button.getSize().x, 100.f});
+            window->draw(text);
+            text.setString("to Exit");
+            text.setPosition({window->getSize().x-button.getSize().x, 120.f});
+            window->draw(text);
+
+            button.setPosition({window->getSize().x-10.f-button.getSize().x, 100.f});
+            window->draw(button);
+
+
+            text.setString("Shoot\nWeakest");
+            button.setPosition({window->getSize().x-10.f-button.getSize().x, 150.f});
+            text.setPosition({window->getSize().x-button.getSize().x, 150.f});
+            window->draw(button);
+            window->draw(text);
+
+            text.setString("Shoot\nStrongest");
+            button.setPosition({window->getSize().x-10.f-button.getSize().x, 200.f});
+            text.setPosition({window->getSize().x-button.getSize().x-5.f, 200.f});
+            window->draw(button);
+            window->draw(text);
+
+            text.setString("Shoot\nNearest");
+            button.setPosition({window->getSize().x-10.f-button.getSize().x, 250.f});
+            text.setPosition({window->getSize().x-button.getSize().x, 250.f});
+            window->draw(button);
+            window->draw(text);
+
+        }
+    
     }
 
 
 
     return 0;
 }
+//deprecated code
+int TowerSimulator::renderTargetingTypeMenu(sf::RenderWindow* window, Towers* toChange){
+    cout << "rendering targeting type menu\n";
+
+
+    //creating buttons
+    sf::RectangleShape button;
+    button.setSize({100.f,40.f});
+    button.setFillColor(sf::Color::Transparent);
+    button.setOutlineColor(ACCENT_COLOR);
+    button.setOutlineThickness(1.f);
+
+    //creating text
+    sf::Font font("Arial Unicode.ttf");
+    sf::Text text(font); 
+    text.setCharacterSize(16);
+    text.setFillColor(TEXT_COLOR);
+
+    //drawing different targeting types
+
+    text.setString("Shoot Close\nto Exit");
+    button.setPosition({window->getSize().x-10.f, 100.f});
+    text.setPosition({window->getSize().x-20.f, 100.f});
+    window->draw(button);
+    window->draw(text);
+
+
+    text.setString("Shoot\nWeakest");
+    button.setPosition({window->getSize().x-10.f, 150.f});
+    text.setPosition({window->getSize().x-20.f, 150.f});
+    window->draw(button);
+    window->draw(text);
+
+    text.setString("Shoot\nStrongest");
+    button.setPosition({window->getSize().x-10.f, 200.f});
+    text.setPosition({window->getSize().x-20.f, 200.f});
+    window->draw(button);
+    window->draw(text);
+
+    text.setString("Shoot\nNearest");
+    button.setPosition({window->getSize().x-10.f, 250.f});
+    text.setPosition({window->getSize().x-20.f, 250.f});
+    window->draw(button);
+    window->draw(text);
+
+    return 0;
+}
+
 
 //upon clicking the window, check if a tower, placement, or button has been clicked
 int TowerSimulator::click(sf::RenderWindow *window){
@@ -329,7 +437,7 @@ int TowerSimulator::click(sf::RenderWindow *window){
         cout << "\nx position: " << x << endl;
         cout << "y position: " << y << endl;
 
-        if(y > 50 & y < 80){
+        if(y > 50 & y < 100){
             if(x > 100 & x < 200){
                 cout << "\nbuy archer" << endl;
                 if(player->balance < Towers::archerCost){
@@ -359,7 +467,6 @@ int TowerSimulator::click(sf::RenderWindow *window){
 
 
         //select a tower
-        
 
         if(towerSelect >= 0){
             cout << "\npressing button?" << endl;
@@ -367,54 +474,99 @@ int TowerSimulator::click(sf::RenderWindow *window){
             TowerObserver* upgradeObserver = toUpgrade->getTowerObserver();
             int towerX = towers->at(towerSelect)->getPosition().x;
             int towerY = towers->at(towerSelect)->getPosition().y;
-            if(x > 10 & x < 90){
-                if(y > 100 & y < 140){
-                    cout << "\n click upgrade" << endl;
-                    int success = map->upgrade('U', towerX, towerY);
-                    if(success == 0){
-                        ValueModifierDecorator* newTower = new ValueModifierDecorator(upgradeObserver->getType(), {towerX,towerY}, *toUpgrade, 20, 10, 1, 2, 100);
-                        upgradeObserver = new TowerObserver(newTower);
-                        towers->erase(towers->begin() + towerSelect);
-                        towers->push_back(newTower);
-                        //toUpgrade = newTower;
-                        //upgradeObserver->update(toUpgrade->getLevel(), toUpgrade->getBuyingCost(), toUpgrade->getRefundValue(), toUpgrade->getRange(), toUpgrade->getPower(), toUpgrade->getRateOfFire(), {towerX,towerY}, "upgraded" );
+            const int yPos = static_cast<int>(y); // switch-case statements cannot use floats
+            if(x > 10 & x < 90 && !towerChanging){
+                switch (yPos){
+                    case 100 ... 140 : {
+                            cout << "\n click upgrade" << endl;
+                        int success = map->upgrade('U', towerX, towerY);
+                        if(success == 0){
+                            ValueModifierDecorator* newTower = new ValueModifierDecorator(upgradeObserver->getType(), {towerX,towerY}, *toUpgrade, 20, 10, 1, 2, 100);
+                            upgradeObserver = new TowerObserver(newTower);
+                            towers->erase(towers->begin() + towerSelect);
+                            towers->push_back(newTower);
+                            //toUpgrade = newTower;
+                            //upgradeObserver->update(toUpgrade->getLevel(), toUpgrade->getBuyingCost(), toUpgrade->getRefundValue(), toUpgrade->getRange(), toUpgrade->getPower(), toUpgrade->getRateOfFire(), {towerX,towerY}, "upgraded" );
+                        }
+                        break;
                     }
-                } else if(y > 150 & y < 190){
-                    cout << "\n click fire" << endl;
-                    int success = map->upgrade('F', towerX, towerY);
-                    if(success == 0){
-                        BurningEffectDecorator* newTower = new BurningEffectDecorator(upgradeObserver->getType(), {towerX,towerY}, *toUpgrade,0.5, 2);
-                        upgradeObserver = new TowerObserver(newTower);
-                        towers->erase(towers->begin() + towerSelect);
-                        towers->push_back(newTower);
-                        burners->push_back(newTower);
-                        //upgradeObserver->update(toUpgrade->getLevel(), toUpgrade->getBuyingCost(), toUpgrade->getRefundValue(), toUpgrade->getRange(), toUpgrade->getPower(), toUpgrade->getRateOfFire(), {towerX,towerY}, "fire" );
+                    case 150 ... 190 : {
+                        cout << "\n click fire" << endl;
+                        int success = map->upgrade('F', towerX, towerY);
+                        if(success == 0){
+                            BurningEffectDecorator* newTower = new BurningEffectDecorator(upgradeObserver->getType(), {towerX,towerY}, *toUpgrade,0.5, 2);
+                            upgradeObserver = new TowerObserver(newTower);
+                            towers->erase(towers->begin() + towerSelect);
+                            towers->push_back(newTower);
+                            burners->push_back(newTower);
+                            //upgradeObserver->update(toUpgrade->getLevel(), toUpgrade->getBuyingCost(), toUpgrade->getRefundValue(), toUpgrade->getRange(), toUpgrade->getPower(), toUpgrade->getRateOfFire(), {towerX,towerY}, "fire" );
+                        }
+                        break;
                     }
-                }
-                else if(y > 200 & y < 240){
-                    cout << "\n click ice" << endl;
-                    int success = map->upgrade('I', towerX, towerY);
-                    if(success == 0){
-                        SlowingEffectDecorator* newTower = new SlowingEffectDecorator(upgradeObserver->getType(), {towerX,towerY}, *toUpgrade,0.5, 2);
-                        upgradeObserver = new TowerObserver(newTower);
-                        towers->erase(towers->begin() + towerSelect);
-                        towers->push_back(newTower);
-                        icers->push_back(newTower);
-                        //upgradeObserver->update(toUpgrade->getLevel(), toUpgrade->getBuyingCost(), toUpgrade->getRefundValue(), toUpgrade->getRange(), toUpgrade->getPower(), toUpgrade->getRateOfFire(), {towerX,towerY}, "ice" );
+                    case 200 ... 240 : {
+                        cout << "\n click ice" << endl;
+                        int success = map->upgrade('I', towerX, towerY);
+                        if(success == 0){
+                            SlowingEffectDecorator* newTower = new SlowingEffectDecorator(upgradeObserver->getType(), {towerX,towerY}, *toUpgrade,0.5, 2);
+                            upgradeObserver = new TowerObserver(newTower);
+                            towers->erase(towers->begin() + towerSelect);
+                            towers->push_back(newTower);
+                            icers->push_back(newTower);
+                            //upgradeObserver->update(toUpgrade->getLevel(), toUpgrade->getBuyingCost(), toUpgrade->getRefundValue(), toUpgrade->getRange(), toUpgrade->getPower(), toUpgrade->getRateOfFire(), {towerX,towerY}, "ice" );
+    
+                        }
+                        break;
+                    } case 250 ... 310 : { // Changing the targeting strategy of selected tower
+                        cout << "\nClick targ type" << endl;
+                        //draw new targeting type buttons
+                        towerChanging = true;
+                        cout << "tower changing = " << towerChanging << endl;
+                        //renderTargetingTypeMenu(window, toUpgrade);
+                        break;
+                    }
 
-                    }
                 }
                 
             }
+            if(x < window->getSize().x-10 & x > window->getSize().x-90 && towerChanging){
+                switch (yPos){
+                    case 100 ... 140 : {
+                            cout << "\n click close to exit" << endl;
+                        toUpgrade->setTargetingType('e');
+                        break;
+                    }
+                    case 150 ... 190 : {
+                        cout << "\n click weakest" << endl;
+                        toUpgrade->setTargetingType('w');
+
+                        break;
+                    }
+                    case 200 ... 240 : {
+                        cout << "\n click strongest" << endl;
+                        toUpgrade->setTargetingType('s');
+
+                        break;
+                    } case 250 ... 290 : { // Changing the targeting strategy of selected tower
+                        cout << "\nClick nearest" << endl;
+                        toUpgrade->setTargetingType('n');
+                        
+                        break;
+                    }
+
+                }
+            towerChanging = false;
         }
+        }
+
+        
 
         x = (x - 100.0) / 20.0;
         y = (y - 100.0) / 20.0;
         int xPos = int(x);
         int yPos = int(y);
 
-
-        towerSelect = -1;
+        if(towerChanging == false)
+            towerSelect = -1;
         int size = towers->size();
         for(int i = 0; i < size; i++){
             if((towers->at(i)->getPosition().x == xPos) & (towers->at(i)->getPosition().y == yPos)){

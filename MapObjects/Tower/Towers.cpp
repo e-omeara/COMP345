@@ -39,8 +39,7 @@ Towers::Towers(double level, double cost, double refund, double towerRange,
 //Use this one for driver
 Towers::Towers(std::string type, Position pos)
     : type(type)
-    , position(pos),
-    targetingType('e')
+    , position(pos)
 {
     level = 1;
     if(type == "archer")
@@ -51,6 +50,7 @@ Towers::Towers(std::string type, Position pos)
         range = 3;
         power = 2;
         rateOfFire = 500; //milliseconds
+        targetingType = 'e'; // closest to exit
     }
     else if(type == "ballista")
     {
@@ -60,6 +60,7 @@ Towers::Towers(std::string type, Position pos)
         range = 7;
         power = 5;
         rateOfFire = 1000; //milliseconds
+        targetingType = 's'; // strongest enemy
     }
     else if(type == "catapult")
     {
@@ -69,6 +70,7 @@ Towers::Towers(std::string type, Position pos)
         range = 5;
         power = 10;
         rateOfFire = 1200; //milliseconds
+        targetingType = 'w'; //weakest enemy
     }
     else
     {
@@ -78,6 +80,7 @@ Towers::Towers(std::string type, Position pos)
         range = 3;
         power = 1;
         rateOfFire = 500; //milliseconds
+        targetingType = 'n'; // nearest to tower
     }
 }
 
@@ -136,7 +139,7 @@ Position Towers::getOrigin(int x = 0, int y = 0){
 }
 
 
-// returns the pointer to the highest priority critter. uses fireZone attribute
+// returns the pointer to the highest priority critter.
 Critter* Towers::findTarget(const std::vector<Critter*>* activeCritters) const {
     if(activeCritters->size() == 0)
         return nullptr; //can't target a critter if none in play
@@ -299,7 +302,7 @@ void Towers::notifyObservers() {
     cerr << "notifying observers..." << endl;
     
     for (TowerObserver* observer : observers) {
-        observer->update(level, buyingCost, refundValue, range, power, rateOfFire, position, type);
+        observer->update(level, buyingCost, refundValue, range, power, rateOfFire, position, type, targetingType);
     }
 }
 
@@ -314,6 +317,7 @@ double Towers::getRateOfFire() const { return rateOfFire; }
 double Towers::getLevel() const { return level; }
 TowerObserver* Towers::getTowerObserver() {return observers.at(0);}
 Position Towers::getPosition(){return position;}
+char Towers::getTargetingType() const {return targetingType;}
 
 // Setters
 void Towers::setBuyingCost(double cost) { buyingCost = cost; notifyObservers(); }
@@ -322,3 +326,4 @@ void Towers::setRange(double towerRange) { range = towerRange; notifyObservers()
 void Towers::setPower(double towerPower) { power = towerPower; notifyObservers(); }
 void Towers::setRateOfFire(double fireRate) { rateOfFire = fireRate; notifyObservers(); }
 void Towers::setLevel(double newLevel) { level = newLevel; notifyObservers(); }
+void Towers::setTargetingType(char targType) { targetingType = targType; notifyObservers(); }

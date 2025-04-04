@@ -34,7 +34,7 @@ class TowerSimulator{
     Player* player;
     char selected;
     int towerSelect;
-    
+    bool towerChanging = false;
 
 
 
@@ -55,6 +55,7 @@ class TowerSimulator{
     int renderTowers(sf::RenderWindow* window);
     //TODO: create tower menu items
     int renderPurchaseMenu(sf::RenderWindow* window);
+    int renderTargetingTypeMenu(sf::RenderWindow* window, Towers* toChange);
     //Create reaction to "click"
     int click(sf::RenderWindow* window);
     //
