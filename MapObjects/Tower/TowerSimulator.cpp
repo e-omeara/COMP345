@@ -254,7 +254,8 @@ int TowerSimulator::renderPurchaseMenu(sf::RenderWindow* window){
             window->draw(text);
 
         }else{
-            std::cout << "rendering targeting type menu\n";
+            //std::cout << "rendering targeting type menu\n";
+
             //creating buttons
             sf::RectangleShape button;
             button.setSize({80.f,40.f});
@@ -271,31 +272,31 @@ int TowerSimulator::renderPurchaseMenu(sf::RenderWindow* window){
             //drawing different targeting types
 
             text.setString("Close");
-            text.setPosition({20.f, 100.f});
+            text.setPosition({window->getSize().x-button.getSize().x, 100.f});
             window->draw(text);
             text.setString("to Exit");
-            text.setPosition({20.f, 120.f});
+            text.setPosition({window->getSize().x-button.getSize().x, 120.f});
             window->draw(text);
 
-            button.setPosition({10.f, 100.f});
+            button.setPosition({window->getSize().x-10.f-button.getSize().x, 100.f});
             window->draw(button);
 
 
             text.setString("Shoot\nWeakest");
-            button.setPosition({10.f, 150.f});
-            text.setPosition({18.f, 150.f});
+            button.setPosition({window->getSize().x-10.f-button.getSize().x, 150.f});
+            text.setPosition({window->getSize().x-button.getSize().x, 150.f});
             window->draw(button);
             window->draw(text);
 
             text.setString("Shoot\nStrongest");
-            button.setPosition({10.f, 200.f});
-            text.setPosition({16.f, 200.f});
+            button.setPosition({window->getSize().x-10.f-button.getSize().x, 200.f});
+            text.setPosition({window->getSize().x-button.getSize().x-5.f, 200.f});
             window->draw(button);
             window->draw(text);
 
             text.setString("Shoot\nNearest");
-            button.setPosition({10.f, 250.f});
-            text.setPosition({20.f, 250.f});
+            button.setPosition({window->getSize().x-10.f-button.getSize().x, 250.f});
+            text.setPosition({window->getSize().x-button.getSize().x, 250.f});
             window->draw(button);
             window->draw(text);
 
@@ -307,8 +308,7 @@ int TowerSimulator::renderPurchaseMenu(sf::RenderWindow* window){
 
     return 0;
 }
-//called by clicking on the "change targeting strategy" button in the 
-//TowerSimulator::renderPurchaseMenu function (called by TowerSimulator::click)
+//deprecated code
 int TowerSimulator::renderTargetingTypeMenu(sf::RenderWindow* window, Towers* toChange){
     cout << "rendering targeting type menu\n";
 
@@ -329,27 +329,27 @@ int TowerSimulator::renderTargetingTypeMenu(sf::RenderWindow* window, Towers* to
     //drawing different targeting types
 
     text.setString("Shoot Close\nto Exit");
-    button.setPosition({10.f, 100.f});
-    text.setPosition({20.f, 100.f});
+    button.setPosition({window->getSize().x-10.f, 100.f});
+    text.setPosition({window->getSize().x-20.f, 100.f});
     window->draw(button);
     window->draw(text);
 
 
     text.setString("Shoot\nWeakest");
-    button.setPosition({10.f, 150.f});
-    text.setPosition({20.f, 150.f});
+    button.setPosition({window->getSize().x-10.f, 150.f});
+    text.setPosition({window->getSize().x-20.f, 150.f});
     window->draw(button);
     window->draw(text);
 
     text.setString("Shoot\nStrongest");
-    button.setPosition({10.f, 200.f});
-    text.setPosition({20.f, 200.f});
+    button.setPosition({window->getSize().x-10.f, 200.f});
+    text.setPosition({window->getSize().x-20.f, 200.f});
     window->draw(button);
     window->draw(text);
 
     text.setString("Shoot\nNearest");
-    button.setPosition({10.f, 250.f});
-    text.setPosition({20.f, 250.f});
+    button.setPosition({window->getSize().x-10.f, 250.f});
+    text.setPosition({window->getSize().x-20.f, 250.f});
     window->draw(button);
     window->draw(text);
 
@@ -506,33 +506,27 @@ int TowerSimulator::click(sf::RenderWindow *window){
                 }
                 
             }
-            if(x > 10 & x < 90 && towerChanging){
+            if(x < window->getSize().x-10 & x > window->getSize().x-90 && towerChanging){
                 switch (yPos){
                     case 100 ... 140 : {
                             cout << "\n click close to exit" << endl;
-                        /*int success = map->upgrade('U', towerX, towerY);
-                        if(success == 0){
-                            ValueModifierDecorator* newTower = new ValueModifierDecorator(upgradeObserver->getType(), {towerX,towerY}, *toUpgrade, 20, 10, 1, 2, 100);
-                            upgradeObserver = new TowerObserver(newTower);
-                            towers->erase(towers->begin() + towerSelect);
-                            towers->push_back(newTower);
-                            //toUpgrade = newTower;
-                            //upgradeObserver->update(toUpgrade->getLevel(), toUpgrade->getBuyingCost(), toUpgrade->getRefundValue(), toUpgrade->getRange(), toUpgrade->getPower(), toUpgrade->getRateOfFire(), {towerX,towerY}, "upgraded" );
-                        }*/
+                        toUpgrade->setTargetingType('e');
                         break;
                     }
                     case 150 ... 190 : {
                         cout << "\n click weakest" << endl;
+                        toUpgrade->setTargetingType('w');
 
                         break;
                     }
                     case 200 ... 240 : {
                         cout << "\n click strongest" << endl;
+                        toUpgrade->setTargetingType('s');
 
                         break;
-                    } case 250 ... 310 : { // Changing the targeting strategy of selected tower
+                    } case 250 ... 290 : { // Changing the targeting strategy of selected tower
                         cout << "\nClick nearest" << endl;
-                        //draw new targeting type buttons
+                        toUpgrade->setTargetingType('n');
                         
                         break;
                     }
