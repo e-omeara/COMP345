@@ -313,7 +313,7 @@ int MapGraphics::mapMaking(sf::RenderWindow* window){
     int mouseX;
     int mouseY;
 
-    sf::Font font("Courier New.ttf");
+    sf::Font font("Arial Unicode.ttf");
     sf::Text text(font); // a font is required to make a text object
 
     // set the string to display and properties
@@ -368,6 +368,9 @@ int MapGraphics::mapMaking(sf::RenderWindow* window){
                     //user is trying to place the exit... validate map
                     int valid = map->setExit(); 
                     if(valid == 0){
+                        string saveName = getSaveName(window);
+                        cout << "\nmap name: " << saveName << endl;
+                        map->saveMap(saveName);
                         window->close();
                         return 0;
                     }
@@ -386,6 +389,66 @@ int MapGraphics::mapMaking(sf::RenderWindow* window){
     }
     return 0;
 
+}
+
+string MapGraphics::getSaveName(sf::RenderWindow* window){
+
+    sf::Font font("Arial Unicode.ttf");
+    sf::Text text(font); // a font is required to make a text object
+
+    // set the string to display and properties
+    string textstr = "";
+    //cout << map->stringMap();
+    text.setString(textstr);
+    text.setCharacterSize(24);
+    text.setFillColor(TEXT_COLOR);
+
+    while (window->isOpen())
+    {
+    while (const std::optional event = window->pollEvent())
+    {
+        if (event->is<sf::Event::Closed>())
+        {
+            window->close();
+        }
+        else if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>())
+        {
+            if (keyPressed->scancode == sf::Keyboard::Scancode::Escape)
+                {window->close();}
+            else if (keyPressed->scancode == sf::Keyboard::Scancode::Backspace){
+                if(textstr.size() >0){
+                    textstr.pop_back();
+                    text.setString(textstr);
+                }
+            }
+            else if (keyPressed->scancode == sf::Keyboard::Scancode::Enter){
+                if(textstr.size() > 0){
+                    cout << "\nName chosen for new map" << endl;
+                    return textstr;
+                }
+            }
+        }
+        if (const auto* textEntered = event->getIf<sf::Event::TextEntered>())
+        {
+            if ((textEntered->unicode <= 57 && textEntered->unicode >= 48) || (textEntered->unicode <= 90 && textEntered->unicode >= 65)  || (textEntered->unicode <= 122 && textEntered->unicode >= 97))
+            {
+                textstr = textstr + static_cast<char>(textEntered->unicode);
+                text.setString(textstr);
+                std::cout << "ASCII character typed: " << static_cast<char>(textEntered->unicode) << std::endl;
+            }
+        }
+    }
+
+    // Rest of the main loop
+    window->clear(BACKGROUND_COLOR);
+    window->draw(text);
+    window->display();
+
+
+    }
+
+
+    return "meow";
 }
 
 
@@ -497,20 +560,16 @@ int MapGraphics::renderMap(sf::RenderWindow* theWindow){
 int MapGraphics::loadingMap(sf::RenderWindow *window, vector<string> mapVect){
 
     sf::RectangleShape titleButton;
-    sf::Font font("arial.ttf");
+    sf::Font font("Arial Unicode.ttf");
     sf::Text title(font);
     sf::Text mapList(font);
     title.setString("Press a number to choose a map");
     title.setCharacterSize(24);
     title.setFillColor(TEXT_COLOR);
-    title.setStyle(sf::Text::Bold | sf::Text::Underlined);
+    //title.setStyle(sf::Text::Bold | sf::Text::Underlined);
     title.setPosition({50.f,50.f});
 
-    titleButton.setPosition({50.f, 50.f});
-    titleButton.setOutlineColor(ACCENT_COLOR);
-    titleButton.setOutlineThickness(1.0f);
-    titleButton.setFillColor(sf::Color::Transparent);
-    titleButton.setSize({400.f, 50.f});
+    
 
     
     string mapString = "";
@@ -528,7 +587,7 @@ int MapGraphics::loadingMap(sf::RenderWindow *window, vector<string> mapVect){
 
     mapList.setPosition({50.f,100.f});
     
-    window->draw(titleButton);
+ 
     window->draw(title);
     window->draw(mapList);
 
@@ -544,20 +603,22 @@ int MapGraphics::loadingMap(sf::RenderWindow *window, vector<string> mapVect){
 //
 // display the loaded map
 int MapGraphics::viewMap(sf::RenderWindow *window){
+
+    
     
 
-    sf::Font font("arial.ttf");
+    sf::Font font("Arial Unicode.ttf");
     sf::Text title(font);
     sf::Text mapList(font);
-    title.setString("Press Enter to Accept or Backspace to Choose Another Map");
+    title.setString("Press Enter to Accept\nPress Backspace to Choose Another Map");
     title.setCharacterSize(24);
     title.setFillColor(TEXT_COLOR);
-    title.setStyle(sf::Text::Bold | sf::Text::Underlined);
-    title.setPosition({50.f,50.f});
+    //title.setStyle(sf::Text::Bold | sf::Text::Underlined);
+    title.setPosition({20.f,20.f});
 
 
 
-
+    window->draw(title);
     renderMap(window);
 
     return 0;

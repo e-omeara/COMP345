@@ -102,7 +102,7 @@ void GameRenderer::getParamsWindow(){
 int GameRenderer::loadMapWindow(){
     delete window;
     window = new sf::RenderWindow(sf::VideoMode({600, 400}), "Load a Map");
-    window->setTitle("Tower Defense: Load a map");
+    window->setTitle("Tower Defense: Choose a map");
     
     int selection = -1;
     bool loaded = false;
@@ -176,6 +176,8 @@ int GameRenderer::loadMapWindow(){
                     //select map
                     if(loaded == true){
                         selection = -1;
+                        delete window;
+                        window = new sf::RenderWindow(sf::VideoMode({600, 400}), "Choose a Map");
                         loaded = false;
                     }
                 }
@@ -187,6 +189,12 @@ int GameRenderer::loadMapWindow(){
         }else{
             if(loaded == false){
                 map->loadMap(mapVector[selection] + ".txt");
+                delete window;
+                int mapheight = map->getHeight();
+                int mapwidth = map->getWidth();
+                winwidth = static_cast<unsigned int>(max(20*mapwidth + 200, 600));
+                winheight = static_cast<unsigned int>(max(20*mapheight + 200, 400));
+                window = new sf::RenderWindow(sf::VideoMode({winwidth, winheight}), "View " + mapVector[selection]);
                 loaded = true;
             }
             mapGraphics->viewMap(window);

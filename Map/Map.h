@@ -73,7 +73,7 @@ class Map{
 
         void clearTowers();
 
-        void saveMap();
+        void saveMap(string fileName);
 
         int loadMap(string fileName);
 

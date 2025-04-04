@@ -323,7 +323,7 @@ using namespace std;
             pathstep.y = makeY;
             path.push_back(pathstep);
 
-            saveMap();
+            
 
             return 0;
 
@@ -381,11 +381,9 @@ using namespace std;
             }  
 
 
-            void Map::saveMap(){
+            void Map::saveMap(string fileName){
 
-                string fileName;
-                cout << "enter map name: " << endl;
-                cin >> fileName;
+                
 
                 ofstream newFile("saved_maps/" + fileName + ".txt");
 

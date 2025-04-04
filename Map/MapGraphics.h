@@ -45,6 +45,8 @@ class MapGraphics {
 
         int updatevisuals();
 
+        string getSaveName(sf::RenderWindow* window);
+
         string displayText(string title);
 
         int renderMap(sf::RenderWindow* window);
