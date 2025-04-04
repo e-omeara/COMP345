@@ -131,7 +131,7 @@ CritterGroup::CritterGroup(int waveLevel, std::vector<Position> path) {
     generateWave(waveLevel, path);
 }
 
-std::__1::vector<Critter> CritterGroup::getCritters(){
+std::vector<Critter> CritterGroup::getCritters(){
     return critters;
 }
 

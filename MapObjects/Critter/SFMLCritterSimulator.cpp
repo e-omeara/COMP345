@@ -1,5 +1,4 @@
 #include "SFMLCritterSimulator.h"
-#include "CritterFactory.h"
 #include <iostream>
 #include <thread>
 #include <vector>

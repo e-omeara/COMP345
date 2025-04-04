@@ -1,7 +1,8 @@
 #ifndef VALUE_MODIFIER_DECORATOR_H
 #define VALUE_MODIFIER_DECORATOR_H
 
-#include "TowerDecorator.h"
+#include "TowerDecorator.cpp"
+#include "TowerObserver.cpp"
 
 // ValueModifierDecorator changes Tower attributes
 class ValueModifierDecorator : public TowerDecorator {

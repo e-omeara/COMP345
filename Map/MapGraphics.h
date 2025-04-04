@@ -5,7 +5,7 @@
 
 #include <iostream>
 #include <SFML/Graphics.hpp>
-#include "MapObserver.h"
+#include "MapObserver.cpp"
 #include "Map.h"
 
 using namespace std;

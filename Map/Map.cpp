@@ -13,12 +13,6 @@
 
 using namespace std;
 
-
-
-
-
-    
-    
         //Constructor takes map width and height as input
         Map::Map(int x, int y){ 
             

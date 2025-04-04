@@ -7,7 +7,7 @@
 #include "TowerObserver.h"
 #include "Towers.h"
 #include "TowerDecorator.h"
-#include "ValueModifierDecorator.h"
+#include "ValueModifierDecorator.cpp"
 
 
 

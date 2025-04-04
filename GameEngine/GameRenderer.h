@@ -7,7 +7,7 @@
 #include <SFML/System.hpp>
 #include <SFML/Audio.hpp>
 #include <SFML/Network.hpp>
-#include "Player.h"
+#include "Player.cpp"
 #include "Towers.h"
 #include "TowerObserver.h"
 #include "Critter.h"
@@ -15,7 +15,7 @@
 #include "MapObserver.h"
 #include "MapGraphics.h"
 #include "TowerSimulator.h"
-#include "SFMLCritterSimulator.h"
+#include "SFMLCritterSimulator.cpp"
 #include "CritterFactory.h"
 
 

@@ -5,7 +5,7 @@
 #include <vector>
 #include "Critter.h"
 #include "Map.h"
-#include "CritterFactory.h"
+#include "CritterFactory.cpp"
 
 class SFMLCritterSimulator {
 

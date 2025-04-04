@@ -276,10 +276,11 @@ void Towers::removeObserver(TowerObserver* observer) {
 }
 //TODO: make virtual
 void Towers::notifyObservers() {
-    cerr << "notifying observers..." << endl;
+    //cerr << "notifying observers..." << endl;
     
     for (TowerObserver* observer : observers) {
         observer->update(level, buyingCost, refundValue, range, power, rateOfFire, position, type);
+        /* std::cout << "a" << std::endl; */
     }
 }
 

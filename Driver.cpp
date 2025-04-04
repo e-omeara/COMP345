@@ -1,14 +1,14 @@
 #include <vector>
 #include <iostream>
-#include "Towers.h"
+#include "Towers.cpp"
 #include "TowerObserver.h"
-#include "Critter.h"
-#include "Map.h"
+#include "Critter.cpp"
+#include "Map.cpp"
 #include "MapObserver.h"
-#include "MapGraphics.h"
-#include "TowerSimulator.h"
+#include "MapGraphics.cpp"
+#include "TowerSimulator.cpp"
 #include "SFMLCritterSimulator.h"
-#include "GameRenderer.h"
+#include "GameRenderer.cpp"
 #include "Player.h"
 #include "TowerDecorator.h"
 #include "ValueModifierDecorator.h"
@@ -22,7 +22,7 @@ Position coordToPosition(const coord &c) {
 
 
 int main() {
-
+/*
  //testing game engine and renderer
  MapObserver* mapobserver = new MapObserver;
  Map* map = new Map(20, 10);
@@ -103,48 +103,7 @@ for(int j = 0; j < 9; j++){
 }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//Tower
-/*
-std::vector<Position> path { {0,0}, {1,0}, {2,0}, {3,0}, {4,0}, {5,0}, {6,0}, {7,0} };
-Critter enemy(20, 1, 3, 1, 7, path);
-
-
-std::cout << "Initial Stats: " << std::endl;
-std::cout << "Level: " << ballista.getLevel() << std::endl;
-std::cout << "Cost: " << ballista.getBuyingCost() << std::endl;
-std::cout << "Refund: " << ballista.getRefundValue() << std::endl;
-std::cout << "Range: " << ballista.getRange() << std::endl;
-std::cout << "Power: " << ballista.getPower() << std::endl;
-std::cout << "Rate Of Fire: " << ballista.getRateOfFire() << std::endl;
-ValueModifierDecorator upgradedBallista("ballista", {3,3}, ballista, 20, 10, 1, 2, 100);
-std::cout << "Upgraded Stats: " << std::endl;
-std::cout << "Level: " << upgradedBallista.getLevel() << std::endl;
-std::cout << "Cost: " << upgradedBallista.getBuyingCost() << std::endl;
-std::cout << "Refund: " << upgradedBallista.getRefundValue() << std::endl;
-std::cout << "Range: " << upgradedBallista.getRange() << std::endl;
-std::cout << "Power: " << upgradedBallista.getPower() << std::endl;
-std::cout << "Rate Of Fire: " << upgradedBallista.getRateOfFire() << std::endl;
-
-
 */
-
-
-
-
 
 
 
@@ -206,7 +165,7 @@ std::cout << "Rate Of Fire: " << upgradedBallista.getRateOfFire() << std::endl;
    delete mapobserver;
    //return 0;
 
-
+*/
 
    //Tower examples
     std::cout << "Creating example towers and critters!" << std::endl;
@@ -217,12 +176,12 @@ std::cout << "Rate Of Fire: " << upgradedBallista.getRateOfFire() << std::endl;
     Towers ballista("ballista", {0,0});
     Towers catapult("catapult", {50,50});
 
-    TowerObserver* observer = new TowerObserver( *archer);
+    TowerObserver* observer = new TowerObserver(archer);
 
-    TowerSimulator tSim(observer , archer);
+    /* TowerSimulator tSim(observer , archer);
     tSim.runGame();
 
-     std::cout << "Archer Level: " << archer.getLevel() << std::endl;
+      std::cout << "Archer Level: " << archer.getLevel() << std::endl;
     std::cout << "Archer Cost: " << archer.getBuyingCost() << std::endl;
     std::cout << "Archer Refund: " << archer.getRefundValue() << std::endl;
  
@@ -244,7 +203,31 @@ std::cout << "Rate Of Fire: " << upgradedBallista.getRateOfFire() << std::endl;
 
      std::cout << "Archer Level: " << archer.getLevel() << std::endl;
     std::cout << "Balance: " << balance << std::endl;
- */
+ 
+
+   //Tower
+
+   std::vector<Position> path { {0,0}, {1,0}, {2,0}, {3,0}, {4,0}, {5,0}, {6,0}, {7,0} };
+   Critter enemy(20, 1, 3, 1, 7, path); */
+
+
+   std::cout << "Initial Stats: " << std::endl;
+   std::cout << "Level: " << observer->getLevel() << std::endl;
+   std::cout << "Cost: " << observer->getBuyingCost() << std::endl;
+   std::cout << "Refund: " << observer->getRefundValue() << std::endl;
+   std::cout << "Range: " << observer->getRange() << std::endl;
+   std::cout << "Power: " << observer->getPower() << std::endl;
+   std::cout << "Rate Of Fire: " << observer->getRateOfFire() << std::endl;
+   ValueModifierDecorator upgradedBallista("ballista", {3,3}, ballista, 20, 10, 1, 2, 100);
+   std::cout << "Upgraded Stats: " << std::endl;
+   std::cout << "Level: " << observer->getLevel() << std::endl;
+   std::cout << "Cost: " << observer->getBuyingCost() << std::endl;
+   std::cout << "Refund: " << observer->getRefundValue() << std::endl;
+   std::cout << "Range: " << observer->getRange() << std::endl;
+   std::cout << "Power: " << observer->getPower() << std::endl;
+   std::cout << "Rate Of Fire: " << observer->getRateOfFire() << std::endl;
+
+
 
  
     return 0;
