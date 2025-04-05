@@ -1,15 +1,25 @@
-Group Name: Team Rocket
-Members:
-Vi Kyne
-Sang Hyun Hong
-MinhThien Tran
-Elizabeth O'Meara
+Group Name: Team Rocket  
+Members:  
+Victoria Kyne  
+Sang Hyun Hong  
+MinhThien Tran  
+Elizabeth O'Meara  
 
-Problem Analysis:
-We decided to create three classes, one for Critters, one for Towers, and one for Maps. We could then create a variety of critters & towers with properties like health & speed or power & range to be placed on a variety of maps. There are several default critter & tower types (e.g: Fast Critter, Ballista Tower) and there is a MapMaker program that allows the user to create a map via the terminal.
+## Project Overview
+This program is a tower defense game where players strategically place towers to defend against waves of critters moving along a predefined path. The game is designed to be modular, allowing for the creation of custom maps.
 
-Critters move along the path according to their speed, moving from the entrance to the exit. Towers shoot at the critters if they are in range, dealing damage until they kill a critter.
+## Features
+- **Critters**: Entities with properties like health and speed that move along the path from the entrance to the exit. Different types of critters (e.g., Fast Critter) provide varying challenges.
+- **Towers**: Defensive structures with attributes such as power and range. Towers attack critters within their range, dealing damage until the critters are eliminated. Various tower types (e.g., Ballista Tower) are available.
+- **Maps**: Customizable game boards where critters traverse a path.
 
-For more specifics on the implementation of the towers and critters, check their corresponding ReadMes in the MapObjects folder.
+## Gameplay Mechanics
+1. Critters spawn at the entrance of the map and move along the path toward the exit based on their speed.
+2. Towers are placed strategically to intercept critters. They attack critters within their range, reducing their health until they are defeated.
+3. The game ends when all critters are eliminated or when critters successfully reach the exit.
 
-Please remember to read HOWtoRUN.md for specific compiler instructions depending on your machine
+## Customization
+- **Critters and Towers**: The program includes several default critter and tower types, but users can extend these classes to create new types with unique properties.
+
+## Additional Documentation
+For more details on the implementation of critters, towers, and maps, refer to the corresponding README files in the each folder.

@@ -369,8 +369,11 @@ int MapGraphics::mapMaking(sf::RenderWindow* window){
                     int valid = map->setExit(); 
                     if(valid == 0){
                         string saveName = getSaveName(window);
-                        cout << "\nmap name: " << saveName << endl;
-                        map->saveMap(saveName);
+                        if(saveName.length() != 0){
+                            cout << "\nmap name: " << saveName << endl;
+                            map->saveMap(saveName);
+                        }
+                        
                         window->close();
                         return 0;
                     }
@@ -394,14 +397,20 @@ int MapGraphics::mapMaking(sf::RenderWindow* window){
 string MapGraphics::getSaveName(sf::RenderWindow* window){
 
     sf::Font font("Arial Unicode.ttf");
-    sf::Text text(font); // a font is required to make a text object
+    sf::Text text(font); // user typing will apear
+    sf::Text title(font); //title
 
-    // set the string to display and properties
+    title.setString("Please enter save name");
+    title.setCharacterSize(32);
+    title.setFillColor(ACCENT_COLOR);
+    title.setPosition({30.f, 0.f});
+
+    // set the string to display chosen name
     string textstr = "";
-    //cout << map->stringMap();
     text.setString(textstr);
     text.setCharacterSize(24);
     text.setFillColor(TEXT_COLOR);
+    text.setPosition({30.f, 50.f});
 
     while (window->isOpen())
     {
@@ -414,7 +423,9 @@ string MapGraphics::getSaveName(sf::RenderWindow* window){
         else if (const auto* keyPressed = event->getIf<sf::Event::KeyPressed>())
         {
             if (keyPressed->scancode == sf::Keyboard::Scancode::Escape)
-                {window->close();}
+                {window->close();
+                return "";
+                }
             else if (keyPressed->scancode == sf::Keyboard::Scancode::Backspace){
                 if(textstr.size() >0){
                     textstr.pop_back();
@@ -425,6 +436,8 @@ string MapGraphics::getSaveName(sf::RenderWindow* window){
                 if(textstr.size() > 0){
                     cout << "\nName chosen for new map" << endl;
                     return textstr;
+                } else {
+                    return "";
                 }
             }
         }
@@ -441,14 +454,16 @@ string MapGraphics::getSaveName(sf::RenderWindow* window){
 
     // Rest of the main loop
     window->clear(BACKGROUND_COLOR);
+    window->draw(title);
     window->draw(text);
+    renderMap(window);
     window->display();
 
 
     }
 
 
-    return "meow";
+    return "";
 }
 
 

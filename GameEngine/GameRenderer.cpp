@@ -133,27 +133,27 @@ int GameRenderer::loadMapWindow(){
                     selection = 1;
                 if(keyPressed->scancode == sf::Keyboard::Scancode::Num2)
                     //move down
-                    if(numberOfMaps >= 2){
+                    if(numberOfMaps > 2){
                         selection = 2;
                     }
                 if(keyPressed->scancode == sf::Keyboard::Scancode::Num3)
                     //move down
-                    if(numberOfMaps >= 3){
+                    if(numberOfMaps > 3){
                         selection = 3;
                     }
                 if(keyPressed->scancode == sf::Keyboard::Scancode::Num4)
                     //move down
-                    if(numberOfMaps >= 4){
+                    if(numberOfMaps > 4){
                         selection = 4;
                     }
                 if(keyPressed->scancode == sf::Keyboard::Scancode::Num5)
                     //move down
-                    if(numberOfMaps >= 5){
+                    if(numberOfMaps > 5){
                         selection = 5;
                     }
                 if(keyPressed->scancode == sf::Keyboard::Scancode::Num6){
                     //select map
-                    if(numberOfMaps >= 6){
+                    if(numberOfMaps > 6){
                         selection = 6;
                     }
                 }
@@ -631,7 +631,7 @@ void GameRenderer::endGame(){
 
     //To Main Menu, Replaying the Game
     if(selectedOption == 0){
-         player->balance = 100;
+         player->balance = 80;
          player->health = 100;
 
          //Delete current map, critter simulator, tower simulator, and map graphics
@@ -648,6 +648,8 @@ void GameRenderer::endGame(){
          startGame();
     } else {
          window->close();
+         exit(0);
+
     }
 }
 
